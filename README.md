@@ -19,10 +19,13 @@ Organisation de notre programme
 
 Initialisation
 
-Choix : Humain-Humain, Humain-Machine, Machine-Machine
+Choix : Humain-Humain pour l'instant
 Placement des cases
-Choix du côté par Rouge
-Placement des pièces de Rouge
+Choix du côté par Rouge, des rotations de matrices peuvent du coup être nécéssaires
+Initialisation des positions des pièces (je te propose de représenter la position des pièces par un tableau contenant des éléments de la forme ([X,Y,in/off, nbMoves]), sachant que le premier élément du tableau serait d'office la Kalista. En fin de tour, on checkera la victoire en regardant ce premier élément. La Kalista est jouée comme les autres pions.
+Mise en surbrillance de la zone ou Rouge peut mettre ses pièces
+Placement des pièces de Rouge, deux pièces ne peuvent pas être placées au même endroit, la Kalista doit être placée en première
+Mise en surbrillance de la zone ou Ocre peut mettre ses pièces
 Placement des pièces d’Ocre
 Tour de jeu
 
