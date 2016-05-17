@@ -36,3 +36,16 @@ cote(droite).
 cote(haut).
 cote(bas).
 lireCote(X) :- print('Quel cote choisir ?'), nl, read(X), cote(X).
+
+/* La fonction modificationPosition permet de modifier les informations dans la BDD à partir du move, qui indique le point de départ et le point d'arrivée */
+modificationPosition(Player, Board, [(X1,X2),(Y1,Y2)]):- transferPiece(Teams,X2,Y2,(Player,X1,Y1,_,_)),transferNbMoves(Board, (Player,X,Y,P,NbMoves)).
+transferPiece(Teams,X2,Y2,(Player,X1,Y1,_,_)):- "trouver",modifierPiece(I,X2,Y2) 
+transferNbMoves(Board, (Player,X,Y,P,NbMoves)):- trouverCase(X,Y,Board,Z),NbMoves is Z,switchInOff(X,Y,_,_).
+/* trouverPièce permet d'identifier une pièce sur le plateau, elle s'arrête à la première pièce trouvé
+ trouverCase renvoie le NbMoves de la case dans Z*/
+trouverCase.
+/* switch inoff permet de modifier l'info de la pièce en fonction de NbMoves */
+switchInOff
+MiseAJourPlateau
+
+Disparition pièce... modificationPosition (Otherplayer, Board, Move)
