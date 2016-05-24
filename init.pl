@@ -57,13 +57,19 @@ initCouleur(InBoard, Cote, ocre, OutBoard) :- placerPion(InBoard, Cote, ko, Boar
 
 /*Placement d'un pion*/
 placerPion(InBoard, Cote, TypePion, OutBoard) :-
-  initPion(Cote, TypePion, Lin, Col),
+  initPion(TypePion, Lin, Col),
   testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col).
 
-testPion(InBoard, _, TypePion, OutBoard, Lin, Col) :-
+testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
+  checkCote(Cote, Lin, Col),
   checkNonOccupe(Lin, Col, InBoard), !,
   remplacer(InBoard, Lin, Col, TypePion, OutBoard),
   afficherPlateau(OutBoard).
+
+testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
+  \+checkCote(Cote, Lin, Col),
+  print('Erreur : vous devez placer votre pion du cote '), print(Cote), nl,
+  placerPion(InBoard, Cote, TypePion, OutBoard).
 
 testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
   \+checkNonOccupe(Lin, Col, InBoard),
@@ -72,21 +78,20 @@ testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
 
 /****initPion****/
 /*On récupère les positions des pions entrées par l'utilisateur*/
-initPion(Cote, kr, Lin, Col) :- print('Kalista rouge'), nl,
-                                lirePosInitiale(Cote, Lin, Col), !.
-initPion(Cote, ko, Lin, Col) :- print('Kalista ocre'), nl,
-                                lirePosInitiale(Cote, Lin, Col), !.
-initPion(Cote, TypePion, Lin, Col) :- element(TypePion, [r1, r2, r3, r4, r5]),
+initPion(kr, Lin, Col) :- print('Kalista rouge'), nl,
+                                lirePosInitiale(Lin, Col), !.
+initPion(ko, Lin, Col) :- print('Kalista ocre'), nl,
+                                lirePosInitiale(Lin, Col), !.
+initPion(TypePion, Lin, Col) :- element(TypePion, [r1, r2, r3, r4, r5]),
                                       print('Sbire rouge'), nl,
-                                      lirePosInitiale(Cote, Lin, Col), !.
-initPion(Cote, TypePion, Lin, Col) :- element(TypePion, [o1, o2, o3, o4, o5]),
+                                      lirePosInitiale(Lin, Col), !.
+initPion(TypePion, Lin, Col) :- element(TypePion, [o1, o2, o3, o4, o5]),
                                       print('Sbire ocre'), nl,
-                                      lirePosInitiale(Cote, Lin, Col), !.
+                                      lirePosInitiale(Lin, Col), !.
 
-/*Lecture ligne et colonne + vérification du côté*/
-lirePosInitiale(Cote, Lin, Col) :- print('Ligne ?'), nl, read(Lin), nl,
-                                   print('Colonne ?'), nl, read(Col), nl,
-                                   checkCote(Cote, Lin, Col).
+/*Lecture ligne et colonne*/
+lirePosInitiale(Lin, Col) :-  print('Ligne ?'), nl, read(Lin), nl,
+                              print('Colonne ?'), nl, read(Col), nl.
 
 /*On vérifie si les pions sont placés du bon côté */
 checkCote(gauche, Lin, Col) :- Lin > 0, Lin < 7, Col > 0, Col < 3 .
@@ -94,8 +99,6 @@ checkCote(droite, Lin, Col) :- Lin > 0, Lin < 7, Col > 4, Col < 7 .
 checkCote(haut, Lin, Col) :- Lin > 0, Lin < 3, Col > 0, Col < 7 .
 checkCote(bas, Lin, Col) :- Lin > 4, Lin < 7, Col > 0, Col < 7 .
 
-
-/****TODO : Debug checkNonOccupe; actuellement reset le tableau. Cut ?****/
 /*On vérifie que la case où l'on veut placer le pion n'est pas déjà occupée*/
 /*On trouve la ligne*/
 checkNonOccupe(1, Col, [Ligne|_]) :- checkNonOccupeDansLigne(Col, Ligne).
