@@ -1,4 +1,7 @@
-/*Démarrage du jeu*/
+/*********************/
+/*Programme Principal*/
+/*********************/
+
 khan :- print('---KHAN---\n'),
         print('Joueur vs Joueur : khan(1).\n'),
         print('Joueur vs Machine : khan(2).\n'),
@@ -6,8 +9,14 @@ khan :- print('---KHAN---\n'),
 
 khan(X) :- X > 0, X < 4, initBoard(_).
 
+element(X, [X|_]).
+element(X, [_|Q]) :- element(X, Q).
+
 /*Import du package d'initialisation du plateau*/
-[init].
+:- include(init).
 
 /*Import du package d'affichage du plateau*/
-[display].
+:- include(display).
+
+/*Import du package d'affichage des mouvements possibles*/
+%:- include(moves).
