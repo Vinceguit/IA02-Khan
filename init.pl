@@ -55,43 +55,46 @@ initCouleur(InBoard, Cote, ocre, OutBoard) :- placerPion(InBoard, Cote, ko, Boar
                                               placerPion(Board4, Cote, o4, Board5),
                                               placerPion(Board5, Cote, o5, OutBoard).
 
-/*Placement d'un pion*/
+/*Placement d'un pion : On initialise la valeur (saisie utilisateur), puis on vérifie si c'est correct*/
 placerPion(InBoard, Cote, TypePion, OutBoard) :-
   initPion(TypePion, Lin, Col),
   testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col).
 
+/****initPion****/
+/*On récupère les positions des pions entrées par l'utilisateur*/
+initPion(kr, Lin, Col) :- print('Kalista rouge'), nl,
+                          lirePosInitiale(Lin, Col), !.
+initPion(ko, Lin, Col) :- print('Kalista ocre'), nl,
+                          lirePosInitiale(Lin, Col), !.
+initPion(TypePion, Lin, Col) :- element(TypePion, [r1, r2, r3, r4, r5]),
+                                print('Sbire rouge'), nl,
+                                lirePosInitiale(Lin, Col), !.
+initPion(TypePion, Lin, Col) :- element(TypePion, [o1, o2, o3, o4, o5]),
+                                print('Sbire ocre'), nl,
+                                lirePosInitiale(Lin, Col), !.
+/*Lecture ligne et colonne*/
+lirePosInitiale(Lin, Col) :-  print('Ligne ?'), nl, read(Lin), nl,
+                              print('Colonne ?'), nl, read(Col), nl.
+
+/****testPion****/
+/*Vérification de la valeur saisie*/
 testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
   checkCote(Cote, Lin, Col),
   checkNonOccupe(Lin, Col, InBoard), !,
   remplacer(InBoard, Lin, Col, TypePion, OutBoard),
   afficherPlateau(OutBoard).
 
+/*Cas d'erreur 1 : La saisie ne correspond pas au côté du joueur ; on replace alors le pion*/
 testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
   \+checkCote(Cote, Lin, Col),
   print('Erreur : vous devez placer votre pion du cote '), print(Cote), nl,
   placerPion(InBoard, Cote, TypePion, OutBoard).
 
+/*Cas d'erreur 2 : La saisie correspond à une case déjà occupée ; on replace alors le pion*/
 testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
   \+checkNonOccupe(Lin, Col, InBoard),
   print('Erreur : un pion est deja present ici'), nl,
   placerPion(InBoard, Cote, TypePion, OutBoard).
-
-/****initPion****/
-/*On récupère les positions des pions entrées par l'utilisateur*/
-initPion(kr, Lin, Col) :- print('Kalista rouge'), nl,
-                                lirePosInitiale(Lin, Col), !.
-initPion(ko, Lin, Col) :- print('Kalista ocre'), nl,
-                                lirePosInitiale(Lin, Col), !.
-initPion(TypePion, Lin, Col) :- element(TypePion, [r1, r2, r3, r4, r5]),
-                                      print('Sbire rouge'), nl,
-                                      lirePosInitiale(Lin, Col), !.
-initPion(TypePion, Lin, Col) :- element(TypePion, [o1, o2, o3, o4, o5]),
-                                      print('Sbire ocre'), nl,
-                                      lirePosInitiale(Lin, Col), !.
-
-/*Lecture ligne et colonne*/
-lirePosInitiale(Lin, Col) :-  print('Ligne ?'), nl, read(Lin), nl,
-                              print('Colonne ?'), nl, read(Col), nl.
 
 /*On vérifie si les pions sont placés du bon côté */
 checkCote(gauche, Lin, Col) :- Lin > 0, Lin < 7, Col > 0, Col < 3 .
@@ -107,9 +110,7 @@ checkNonOccupe(Lin, Col, [_|Q]) :- Lin > 0, NLin is Lin - 1, checkNonOccupe(NLin
 checkNonOccupeDansLigne(1, [(_, b)|_]).
 checkNonOccupeDansLigne(Col, [_|Q]) :- Col > 0, NCol is Col - 1, checkNonOccupeDansLigne(NCol, Q).
 
-
-/****remplacer****/
-/*Placement d'un pion en remplacant la valeur 'b' dans le tableau initial*/
+/*Placement effectif du pion en remplaçant la valeur 'b' dans le tableau initial*/
 /*On trouve la ligne*/
 remplacer([T|Q], 1, Col, X, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, Ligne).
 remplacer([T|Q], Lin, Col, X, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, Res), !.
