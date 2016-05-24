@@ -57,10 +57,18 @@ initCouleur(InBoard, Cote, ocre, OutBoard) :- placerPion(InBoard, Cote, ko, Boar
 
 /*Placement d'un pion*/
 placerPion(InBoard, Cote, TypePion, OutBoard) :-
-  initPion(Cote, TypePion, Lin, Col), !,
+  initPion(Cote, TypePion, Lin, Col),
+  testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col).
+
+testPion(InBoard, _, TypePion, OutBoard, Lin, Col) :-
   checkNonOccupe(Lin, Col, InBoard), !,
   remplacer(InBoard, Lin, Col, TypePion, OutBoard),
   afficherPlateau(OutBoard).
+
+testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
+  \+checkNonOccupe(Lin, Col, InBoard),
+  print('Erreur : un pion est deja present ici'), nl,
+  placerPion(InBoard, Cote, TypePion, OutBoard).
 
 /****initPion****/
 /*On récupère les positions des pions entrées par l'utilisateur*/
