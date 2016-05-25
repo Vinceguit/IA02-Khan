@@ -2,6 +2,19 @@
 /**Initialisation du plateau de jeu**/
 /************************************/
 
+/****CHOIX DES JOUEURS (Humain/Machine)****/
+typePlayer(humain).
+typePlayer(machine).
+initPlayers :- getPlayer(rouge), getPlayer(ocre).
+getPlayer(Colour) :- print('Joueur '), print(Colour), print(' : humain ou machine ?'), nl,
+                     read(Player),
+                     testPlayer(Player, Colour).
+
+testPlayer(Player, Colour) :- typePlayer(Player), asserta(player(Player, Colour)), !.
+testPlayer(_, _) :-  print('Erreur de saisie'), !, fail.
+
+
+
 /****PRINCIPAL****/
 /*Etat initial du plateau de jeu*/
 etatInitial([[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
@@ -12,14 +25,12 @@ etatInitial([[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
              [(2, b),(1, b),(3, b),(2, b),(2, b),(1, b)]]).
 
 /*Prédicat d'initialisation du plateau, à appeler dans le programme principal*/
-initBoard(Board) :-	etatInitial(BoardInit),
+initBoard(Board) :- player(J1, rouge), player(J2, ocre),
+                    etatInitial(BoardInit),
                     afficherPlateau(BoardInit),
-                    lireCote(Cote),
-                    initCouleur(BoardInit, Cote, rouge, BoardInter),
+                    initCouleur(BoardInit, Cote, rouge, J1, BoardInter),
                     oppose(Cote, CoteOpp),
-                    initCouleur(BoardInter, CoteOpp, ocre, Board).
-
-
+                    initCouleur(BoardInter, CoteOpp, ocre, J2, Board), !.
 
 /****CÔTÉS****/
 /*Déclaration des côtés valides*/
@@ -35,25 +46,50 @@ oppose(haut, bas).
 oppose(bas, haut).
 
 /*Lecture du côté*/
-lireCote(X) :- print('Quel cote choisir ?'), nl, read(X), cote(X).
+lireCote(Cote) :- print('Quel cote choisir ?'), nl, read(Cote), cote(Cote), !.
+lireCote(_) :- print('Erreur de saisie'), nl, !, fail.
+
+/*Génération aléatoire d'un côté*/
+convertToCote(1, gauche).
+convertToCote(2, droite).
+convertToCote(3, haut).
+convertToCote(4, bas).
+randomCote(Cote) :- random(1, 5, Rand), convertToCote(Rand, Cote),
+                    print('Cote choisi par la machine : '), print(Cote), nl.
 
 
 
 /****INITIALISATION DES PIONS****/
 /*Initialisation des pions d'une couleur; c'est lui qu'on appelle dans initBoard*/
-initCouleur(InBoard, Cote, rouge, OutBoard) :- placerPion(InBoard, Cote, kr, Board1),
-                                               placerPion(Board1, Cote, r1, Board2),
-                                               placerPion(Board2, Cote, r2, Board3),
-                                               placerPion(Board3, Cote, r3, Board4),
-                                               placerPion(Board4, Cote, r4, Board5),
-                                               placerPion(Board5, Cote, r5, OutBoard).
+initCouleur(InBoard, Cote, rouge, humain, OutBoard) :- lireCote(Cote),
+                                                       placerPion(InBoard, Cote, kr, Board1),
+                                                       placerPion(Board1, Cote, r1, Board2),
+                                                       placerPion(Board2, Cote, r2, Board3),
+                                                       placerPion(Board3, Cote, r3, Board4),
+                                                       placerPion(Board4, Cote, r4, Board5),
+                                                       placerPion(Board5, Cote, r5, OutBoard), !.
 
-initCouleur(InBoard, Cote, ocre, OutBoard) :- placerPion(InBoard, Cote, ko, Board1),
-                                              placerPion(Board1, Cote, o1, Board2),
-                                              placerPion(Board2, Cote, o2, Board3),
-                                              placerPion(Board3, Cote, o3, Board4),
-                                              placerPion(Board4, Cote, o4, Board5),
-                                              placerPion(Board5, Cote, o5, OutBoard).
+initCouleur(InBoard, Cote, ocre, humain, OutBoard) :- placerPion(InBoard, Cote, ko, Board1),
+                                                      placerPion(Board1, Cote, o1, Board2),
+                                                      placerPion(Board2, Cote, o2, Board3),
+                                                      placerPion(Board3, Cote, o3, Board4),
+                                                      placerPion(Board4, Cote, o4, Board5),
+                                                      placerPion(Board5, Cote, o5, OutBoard), !.
+
+initCouleur(InBoard, Cote, rouge, machine, OutBoard) :- randomCote(Cote),
+                                                        placerPion(InBoard, Cote, kr, Board1),
+                                                        placerPion(Board1, Cote, r1, Board2),
+                                                        placerPion(Board2, Cote, r2, Board3),
+                                                        placerPion(Board3, Cote, r3, Board4),
+                                                        placerPion(Board4, Cote, r4, Board5),
+                                                        placerPion(Board5, Cote, r5, OutBoard), !.
+
+initCouleur(InBoard, Cote, ocre, machine, OutBoard) :- placerPion(InBoard, Cote, kr, Board1),
+                                                       placerPion(Board1, Cote, r1, Board2),
+                                                       placerPion(Board2, Cote, r2, Board3),
+                                                       placerPion(Board3, Cote, r3, Board4),
+                                                       placerPion(Board4, Cote, r4, Board5),
+                                                       placerPion(Board5, Cote, r5, OutBoard), !.
 
 /*Placement d'un pion : On initialise la valeur (saisie utilisateur), puis on vérifie si c'est correct*/
 placerPion(InBoard, Cote, TypePion, OutBoard) :-
