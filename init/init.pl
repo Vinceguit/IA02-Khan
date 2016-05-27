@@ -77,4 +77,4 @@ initCouleur(InBoard, Cote, ocre, humain, OutBoard) :- placerPions(InBoard, Cote,
 initCouleur(InBoard, Cote, rouge, machine, OutBoard) :- randomCote(Cote),
                                                         placerPionsIA(InBoard, Cote, rouge, OutBoard), !.
 
-initCouleur(InBoard, Cote, ocre, machine, OutBoard) :- placerPionsIA(InBoard, Cote, rouge, OutBoard), !.
+initCouleur(InBoard, Cote, ocre, machine, OutBoard) :- placerPionsIA(InBoard, Cote, ocre, OutBoard), !.

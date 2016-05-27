@@ -63,6 +63,7 @@ checkCote(bas, Lin, Col) :- Lin > 4, Lin < 7, Col > 0, Col < 7 .
 
 /*On vérifie que la case où l'on veut placer le pion n'est pas déjà occupée*/
 /*On trouve la ligne*/
+/*TODO : Revoir checkNonOccupe à l'aide des listes de pions.*/
 checkNonOccupe(1, Col, [Ligne|_]) :- checkNonOccupeDansLigne(Col, Ligne).
 checkNonOccupe(Lin, Col, [_|Q]) :- Lin > 0, NLin is Lin - 1, checkNonOccupe(NLin, Col, Q).
 /*On trouve la colonne*/

@@ -2,4 +2,4 @@
 /*Mouvements possibles*/
 /**********************/
 
-possibleMoves(Board, Player, PossibleMoveList).
+possibleMoves(Board, Player, PossibleMoveList) :- element(Player, [rouge, ocre]).
