@@ -1,4 +1,5 @@
-placerPionsIA(InBoard, Cote, rouge, OutBoard) :- placerPionIA(InBoard, Cote, kr, Board1),
+placerPionsIA(InBoard, Cote, rouge, OutBoard) :- print('Initialisation des pions de la machine rouge'), nl,
+                                                 placerPionIA(InBoard, Cote, kr, Board1),
                                                  placerPionIA(Board1, Cote, r1, Board2),
                                                  placerPionIA(Board2, Cote, r2, Board3),
                                                  placerPionIA(Board3, Cote, r3, Board4),
@@ -6,7 +7,8 @@ placerPionsIA(InBoard, Cote, rouge, OutBoard) :- placerPionIA(InBoard, Cote, kr,
                                                  placerPionIA(Board5, Cote, r5, OutBoard),
                                                  afficherPlateau(OutBoard), !.
 
-placerPionsIA(InBoard, Cote, ocre, OutBoard) :- placerPionIA(InBoard, Cote, ko, Board1),
+placerPionsIA(InBoard, Cote, ocre, OutBoard) :- print('Initialisation des pions de la machine ocre'), nl,
+                                                placerPionIA(InBoard, Cote, ko, Board1),
                                                 placerPionIA(Board1, Cote, o1, Board2),
                                                 placerPionIA(Board2, Cote, o2, Board3),
                                                 placerPionIA(Board3, Cote, o3, Board4),
@@ -31,6 +33,7 @@ generatePos(TypePion, Cote, Lin, Col) :- randomPos(Cote, Lin, Col),
                                          listePions(Colour, Liste),
                                          checkNonOccupeIA(TypePion, Cote, Lin, Col, Liste).
 
+/*TODO : fixer le bug de checkNonOccupeIA*/
 checkNonOccupeIA(_, _, _, _, []) :- !.
 checkNonOccupeIA(TypePion, Cote, Lin, Col, [(TypePion, Lin, Col)|_]) :- generatePos(TypePion, Cote, Lin, Col), !.
 checkNonOccupeIA(TypePion, Cote, Lin, Col, [_|Q]) :- checkNonOccupeIA(TypePion, Cote, Lin, Col, Q).
