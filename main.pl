@@ -19,6 +19,8 @@ play :- print('---KHAN---\n'), initPlayers, initBoard(_).
 /*Import de la bibliothèque d'affichage du plateau*/
 :- include('./display').
 
-/*Import du package d'affichage des mouvements possibles*/
+/*Import de la bibliothèque d'affichage des mouvements possibles*/
 %:- include('moves/moves').
+
+/*Import de la bibliothèque de génération du meilleur mouvement possible*/
 %:- include('moves/bestmove').
