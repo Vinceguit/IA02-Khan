@@ -39,8 +39,8 @@ lirePosInitiale(Lin, Col) :-  print('Ligne ?'), nl, read(Lin), nl,
 testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
   checkCote(Cote, Lin, Col),
   checkNonOccupe(Lin, Col, InBoard), !,
-  remplacer(InBoard, Lin, Col, TypePion, OutBoard),
-  updateListePions(TypePion, Lin, Col),
+  remplacer(InBoard, Lin, Col, TypePion, IdCase, OutBoard),
+  addPion(TypePion, Lin, Col, IdCase),
   afficherPlateau(OutBoard).
 
 /*Cas d'erreur 1 : La saisie ne correspond pas au côté du joueur ; on replace alors le pion*/
@@ -72,10 +72,10 @@ checkNonOccupeDansLigne(Col, [_|Q]) :- Col > 0, NCol is Col - 1, checkNonOccupeD
 
 /*Placement effectif du pion en remplaçant la valeur 'b' dans le tableau initial*/
 /*On trouve la ligne*/
-remplacer([T|Q], 1, Col, X, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, Ligne).
-remplacer([T|Q], Lin, Col, X, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, Res), !.
-remplacer(L, _, _, L).
+remplacer([T|Q], 1, Col, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
+remplacer([T|Q], Lin, Col, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, IdCase, Res), !.
+remplacer(L, _, _, _, L).
 /*On trouve la colonne*/
-remplacerDansLigne([(Val, b)|Q], 1, X, [(Val, X)|Q]).
-remplacerDansLigne([T|Q], Col, X, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, Res), !.
-remplacerDansLigne(L, _, _, L).
+remplacerDansLigne([(IdCase, b)|Q], 1, X, IdCase, [(IdCase, X)|Q]).
+remplacerDansLigne([T|Q], Col, X, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
+remplacerDansLigne(L, _, _, _, L).

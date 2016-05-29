@@ -32,7 +32,7 @@ etatInitial([[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
              [(2, b),(1, b),(3, b),(2, b),(2, b),(1, b)]]).
 
 /*Prédicat d'initialisation du plateau, à appeler dans le programme principal*/
-initBoard(Board) :- setListePions,
+initBoard(Board) :- resetPions,
                     player(J1, rouge), player(J2, ocre),
                     etatInitial(BoardInit),
                     afficherPlateau(BoardInit),

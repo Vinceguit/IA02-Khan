@@ -10,9 +10,6 @@ play :- print('---KHAN---\n'), initPlayers, initBoard(_).
 
   - lors de l'exécution du prédicat, une liste de pions est générée dynamiquement dans le programme; elle est accessible par le prédicat listePions(List), où List est une liste de tuples [(Type1, Lin1, Col1), ..., (TypeN, LinN, ColN)] contenant le type de pion, la ligne et la colonne de chaque pion.*/
 
-element(X, [X|_]).
-element(X, [_|Q]) :- element(X, Q).
-
 /*Import de la bibliothèque principale*/
 :- include('./library').
 

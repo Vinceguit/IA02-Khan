@@ -17,28 +17,24 @@ placerPionsIA(InBoard, Cote, ocre, OutBoard) :- print('Initialisation des pions 
                                                 afficherPlateau(OutBoard), !.
 
 /*Pour l'instant, on appelle le placement de pion humain pour faire tourner le programme*/
-placerPionIA(InBoard, Cote, TypePion, OutBoard) :- generatePos(TypePion, Cote, Lin, Col),
-                                                   remplacer(InBoard, Lin, Col, TypePion, OutBoard),
-                                                   updateListePions(TypePion, Lin, Col).
+placerPionIA(InBoard, Cote, TypePion, OutBoard) :- generatePos(Cote, Lin, Col),
+                                                   remplacer(InBoard, Lin, Col, TypePion, IdCase, OutBoard),
+                                                   addPion(TypePion, Lin, Col, IdCase).
 
 /*On peut remarquer, dans la structure du plateau, que chaque côté contient 4 cases de chaque indice (1,2,3); tous les côtés sont donc équivalents sur ce plan.
-
 On peut entourer la Kalista de 2 à 3 sbires pour la protéger.
-
 On peut ne placer ses pions que sur des cases de 2 indices; ainsi, il est possible dès le début de partie de désobéir au Khan, et donc de forcer le jeu de l'adversaire.*/
 
-/*TODO : Optimisation de la génération de position. En passant par un random, on est obligé de checker qu'il n'y a pas déjà un pion à la place souhaitée => la complexité est un peu pourrie*/
-generatePos(TypePion, Cote, Lin, Col) :- randomPos(Cote, Lin, Col),
-                                         findColour(TypePion, Colour),
-                                         listePions(Colour, Liste),
-                                         checkNonOccupeIA(TypePion, Cote, Lin, Col, Liste).
 
-/*TODO : fixer le bug de checkNonOccupeIA*/
-checkNonOccupeIA(_, _, _, _, []) :- !.
-checkNonOccupeIA(TypePion, Cote, Lin, Col, [(TypePion, Lin, Col)|_]) :- generatePos(TypePion, Cote, Lin, Col), !.
-checkNonOccupeIA(TypePion, Cote, Lin, Col, [_|Q]) :- checkNonOccupeIA(TypePion, Cote, Lin, Col, Q).
+/*Génération aléatoire de la position; on utilise une liste de positions possibles dynamique, qu'on update au fur et à mesure en supprimant une position déjà prise.*/
+generatePos(Cote, Lin, Col) :- listePos(Cote, List),
+                                longueur(Long, List),
+                                L is Long + 1,
+                                random(1, L, RandPos),
+                                findAndDelete(RandPos, Lin, Col, List, NewList),
+                                retract(listePos(Cote, List)),
+                                asserta(listePos(Cote, NewList)).
 
-randomPos(gauche, Lin, Col) :- random(1, 7, Lin), random(1, 3, Col).
-randomPos(droite, Lin, Col) :- random(1, 7, Lin), random(5, 7, Col).
-randomPos(haut, Lin, Col) :- random(1, 3, Lin), random(1, 7, Col).
-randomPos(bas, Lin, Col) :- random(5, 7, Lin), random(1, 7, Col).
+/*On trouve la position choisie aléatoirement dans la liste, on récupère la ligne et la colonne, puis on supprime l'occurrence*/
+findAndDelete(1, Lin, Col, [(Col, Lin)|Q], Q) :- !.
+findAndDelete(Pos, Lin, Col, [T|Q], [T|Res]) :- Pos > 0, NPos is Pos-1, findAndDelete(NPos, Lin, Col, Q, Res).
