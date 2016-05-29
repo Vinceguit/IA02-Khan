@@ -1,51 +1,24 @@
-/*Démarrage du jeu*/
-khan :- print('---KHAN---\n'),
-        print('Joueur vs Joueur : khan(1).\n'),
-        print('Joueur vs Machine : khan(2).\n'),
-        print('Machine vs Machine : khan(3).\n\n').
+/*********************/
+/*Programme Principal*/
+/*********************/
 
-khan(X) :- X > 0, X < 4, jeu(X, _, [[(2, r),(3, b),(1, r),(2, b),(2, kr),(3, b)],
-                                    [(2, b),(1, b),(3, b),(1, b),(3, b),(1, b)],
-                                    [(1, b),(3, b),(2, b),(3, b),(1, b),(2, b)],
-                                    [(3, b),(1, b),(2, b),(1, b),(3, b),(2, b)],
-                                    [(2, b),(3, b),(1, b),(3, ko),(1, b),(3, b)],
-                                    [(2, b),(1, b),(3, o),(2, b),(2, b),(1, b)]]).
+play :- print('---KHAN---\n'), initPlayers, initBoard(_).
 
-/*Affichage du plateau*/
+/*L'appel d'initBoard effectue les actions suivantes :
 
-jeu(_, Y, Z):- afficherPlateau(Z), lireCote(Y).
-afficherPlateau([]) :- print('_____________________________________\n').
-afficherPlateau([T|Q]) :- print('_____________________________________\n'),
-                         print('|'), afficherLigne(T), print('\n'),
-                         print('|     |     |     |     |     |     |\n'),
-                         afficherPlateau(Q).
+  - le prédicat retourne en paramètre le plateau de jeu initialisé, sous forme de liste de ligne [L1, ..., L6], chaque ligne étant une liste de tuples [(Indice1, Type1), ..., (Indice6, Type6)] contenant l'indice de la case (de 1 à 3) et le type de pion sur cette case (b = case blanche, kr = Kalista rouge, ko = Kalista ocre, r1 à r5 = sbires rouges, o1 à o5 = sbires ocres)
 
-afficherLigne([]).
-afficherLigne([(T1, X)|Q]) :- print(' '), print(T1), afficher(X), afficherLigne(Q).
+  - lors de l'exécution du prédicat, une liste de pions est générée dynamiquement dans le programme; elle est accessible par le prédicat listePions(List), où List est une liste de tuples [(Type1, Lin1, Col1), ..., (TypeN, LinN, ColN)] contenant le type de pion, la ligne et la colonne de chaque pion.*/
 
-/*On traite les différents cas d'affichage; à revoir différement une fois les pions définis*/
-afficher(b) :- print('   |'), !.
-afficher(r) :- print(' r |'), !.
-afficher(kr) :- print(' R |'), !.
-afficher(o) :- print(' o |'), !.
-afficher(ko) :- print(' O |'), !.
+/*Import de la bibliothèque principale*/
+:- include('./library').
 
-/*Initialisation des pions*/
-cote(gauche).
-cote(droite).
-cote(haut).
-cote(bas).
-lireCote(X) :- print('Quel cote choisir ?'), nl, read(X), cote(X).
+/*Import de la bibliothèque d'initialisation du plateau*/
+:- include('./init/init').
 
-/* La fonction modificationPosition permet de modifier les informations dans la BDD à partir du move, qui indique le point de départ et le point d'arrivée */
-modificationPosition(Player, Board, [(X1,X2),(Y1,Y2)]):- transferPiece(Teams,X2,Y2,(Player,X1,Y1,_,_)),transferNbMoves(Board, (Player,X,Y,P,NbMoves)).
-transferPiece(Teams,X2,Y2,(Player,X1,Y1,_,_)):- "trouver",modifierPiece(I,X2,Y2) 
-transferNbMoves(Board, (Player,X,Y,P,NbMoves)):- trouverCase(X,Y,Board,Z),NbMoves is Z,switchInOff(X,Y,_,_).
-/* trouverPièce permet d'identifier une pièce sur le plateau, elle s'arrête à la première pièce trouvé
- trouverCase renvoie le NbMoves de la case dans Z*/
-trouverCase.
-/* switch inoff permet de modifier l'info de la pièce en fonction de NbMoves */
-switchInOff
-MiseAJourPlateau
+/*Import de la bibliothèque d'affichage du plateau*/
+:- include('./display').
 
-Disparition pièce... modificationPosition (Otherplayer, Board, Move)
+/*Import du package d'affichage des mouvements possibles*/
+%:- include('moves/moves').
+%:- include('moves/bestmove').
