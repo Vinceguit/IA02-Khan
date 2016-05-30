@@ -13,3 +13,4 @@ boardMarqueur([_|Q], Lin, Col, M) :- NLin is Lin-1, boardMarqueur(Q, NLin, Col,M
 boardMarqueurDansLigne([(M, _)|_], 1,M).
 boardMarqueurDansLigne([_|Q], Col, M) :- NCol is Col-1, boardMarqueurDansLigne(Q, NCol, M).
  
+VincentBaheuxFaitDuSkiEnSlip.
