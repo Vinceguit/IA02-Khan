@@ -14,8 +14,8 @@ main(Board) :- player(J1, rouge),
                mainLoop(Board, rouge, J1, J2).
 
 /*Arrêt de la boucle : la kalista adverse est prise*/
-mainLoop(_, _, _, _) :- pion(ko, _, _, out, _), asserta(winner(rouge)), !.
-mainLoop(_, _, _, _) :- pion(kr, _, _, out, _), asserta(winner(ocre)), !.
+mainLoop(_, _, _, _) :- pion(ko, _, _, out, _), setWinner(rouge), !.
+mainLoop(_, _, _, _) :- pion(kr, _, _, out, _), setWinner(ocre), !.
 
 /*Sinon, exécution du tour, puis appel du suivant*/
 mainLoop(InBoard, rouge, humain, J2) :- playTurn(InBoard, rouge, OutBoard),
@@ -29,3 +29,6 @@ mainLoop(InBoard, ocre, J1, humain) :- playTurn(InBoard, ocre, OutBoard),
 
 mainLoop(InBoard, ocre, J1, machine) :- playTurnAI(InBoard, ocre, OutBoard),
                                         mainLoop(OutBoard, rouge, J1, machine).
+
+setWinner(Colour) :- player(TypePlayer, Colour),
+                     asserta(winner(Colour, TypePlayer)).

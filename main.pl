@@ -6,8 +6,8 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
         initPlayers,
         initBoard(Board),
         main(Board),
-        winner(Winner),
-        print('Le gagnant est le joueur'), print(Winner), print(' !').
+        winner(WColour, WType),
+        print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
 
 /*L'appel d'initBoard effectue les actions suivantes :
 
