@@ -2,10 +2,12 @@
 
 ##Bibliothèque
 
+Prédicat | Action
+------------ | -------------
 ```prolog
 	element(Element, List)
 ```
-S'efface si **Element** est un élément de la liste **List**.
+| S'efface si **Element** est un élément de la liste **List**
 
 ##Prédicats Principaux
 
