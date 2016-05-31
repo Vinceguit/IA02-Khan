@@ -28,7 +28,7 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 :- include('./turn').
 
 /*Import de la bibliothèque d'affichage des mouvements possibles*/
-%:- include('moves/moves').
+:- include('moves/moves').
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
 %:- include('moves/bestmove').
