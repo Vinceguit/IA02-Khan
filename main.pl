@@ -2,7 +2,12 @@
 /*Programme Principal*/
 /*********************/
 
-play :- print('---KHAN---\n'), initPlayers, initBoard(_).
+play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
+        initPlayers,
+        initBoard(Board),
+        main(Board),
+        winner(Winner),
+        print('Le gagnant est le joueur'), print(Winner), print(' !').
 
 /*L'appel d'initBoard effectue les actions suivantes :
 
@@ -13,12 +18,17 @@ play :- print('---KHAN---\n'), initPlayers, initBoard(_).
 /*Import de la bibliothèque principale*/
 :- include('./library').
 
-/*Import de la bibliothèque d'initialisation du plateau*/
-:- include('./init/init').
-
 /*Import de la bibliothèque d'affichage du plateau*/
 :- include('./display').
 
-/*Import du package d'affichage des mouvements possibles*/
+/*Import de la bibliothèque d'initialisation du plateau*/
+:- include('./init/init').
+
+/*Import de la bibliothèque d'exécution des tours*/
+:- include('./turn').
+
+/*Import de la bibliothèque d'affichage des mouvements possibles*/
 %:- include('moves/moves').
+
+/*Import de la bibliothèque de génération du meilleur mouvement possible*/
 %:- include('moves/bestmove').
