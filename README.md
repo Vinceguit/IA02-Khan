@@ -4,7 +4,7 @@
 
 Prédicat | Action
 ------------ | -------------
-element(Element, List) | S'efface si **Element** est un élément de la liste **List**
+`element(Element, List)`` | S'efface si **Element** est un élément de la liste **List**
 
 ##Prédicats Principaux
 
