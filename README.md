@@ -18,7 +18,10 @@ Prédicat | Action
 ```
 Ce prédicat retourne en paramètre le plateau de jeu initialisé, sous forme de liste de ligne [L1, ..., L6], chaque ligne étant une liste de tuples [(Indice1, Type1), ..., (Indice6, Type6)] contenant l'indice de la case (de 1 à 3) et le type de pion sur cette case (b = case blanche, kr = Kalista rouge, ko = Kalista ocre, r1 à r5 = sbires rouges, o1 à o5 = sbires ocres).
 
-Lors de l'exécution du prédicat, chaque pion est généré dynamiquement  sous la forme d'un prédicat  `pion(IdPion, Col, Lin, Status, IdCase)`, où `IdPion` est l'identifiant unique du pion, `Col` et `Lin` sa position sur le plateau, `Status` sont statut (`in` s'il est en jeu; `khan` s'il porte le Khan; `out` s'il est hors-jeu), et `IdCase` l'indice de la case sur lequel il se trouve (1, 2 ou 3).
+Lors de l'exécution du prédicat, chaque pion est généré dynamiquement  sous la forme d'un prédicat  ```prolog
+	pion(IdPion, Col, Lin, Status, IdCase)
+```
+où `IdPion` est l'identifiant unique du pion, `Col` et `Lin` sa position sur le plateau, `Status` son statut (`in` s'il est en jeu; `khan` s'il porte le Khan; `out` s'il est hors-jeu), et `IdCase` l'indice de la case sur lequel il se trouve (1, 2 ou 3).
 
 ##Prédicats Principaux
 
