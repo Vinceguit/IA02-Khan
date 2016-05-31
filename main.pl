@@ -25,7 +25,7 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 :- include('./init/init').
 
 /*Import de la bibliothèque d'exécution des tours*/
-:- include('./turn').
+:- include('./turn/turn').
 
 /*Import de la bibliothèque d'affichage des mouvements possibles*/
 :- include('moves/moves').
