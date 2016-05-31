@@ -2,6 +2,7 @@
 /*Gestion des mouvements*/
 /************************/
 
+/*Gros du boulot*/
 possibleMoves(Board, Player, PossibleMoveList) :- element(Player, [rouge, ocre]).
 
 :-dynamic(piece/5).
