@@ -16,7 +16,7 @@ Prédicat | Action
 ```prolog
 	initBoard(Board)
 ```
-Ce prédicat retourne en paramètre le plateau de jeu initialisé, sous forme de liste de ligne [L1, ..., L6], chaque ligne étant une liste de tuples [(Indice1, Type1), ..., (Indice6, Type6)] contenant l'indice de la case (de 1 à 3) et le type de pion sur cette case (b = case blanche, kr = Kalista rouge, ko = Kalista ocre, r1 à r5 = sbires rouges, o1 à o5 = sbires ocres).
+Ce prédicat retourne en paramètre le plateau de jeu initialisé, sous forme de liste de ligne [L1, ..., L6], chaque ligne étant une liste de tuples `[(Indice1, Type1), ..., (Indice6, Type6)]` contenant l'indice de la case (de 1 à 3) et le type de pion sur cette case (`b` = case blanche, `kr` = Kalista rouge, `ko` = Kalista ocre, `r1` à `r5` = sbires rouges, `o1` à `o5` = sbires ocres).
 
 Lors de l'exécution du prédicat, chaque pion est généré dynamiquement  sous la forme d'un prédicat  
 ```prolog
