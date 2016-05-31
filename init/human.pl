@@ -69,13 +69,3 @@ checkNonOccupe(Lin, Col, [_|Q]) :- Lin > 0, NLin is Lin - 1, checkNonOccupe(NLin
 /*On trouve la colonne*/
 checkNonOccupeDansLigne(1, [(_, b)|_]).
 checkNonOccupeDansLigne(Col, [_|Q]) :- Col > 0, NCol is Col - 1, checkNonOccupeDansLigne(NCol, Q).
-
-/*Placement effectif du pion en remplaçant la valeur 'b' dans le tableau initial*/
-/*On trouve la ligne*/
-remplacer([T|Q], 1, Col, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
-remplacer([T|Q], Lin, Col, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, IdCase, Res), !.
-remplacer(L, _, _, _, L).
-/*On trouve la colonne*/
-remplacerDansLigne([(IdCase, b)|Q], 1, X, IdCase, [(IdCase, X)|Q]).
-remplacerDansLigne([T|Q], Col, X, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
-remplacerDansLigne(L, _, _, _, L).

@@ -5,7 +5,8 @@
 play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
         initPlayers,
         initBoard(Board),
-        mainLoop(Board, Winner),
+        main(Board),
+        winner(Winner),
         print('Le gagnant est le joueur'), print(Winner), print(' !').
 
 /*L'appel d'initBoard effectue les actions suivantes :

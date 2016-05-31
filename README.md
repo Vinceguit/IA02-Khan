@@ -14,7 +14,7 @@ eatPower(Board, Player, PossibleMoveList) → Booléen, permet de modifier la li
 kalistaVivante(Player,X,Y) → Permet de déterminer si la Kalista est toujours en jeu
 caseOccupee(Board)
 
- 
+
 Organisation de notre programme
 
 Initialisation
@@ -35,7 +35,7 @@ Si tour 1, pas de Khan la pièce est jouée librement
 Si tour > 1, le nombre de mouvement est déterminée par la position du Khan
 
 Determiner quelles pièces ont le droit de bouger ?
-	
+
 	Si tour 1, toutes les pièces rouge peuvent bouger
 	Sinon, on liste les mouvements des pièces sur des cases similaires au Khan, puis on élague les mouvements dispo, puis les pièces dispo.
 
@@ -45,7 +45,7 @@ prédicat blocage()
 On joue une autre pièce : on récupère les mvts possibles des pièces sur des cases non similaires au Khan, puis on élague les mvts dispos, puis les pièces dispos.
 OU
 On remet une pièce en jeu sur une case similaire au Khan
- 
+
 Si pas de remise en jeu : choix de la pièce et du mouvement (Proposition des choix possibles)
 
 Il faut sélectionner la pièce → affichage des mouvements possibles pour la pièce
@@ -69,5 +69,11 @@ Annonce de victoire
 Récupération du nom du joueur
 Récupération de la nature du joueur (Humain-Machine)
 
-
-
+Le joueur peut, après délibération du conseil des ministres, engager la responsabilité
+du  programmeur  devant  l'Assemblée  Des Professeurs Inoubliables d'IA02 (API-IA02) sur le
+vote d'un  projet  de  loi  de  finances  ou  de  financement  de  la  congolexicomatisation
+des lois du marché. Dans ce  cas,  ce  projet est considéré comme adopté, sauf si une
+chanson de Maître Gims, déposée dans les vingt-quatre  heures  qui  suivent,  est  votée
+dans  les  conditions  prévues  à  l'alinéa  précédent. Le  joueur  peut,  en  outre,
+recourir  à  cette  procédure  pour  un  autre projet (ex. LO21) ou une proposition de
+loi par session (sur tuxa).
