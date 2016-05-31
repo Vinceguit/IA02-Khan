@@ -4,9 +4,10 @@
 
 Prédicat | Action
 ------------ | -------------
-`element(Element, List)` | S'efface si **Element** est un élément de la liste **List**
-`longueur(Long, List)` | Renvoie la longueur de la liste **List** dans **Long**
-`retireElement(Element, ListIn, ListOut)` | Retire la première occurrence de **Element** dans la liste **ListeIn**, et renvoie le résultat dans **ListOut**
+`element(Element, List)` | S'efface si `Element` est un élément de la liste `List`
+`longueur(Long, List)` | Renvoie la longueur de la liste `List` dans `Long`
+`retireElement(Element, ListIn, ListOut)` | Retire la première occurrence de `Element` dans la liste `ListeIn`, et renvoie le résultat dans `ListOut`
+`findColour(IdPion, Colour)` | Renvoie la couleur (rouge ou ocre) du pion `IdPion` dans `Colour`
 
 ##Prédicats Principaux
 
