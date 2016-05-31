@@ -1,4 +1,24 @@
 # Khan
+
+##Prédicats
+
+###library.pl
+
+Prédicat | Action
+------------ | -------------
+`element(Element, List)` | S'efface si `Element` est un élément de la liste `List`
+`longueur(Long, List)` | Renvoie la longueur de la liste `List` dans `Long`
+`retireElement(Element, ListIn, ListOut)` | Retire la première occurrence de `Element` dans la liste `ListeIn`, et renvoie le résultat dans `ListOut`
+`findColour(IdPion, Colour)` | Renvoie la couleur (rouge ou ocre) du pion `IdPion` dans `Colour`
+`remplacer(InBoard, Lin, Col, IdPion, IdCase, OutBoard)`| Place le pion `IdPion` à la ligne `Lin` et à la colonne `Col` du plateau `InBoard`, et renvoie l'indice de la case correspondante `IdCase`, ainsi que le plateau édité `OutBoard`
+
+##Prédicats Principaux
+
+```prolog
+	initBoard(Board)
+```
+
+##Présentation
 Création d'un jeu de Khan avec Intelligence Artificiellle dans le cadre de l'UV IA02 de la formation Informatique à l'Université de Technologie de Compiègne.
 PROJET IA02 – Jeu de KHAN
 Liste de nos prédicats
