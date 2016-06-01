@@ -5,9 +5,10 @@
 play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
         initPlayers,
         initBoard(Board),
-        main(Board),
-        winner(WColour, WType),
-        print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
+        asserta(plateau(Board)).
+        %main(Board),
+        %winner(WColour, WType),
+        %print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
 
 /*L'appel d'initBoard effectue les actions suivantes :
 
@@ -21,14 +22,17 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 /*Import de la bibliothèque d'affichage du plateau*/
 :- include('./display').
 
+/*Import du parseur de coordonnées*/
+:- include('./coord_parser').
+
 /*Import de la bibliothèque d'initialisation du plateau*/
 :- include('./init/init').
 
 /*Import de la bibliothèque d'exécution des tours*/
-:- include('./turn/turn').
+%:- include('./turn/turn').
 
 /*Import de la bibliothèque d'affichage des mouvements possibles*/
-:- include('moves/moves').
+%:- include('moves/moves').
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
 %:- include('moves/bestmove').

@@ -31,8 +31,8 @@ initPion(TypePion, Lin, Col) :- element(TypePion, [o1, o2, o3, o4, o5]),
                                 print('Sbire ocre'), nl,
                                 lirePosInitiale(Lin, Col), !.
 /*Lecture ligne et colonne*/
-lirePosInitiale(Lin, Col) :-  print('Ligne ?'), nl, read(Lin), nl,
-                              print('Colonne ?'), nl, read(Col), nl.
+lirePosInitiale(Lin, Col) :-  print('Position (Ex. :''A1'') ? '), nl, read(Pos), nl,
+                              coord(Pos, Col, Lin).
 
 /****testPion****/
 /*Vérification de la valeur saisie*/

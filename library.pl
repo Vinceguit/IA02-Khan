@@ -38,8 +38,10 @@ findColour(IdPion, ocre) :- element(IdPion, [ko, o1, o2, o3, o4, o5]), !.
 /*Placement effectif d'un pion en remplaçant la valeur dans le tableau initial*/
 /*Prototype : remplacer(InBoard, Lin, Col, IdPion, IdCase, OutBoard), avec IdCase et OutBoard en sortie*/
 /*On trouve la ligne*/
-remplacer([T|Q], 1, Col, IdPion, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, IdPion, IdCase, Ligne).
-remplacer([T|Q], Lin, Col, IdPion, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, IdPion, IdCase, Res), !.
+remplacer([T|Q], 1, Col, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
+remplacer([T|Q], Lin, Col, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, IdCase, Res), !.
+remplacer(L, _, _, _, L).
 /*On trouve la colonne*/
-remplacerDansLigne([(IdCase, _)|Q], 1, IdPion, IdCase, [(IdCase, IdPion)|Q]).
-remplacerDansLigne([T|Q], Col, IdPion, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
+remplacerDansLigne([(IdCase, b)|Q], 1, X, IdCase, [(IdCase, X)|Q]).
+remplacerDansLigne([T|Q], Col, X, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
+remplacerDansLigne(L, _, _, _, L).
