@@ -2,7 +2,7 @@
 
 Ce projet est un jeu de Khan disposant d'une IA permettant des parties humain-humain, humain-machine et machine-machine; il s'inscrit dans le cadre de l'UV IA02 de l'Université de Technologie de Compiègne.
 
-##Règles du jeu (A reformuler : copy-paste du sujet)
+##Règles du jeu
 
 ###Description
 * Un tapis de jeu comporte 6 X 6 cases : 12 cases simples, 12 doubles, 12 triples.
@@ -27,8 +27,8 @@ Le Khan a pour rôle d'influencer le déplacement des pièces adverses. Il in
 
 ###Faut-il toujours obéir au Khan ?
 Il y a deux exceptions logiques :
-1. Quand aucune de vos pièces (Sbires et Kalista) n’est sur le type de case demandé
-2. Quand certaines de vos pièces qui sont sur le type de case demandé ne peuvent se déplacer de façon règlementaire, le passage étant bouché par d’autres pièces.
+* Quand aucune de vos pièces (Sbires et Kalista) n’est sur le type de case demandé
+* Quand certaines de vos pièces qui sont sur le type de case demandé ne peuvent se déplacer de façon règlementaire, le passage étant bouché par d’autres pièces.
 
 Dans ces cas-là, vous pouvez :
 * Soit bouger une autre pièce (le mouvement sera
@@ -80,28 +80,28 @@ où `IdPion` est l'identifiant unique du pion, `Col` et `Lin` sa position sur le
 
 ####Placement des pions pour une machine
 
-##Déroulement du jeu
-Création d'un jeu de Khan avec Intelligence Artificiellle dans le cadre de l'UV IA02 de la formation Informatique à l'Université de Technologie de Compiègne.
-PROJET IA02 – Jeu de KHAN
-Liste de nos prédicats
+###Dossier moves
+####Liste des mouvements possibles
+```prolog
+	possibleMoves(Board, Player, PossibleMoveList)
+```
 
-possibleMoves (Board, Player, PossibleMoveList)
-initBoard(Board)
-generateMove(Board, Player, Move)
-tourActif(Joueur)
-position(X,Y,in/out, nmoves)
-nbMoves(n) → Pourra être placé dans une fonction récursive pour décompter le nombre de mouvements restants, le dernier tour devra pouvoir autoriser de manger une pièce
-eatPower(Board, Player, PossibleMoveList) → Booléen, permet de modifier la liste des actions possibles lors de la dernière action
-kalistaVivante(Player,X,Y) → Permet de déterminer si la Kalista est toujours en jeu
-caseOccupee(Board)
+####Détermination du meilleur mouvement possible
+```prolog
+	generateMove(Board, Player, Move)
+```
+
+##Déroulement du jeu
 
 Le lancement du jeu s'effectue à l'aide du prédicat `play`.
 
+###Initialisation
 
+###Boucle principale
 
-Organisation de notre programme
+###Fin de jeu
 
-Initialisation
+Dès que l'une des deux Kalistas est prise, on sort de la boucle principale et on renvoie le joueur qui a pris la Kalista dans un prédicat `winner(Colour, TypePlayer)`, où `Colour` est le joueur (rouge/ocre) et `TypePlayer` son type (humain ou machine). On récupère alors le gagnant dans le prédicat `play` pour l'afficher, puis l'exécution se termine.
 
 Choix : Humain-Humain pour l'instant
 Placement des cases
@@ -148,7 +148,3 @@ Il ne sera pas nécéssaire de scanner toutes les pièces hors du jeu mais seule
 Si la pièce est prise, on peut passer à l’annonce de victoire
 
 Placement du Khan sur la pièce jouée (si pas de victoire et pas de blocage de mvt par le Khan à l’étape 3)
-
-Annonce de victoire
-Récupération du nom du joueur
-Récupération de la nature du joueur (Humain-Machine)
