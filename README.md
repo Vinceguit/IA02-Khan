@@ -27,10 +27,8 @@ Le Khan a pour rôle d'influencer le déplacement des pièces adverses. Il in
 
 ###Faut-il toujours obéir au Khan ?
 Il y a deux exceptions logiques :
-1. Quand aucune de vos pièces (Sbires et Kalista)
-n’est sur le type de case demandé
-2. Quand certaines de vos pièces qui sont sur le
-type de case demandé ne peuvent se déplacer de façon règlementaire, le passage étant bouché par d’autres pièces.
+1. Quand aucune de vos pièces (Sbires et Kalista) n’est sur le type de case demandé
+2. Quand certaines de vos pièces qui sont sur le type de case demandé ne peuvent se déplacer de façon règlementaire, le passage étant bouché par d’autres pièces.
 
 Dans ces cas-là, vous pouvez :
 * Soit bouger une autre pièce (le mouvement sera
