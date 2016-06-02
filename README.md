@@ -4,28 +4,28 @@ Ce projet est un jeu de Khan disposant d'une IA permettant des parties humain-hu
 
 ##Règles du jeu
 
-###Description
+>###Description
 >* Un tapis de jeu comporte 6 X 6 cases : 12 cases simples, 12 doubles, 12 triples.
 * Une Kalista (reine) et cinq Sbires (serviteurs) rouges.
 * Une Kalista et cinq Sbires ocres.
 * Un accessoire muni d'un pédoncule, le KHAN.
 
-###But du jeu
+>###But du jeu
 >La partie est gagnée partie quand une pièce (Kalista ou Sbire) élimine la Kalista adverse, en la rejoignant sur sa case.
 
-###Protocole de départ
+>###Protocole de départ
 >* Le joueur « Rouge » oriente le tapis en choisissant un bord parmi les 4 « bords » possibles. Ensuite il installe ses 6 pièces sur 6 des 12 cases prises au sein de ses deux premières rangées.
 * Le joueur « Ocre » installe à son tour ses 6 pièces sur 6 cases prises au sein de ses deux premières rangées.
 
-###Marches des pièces (Kalistas ou sbires)
+>###Marches des pièces (Kalistas ou sbires)
 >* Chacun, et en premier « Rouge », déplace à tour de rôle une pièce, de 3 cases si la case de départ est triple, de 2 cases si elle est double, d’une seule case si elle est simple. Il est possible d’aller en avant, en arrière latéralement, mais pas en diagonale. On peut tourner à tout moment, à condition que ce soit à angle droit.
 * Il est interdit de passer dessus une case occupée, et il est interdit, lors d’un même coup, de passer deux fois par la même case.
 * En revanche, on peut finir son coup sur une case tenue par une pièce adverse et donc prendre sa place. (Rappel : prendre la Kalista adverse met fin à la partie).
 
-###A quoi sert le Khan ?
+>###A quoi sert le Khan ?
 >Le Khan a pour rôle d'influencer le déplacement des pièces adverses. Il intervient dès que « Rouge » a joué son premier coup, en « coiffant » la pièce qui vient de bouger. « Ocre » doit alors jouer une pièce (Sbire ou Kalista) occupant le même type de cases (soit simple, soit double, soit triple) que la pièce rouge porteuse du Khan. Dès qu'il a joué, il récupère à son tour le Khan pour en coiffer la pièce qu'il vient de bouger, et conditionne ainsi le prochain coup de « Rouge ». Chaque pièce venant de bouger devient donc porteuse du Khan. On procède ainsi de suite jusqu'à la fin de la partie.
 
-###Faut-il toujours obéir au Khan ?
+>###Faut-il toujours obéir au Khan ?
 >Il y a deux exceptions logiques :
 * Quand aucune de vos pièces (Sbires et Kalista) n’est sur le type de case demandé
 * Quand certaines de vos pièces qui sont sur le type de case demandé ne peuvent se déplacer de façon règlementaire, le passage étant bouché par d’autres pièces.
