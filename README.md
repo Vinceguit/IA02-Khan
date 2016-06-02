@@ -4,6 +4,8 @@ Ce projet est un jeu de Khan disposant d'une IA permettant des parties humain-hu
 
 ##Règles du jeu
 
+Les règles suivantes sont issues de l'énoncé du projet :
+
 >###Description
 >* Un tapis de jeu comporte 6 X 6 cases : 12 cases simples, 12 doubles, 12 triples.
 * Une Kalista (reine) et cinq Sbires (serviteurs) rouges.
@@ -66,6 +68,7 @@ où `IdPion` est l'identifiant unique du pion, `Col` et `Lin` sa position sur le
 ```prolog
 	initPlayers.
 ```
+Ce prédicat retire tous les prédicats `player(Colour, TypePlayer)` éventuellement définis lors d'une précédente exécution. Il demande ensuite à l'utilisateur d'entrer le type de chaque joueur `TypePlayer` (`humain` ou `machine`), pour ensuite déclarer le prédicat `player(Colour, TypePlayer)` pour chaque joueur.
 
 ####Initialisation des côtés
 ```prolog
@@ -93,25 +96,23 @@ où `IdPion` est l'identifiant unique du pion, `Col` et `Lin` sa position sur le
 
 ##Déroulement du jeu
 
-Le lancement du jeu s'effectue à l'aide du prédicat `play`.
+Le lancement du jeu s'effectue à l'aide de la commande `play.`.
 
 ###Initialisation
 
-###Boucle principale
+Tout d'abord, on demande à l'utilisateur quel type il souhaite affecter à chaque joueur (`humain.` ou `machine.`).
 
-###Fin de jeu
+On affiche ensuite le plateau vide, afin de permettre à l'utilisateur de visualiser ce dernier.
 
-Dès que l'une des deux Kalistas est prise, on sort de la boucle principale et on renvoie le joueur qui a pris la Kalista dans un prédicat `winner(Colour, TypePlayer)`, où `Colour` est le joueur (rouge/ocre) et `TypePlayer` son type (humain ou machine). On récupère alors le gagnant dans le prédicat `play` pour l'afficher, puis l'exécution se termine.
+Le joueur rouge choisit le côté du plateau sur lequel il souhaite commencer; si c'est une machine, on choisit le côté aléatoirement. Si c'est un humain, on lui demande de saisir le côté qu'il souhaite (`gauche.`, `droite.`, `haut.`, `bas.`).
 
-Choix : Humain-Humain pour l'instant
-Placement des cases
-Choix du côté par Rouge, des rotations de matrices peuvent du coup être nécéssaires
-Initialisation des positions des pièces (je te propose de représenter la position des pièces par un tableau contenant des éléments de la forme ([X,Y,in/off, nbMoves]), sachant que le premier élément du tableau serait d'office la Kalista. En fin de tour, on checkera la victoire en regardant ce premier élément. La Kalista est jouée comme les autres pions.
-Mise en surbrillance de la zone ou Rouge peut mettre ses pièces
-Placement des pièces de Rouge, deux pièces ne peuvent pas être placées au même endroit, la Kalista doit être placée en première
-Mise en surbrillance de la zone ou Ocre peut mettre ses pièces
-Placement des pièces d’Ocre
-Tour de jeu
+Ensuite, chaque joueur doit placer ses pièces sur le plateau; si c'est une machine, on place les pièces automatiquement de manière aléatoire.
+
+Si le joueur est un humain, on demande à l'utilisateur la coordonnée sur laquelle il souhaite placer un pion pour la kalista et les 5 sbires. Les coordonnées vont de `'A1'.` à `'F6.'`. Si la case saisie est déjà occupée par un autre pion ou si elle ne se situe pas du bon côté, un message d'erreur s'affiche et l'utilisateur doit rentrer à nouveau la coordonnée de cette pièce.
+
+A chaque placement de pion pour le joueur, et à la fin de l'initialisation pour la machine, on affiche l'état du plateau.
+
+###Boucle principale (A reformuler)
 
 Savoir où est le Khan
 
@@ -148,3 +149,7 @@ Il ne sera pas nécéssaire de scanner toutes les pièces hors du jeu mais seule
 Si la pièce est prise, on peut passer à l’annonce de victoire
 
 Placement du Khan sur la pièce jouée (si pas de victoire et pas de blocage de mvt par le Khan à l’étape 3)
+
+###Fin de jeu
+
+Dès que l'une des deux Kalistas est prise, on sort de la boucle principale et on renvoie le joueur qui a pris la Kalista dans un prédicat `winner(Colour, TypePlayer)`, où `Colour` est le joueur (rouge/ocre) et `TypePlayer` son type (humain ou machine). On récupère alors le gagnant dans le prédicat `play` pour l'afficher, puis l'exécution se termine.
