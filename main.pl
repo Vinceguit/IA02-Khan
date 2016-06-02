@@ -6,9 +6,9 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
         initPlayers,
         initBoard(Board),
         asserta(plateau(Board)).
-        %main(Board),
-        %winner(WColour, WType),
-        %print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
+        main(Board),
+        winner(WColour, WType),
+        print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
 
 /*L'appel d'initBoard effectue les actions suivantes :
 
@@ -29,7 +29,7 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 :- include('./init/init').
 
 /*Import de la bibliothèque d'exécution des tours*/
-%:- include('./turn/turn').
+:- include('./turn/turn').
 
 /*Import de la bibliothèque d'affichage des mouvements possibles*/
 %:- include('moves/moves').

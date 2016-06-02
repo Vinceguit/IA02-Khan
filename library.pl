@@ -13,7 +13,7 @@ longueur(Long, [_|Q]) :-longueur(L,Q), Long is L+1.
 /*Retirer l'élément X d'une liste*/
 retireElement(_, [], []).
 retireElement(X, [X|Q], Q) :- !.
-retireElement(X, [T|Q], [T|R]) :- X \= T, retireElement(X, Q, R).
+retireElement(X, [T|Q], [T|R]) :- retireElement(X, Q, R).
 
 /*Suppression des pions de la dernière exécution; reset des listes de positions*/
 /*listePos : Position en (Col, Lin) ou (X,Y)*/
@@ -42,6 +42,6 @@ remplacer([T|Q], 1, Col, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, 
 remplacer([T|Q], Lin, Col, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, IdCase, Res), !.
 remplacer(L, _, _, _, L).
 /*On trouve la colonne*/
-remplacerDansLigne([(IdCase, b)|Q], 1, X, IdCase, [(IdCase, X)|Q]).
+remplacerDansLigne([(IdCase, _)|Q], 1, X, IdCase, [(IdCase, X)|Q]).
 remplacerDansLigne([T|Q], Col, X, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
 remplacerDansLigne(L, _, _, _, L).
