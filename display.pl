@@ -3,12 +3,16 @@
 /*******************************/
 
 /*Affichage du plateau : afficherPlateau(Board)*/
-afficherPlateau([]) :- print('_____________________________________\n').
-afficherPlateau([T|Q]) :- print('_____________________________________\n'),
-                         print('|'), afficherLigne(T), print('\n'),
+
+afficherPlateau(Board) :- affichagePlateau(Board, 1).
+affichagePlateau([], _) :- print('_____________________________________\n'),
+                             print('   A     B     C     D     E     F   \n').
+affichagePlateau([T|Q], Lin) :- print('_____________________________________\n'),
+                         print('|'), afficherLigne(T), print(Lin), nl,
                          print('|     |     |     |     |     |     |\n'),
-                         afficherPlateau(Q).
-afficherLigne([]).
+                         NLin is Lin + 1,
+                         affichagePlateau(Q, NLin).
+afficherLigne([]):- print(' ').
 afficherLigne([(T1, X)|Q]) :- print(' '), print(T1), afficher(X), afficherLigne(Q).
 
 /*On traite les différents cas d'affichage; à revoir différement une fois les pions définis*/

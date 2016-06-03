@@ -2,6 +2,8 @@
 /*Bibliothèque de prédicats utiles dans différents fichiers*/
 /***********************************************************/
 
+:-dynamic(pion/5).
+
 /*element(X, L) s'efface si X est élément de la liste L*/
 element(X, [X|_]).
 element(X, [_|Q]) :- element(X, Q).
@@ -13,7 +15,7 @@ longueur(Long, [_|Q]) :-longueur(L,Q), Long is L+1.
 /*Retirer l'élément X d'une liste*/
 retireElement(_, [], []).
 retireElement(X, [X|Q], Q) :- !.
-retireElement(X, [T|Q], [T|R]) :- X \= T, retireElement(X, Q, R).
+retireElement(X, [T|Q], [T|R]) :- retireElement(X, Q, R).
 
 /*Suppression des pions de la dernière exécution; reset des listes de positions*/
 /*listePos : Position en (Col, Lin) ou (X,Y)*/
@@ -38,8 +40,10 @@ findColour(IdPion, ocre) :- element(IdPion, [ko, o1, o2, o3, o4, o5]), !.
 /*Placement effectif d'un pion en remplaçant la valeur dans le tableau initial*/
 /*Prototype : remplacer(InBoard, Lin, Col, IdPion, IdCase, OutBoard), avec IdCase et OutBoard en sortie*/
 /*On trouve la ligne*/
-remplacer([T|Q], 1, Col, IdPion, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, IdPion, IdCase, Ligne).
-remplacer([T|Q], Lin, Col, IdPion, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, IdPion, IdCase, Res), !.
+remplacer([T|Q], 1, Col, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
+remplacer([T|Q], Lin, Col, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, IdCase, Res), !.
+remplacer(L, _, _, _, L).
 /*On trouve la colonne*/
-remplacerDansLigne([(IdCase, _)|Q], 1, IdPion, IdCase, [(IdCase, IdPion)|Q]).
-remplacerDansLigne([T|Q], Col, IdPion, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
+remplacerDansLigne([(IdCase, _)|Q], 1, X, IdCase, [(IdCase, X)|Q]).
+remplacerDansLigne([T|Q], Col, X, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
+remplacerDansLigne(L, _, _, _, L).
