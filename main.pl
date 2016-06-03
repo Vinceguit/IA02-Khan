@@ -5,7 +5,7 @@
 play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
         initPlayers,
         initBoard(Board),
-        asserta(plateau(Board)).
+        asserta(plateau(Board)),
         main(Board),
         winner(WColour, WType),
         print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
@@ -32,7 +32,7 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 :- include('./turn/turn').
 
 /*Import de la bibliothèque d'affichage des mouvements possibles*/
-%:- include('moves/moves').
+:- include('moves/moves').
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
 %:- include('moves/bestmove').

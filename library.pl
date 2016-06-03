@@ -2,6 +2,8 @@
 /*Bibliothèque de prédicats utiles dans différents fichiers*/
 /***********************************************************/
 
+:-dynamic(pion/5).
+
 /*element(X, L) s'efface si X est élément de la liste L*/
 element(X, [X|_]).
 element(X, [_|Q]) :- element(X, Q).

@@ -1,2 +1,2 @@
 /****TOUR MACHINE****/
-playTurnAI(Colour, InBoard, OutBoard).
+playTurnAI(Colour, InBoard, OutBoard) :- playTurn(Colour, InBoard, OutBoard).
