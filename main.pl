@@ -35,4 +35,4 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 :- include('moves/moves').
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
-%:- include('moves/bestmove').
+:- include('moves/bestmove').
