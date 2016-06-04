@@ -1,8 +1,8 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
                                        initMove(Colour, Move),
-                                       %possibleMoves(InBoard, Colour, MoveList),
-                                       checkMove(InBoard, Colour, Move, MoveList, OutBoard).
+                                       possibleMoves(InBoard, Colour, MoveList),
+                                       execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
 
 /**SAISIE DU MOUVEMENT**/
@@ -36,10 +36,10 @@ testPos(Pos, Col, Lin) :- parse(Pos, Col, Lin), Col \= 0, Lin \= 0, !.
 testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la position d''arrivée.'), nl, getNewPos(Col, Lin).
 
 
-/**VERIFICATION DU MOUVEMENT**/
-checkMove(InBoard, _, Move, MoveList, OutBoard) :- %element(Move, MoveList), !,
-                                                   transfert(InBoard, Move, OutBoard).
+/**VERIFICATION ET EXECUTION DU MOUVEMENT**/
+execMove(InBoard, _, Move, MoveList, OutBoard) :- element(Move, MoveList), !,
+                                                  transfert(InBoard, Move, OutBoard).
 
-checkMove(InBoard, Colour, Move, MoveList, OutBoard) :- \+element(Move, MoveList),
+execMove(InBoard, Colour, Move, MoveList, OutBoard) :- \+element(Move, MoveList),
                                                         print('Erreur : mouvement invalide.'), nl,
                                                         playTurn(InBoard, Colour, OutBoard).

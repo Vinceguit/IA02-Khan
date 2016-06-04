@@ -7,7 +7,7 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
         initBoard(Board),
         asserta(plateau(Board)),
         main(Board),
-        winner(WColour, WType),
+        winner(WColour, WType), !,
         print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
 
 /*Import de la bibliothèque principale*/
