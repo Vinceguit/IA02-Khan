@@ -1,5 +1,5 @@
 /****TOUR HUMAIN****/
-playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), (', à votre tour !'), nl,
+playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
                                        initMove(Colour, Move),
                                        %possibleMoves(InBoard, Colour, MoveList),
                                        checkMove(InBoard, Colour, Move, MoveList, OutBoard).
