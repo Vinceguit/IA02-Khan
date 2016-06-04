@@ -11,7 +11,7 @@ possibleMoves(Board, Player, PossibleMoveList) :- element(Player, [rouge, ocre])
 transfert(InBoard,Move,OutBoard) :- presenceProie(Move ,InBoard, NewBoard),
                                     rechercheMarqueur(NewBoard, Move, NewMarqueur),
                                     enregistrementMove(Move, NewMarqueur, NewBoard, OutBoard),
-                                    !.
+                                    afficherPlateau(OutBoard), !.
 
 transfert(InBoard,Move,OutBoard) :- rechercheMarqueur(InBoard, Move, NewMarqueur),
                                     enregistrementMove(Move, NewMarqueur, InBoard, OutBoard), !.

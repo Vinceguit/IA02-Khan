@@ -1,17 +1,16 @@
 /****TOUR HUMAIN****/
-playTurn(InBoard, Colour, OutBoard) :- initMove(Colour, Move),
+playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
+                                       initMove(Colour, Move),
                                        %possibleMoves(InBoard, Colour, MoveList),
                                        checkMove(InBoard, Colour, Move, MoveList, OutBoard).
 
 
 /**SAISIE DU MOUVEMENT**/
-initMove(rouge, (Col1, Lin1, Col2, Lin2)) :- print('Joueur rouge, à votre tour !'), nl,
-                                             print('Pion à déplacer (kr, r1..r5) ? '),
+initMove(rouge, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (kr, r1..r5) ? '),
                                              read(Pion),
                                              testInitMove(rouge, Pion, (Col1, Lin1, Col2, Lin2)).
 
-initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Joueur ocre, à votre tour !'), nl,
-                                            print('Pion à déplacer (ko, o1..o5) ? '),
+initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5) ? '),
                                             read(Pion),
                                             testInitMove(ocre, Pion, (Col1, Lin1, Col2, Lin2)).
 
@@ -29,8 +28,12 @@ testInitMove(Colour, Pion, Move) :- pion(Pion, _, _, out, _),
                                     initMove(Colour, Move).
 
 /*Saisie de la position d'arrivée*/
-getNewPos(Lin, Col) :-  print('Position d''arrivee (Ex. ''A1'') ? '), nl,
-                        read(Pos), parse(Pos, Col, Lin).
+getNewPos(Lin, Col) :-  print('Position d''arrivee (Ex. a1) ? '), nl,
+                        read(Pos), testPos(Pos, Col, Lin).
+
+/*Test de la saisie de la position d'arrivée (On boucle tant qu'on n'a pas une saisie correcte)*/
+testPos(Pos, Col, Lin) :- parse(Pos, Col, Lin), Col \= 0, Lin \= 0, !.
+testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la position d''arrivée.'), nl, getNewPos(Lin, Col).
 
 
 /**VERIFICATION DU MOUVEMENT**/

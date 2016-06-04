@@ -39,17 +39,25 @@ donc fait selon le type de case qu'elle occupe)
 
 ##Prédicats
 
-###library.pl et coord_parser.pl
-
+###library.pl
 Prédicat | Action
 -------- | --------
 `element(Element, List)` | S'efface si `Element` est un élément de la liste `List`
 `longueur(Long, List)` | Renvoie la longueur de la liste `List` dans `Long`
 `retireElement(Element, ListIn, ListOut)` | Retire la première occurrence de `Element` dans la liste `ListeIn`, et renvoie le résultat dans `ListOut`
 `findColour(IdPion, Colour)` | Renvoie la couleur (rouge ou ocre) du pion `IdPion` dans `Colour`
-`setKhan(IdPion)` | Change le statut `Status` de `pion(IdPion, Col, Lin, Status, IdCase)` de `in` à `khan`.
+`setKhan(IdPion)` | Change le statut `Status` de `pion(IdPion, Col, Lin, Status, IdCase)` de `in` à `khan`
 `remplacer(InBoard, Lin, Col, IdPion, IdCase, OutBoard)`| Place le pion `IdPion` à la ligne `Lin` et à la colonne `Col` du plateau `InBoard`, et renvoie l'indice de la case correspondante `IdCase`, ainsi que le plateau édité `OutBoard`
-`parse(Coord, Col, Lin)` | Convertit une coordonnée saisie sous la forme 'LettreChiffre' en position sur le plateau (Col : colonne, Lin : ligne)
+
+###coord_parser.pl
+Prédicat | Action
+-------- | --------
+`parse(Coord,Col,Lin)` | Convertit une coordonnée saisie sous la forme 'LettreChiffre' en position sur le plateau (Col : colonne, Lin : ligne); si mauvaise saisie utilisateur, renvoie la coordonnée (0, 0)
+
+###display.pl
+Prédicat | Action
+-------- | --------
+`afficherPlateau(Board)` | Affiche le plateau Board dans la console
 
 ###main.pl
 ```prolog

@@ -70,9 +70,9 @@ randomCote(Cote) :- random(1, 5, Rand), convertToCote(Rand, Cote),
 /****INITIALISATION DES PIONS****/
 /*Initialisation des pions d'une couleur; c'est lui qu'on appelle dans initBoard*/
 initCouleur(InBoard, Cote, rouge, humain, OutBoard) :- lireCote(Cote),
-                                                       placerPionsIA(InBoard, Cote, rouge, OutBoard), !.
+                                                       placerPions(InBoard, Cote, rouge, OutBoard), !.
 
-initCouleur(InBoard, Cote, ocre, humain, OutBoard) :- placerPionsIA(InBoard, Cote, ocre, OutBoard), !.
+initCouleur(InBoard, Cote, ocre, humain, OutBoard) :- placerPions(InBoard, Cote, ocre, OutBoard), !.
 
 initCouleur(InBoard, Cote, rouge, machine, OutBoard) :- randomCote(Cote),
                                                         placerPionsIA(InBoard, Cote, rouge, OutBoard), !.
