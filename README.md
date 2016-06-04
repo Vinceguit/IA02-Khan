@@ -52,7 +52,7 @@ Prédicat | Action
 ###coord_parser.pl
 Prédicat | Action
 -------- | --------
-`parse(Coord, Col, Lin)` | Convertit une coordonnée saisie sous la forme 'LettreChiffre' en position sur le plateau (Col : colonne, Lin : ligne); si mauvaise saisie utilisateur, renvoie la coordonnée (0, 0)
+`parse(Coord,Col,Lin)` | Convertit une coordonnée saisie sous la forme 'LettreChiffre' en position sur le plateau (Col : colonne, Lin : ligne); si mauvaise saisie utilisateur, renvoie la coordonnée (0, 0)
 
 ###display.pl
 Prédicat | Action
