@@ -29,14 +29,18 @@ testInitMove(Colour, Pion, Move) :- pion(Pion, _, _, out, _),
                                     initMove(Colour, Move).
 
 /*Saisie de la position d'arrivée*/
-getNewPos(Lin, Col) :-  print('Position d''arrivee (Ex. ''A1'') ? '), nl,
-                        read(Pos), parse(Pos, Col, Lin).
+getNewPos(Lin, Col) :-  print('Position d''arrivee (Ex. a1) ? '), nl,
+                        read(Pos), testPos(Pos, Col, Lin).
+
+testPos(Pos, Col, Lin) :- parse(Pos, Col, Lin), Col \= 0, Lin \= 0, !.
+testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la position d''arrivée.'), nl, getNewPos(Lin, Col).
+
 
 
 /**VERIFICATION DU MOUVEMENT**/
 checkMove(InBoard, _, Move, MoveList, OutBoard) :- %element(Move, MoveList), !,
                                                    transfert(InBoard, Move, OutBoard).
 
-checkMove(InBoard, Colour, Move, MoveList, OutBoard) :- \+element(Move, MoveList),
-                                                        print('Erreur : mouvement invalide.'), nl,
-                                                        playTurn(InBoard, Colour, OutBoard).
+%checkMove(InBoard, Colour, Move, MoveList, OutBoard) :- \+element(Move, MoveList),
+%                                                        print('Erreur : mouvement invalide.'), nl,
+%                                                        playTurn(InBoard, Colour, OutBoard).
