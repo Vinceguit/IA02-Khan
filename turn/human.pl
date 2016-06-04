@@ -17,7 +17,7 @@ initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5
 /*Vérification de la saisie du pion et saisie de la position d'arrivée*/
 testInitMove(Colour, Pion, (Col1, Lin1, Col2, Lin2)) :- findColour(Pion, Colour),
                                                         pion(Pion, Col1, Lin1, 'in', _), !,
-                                                        getNewPos(Lin2, Col2).
+                                                        getNewPos(Col2, Lin2).
 /*Cas d'erreur 1 : L'utilisateur a effectué une mauvaise saisie*/
 testInitMove(Colour, Pion, Move) :- \+findColour(Pion, Colour),
                                     print('Erreur de saisie du pion.'), nl,
@@ -28,12 +28,12 @@ testInitMove(Colour, Pion, Move) :- pion(Pion, _, _, 'out', _),
                                     initMove(Colour, Move).
 
 /*Saisie de la position d'arrivée*/
-getNewPos(Lin, Col) :-  print('Position d''arrivee (Ex. a1) ? '), nl,
+getNewPos(Col, Lin) :-  print('Position d''arrivee (Ex. a1) ? '), nl,
                         read(Pos), testPos(Pos, Col, Lin).
 
 /*Test de la saisie de la position d'arrivée (On boucle tant qu'on n'a pas une saisie correcte)*/
 testPos(Pos, Col, Lin) :- parse(Pos, Col, Lin), Col \= 0, Lin \= 0, !.
-testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la position d''arrivée.'), nl, getNewPos(Lin, Col).
+testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la position d''arrivée.'), nl, getNewPos(Col, Lin).
 
 
 /**VERIFICATION DU MOUVEMENT**/

@@ -27,7 +27,7 @@ resetPions :- retractall(pion(_, _, _, _, _)),
               asserta(listePos(droite, [(5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6)])).
 
 /*Déclaration d'un pion*/
-addPion(IdPion, Lin, Col, IdCase) :- asserta(pion(IdPion, Col, Lin, in, IdCase)).
+addPion(IdPion, Col, Lin, IdCase) :- asserta(pion(IdPion, Col, Lin, in, IdCase)).
 
 /*Affectation du Khan à un pion*/
 setKhan(IdPion) :- retract(pion(IdPion, Col, Lin, _, IdCase)),
@@ -40,8 +40,8 @@ findColour(IdPion, ocre) :- element(IdPion, [ko, o1, o2, o3, o4, o5]), !.
 /*Placement effectif d'un pion en remplaçant la valeur dans le tableau initial*/
 /*Prototype : remplacer(InBoard, Lin, Col, IdPion, IdCase, OutBoard), avec IdCase et OutBoard en sortie*/
 /*On trouve la ligne*/
-remplacer([T|Q], Col,1, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
-remplacer([T|Q], Col, Lin, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, Col,NLin, X, IdCase, Res), !.
+remplacer([T|Q], Col, 1, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
+remplacer([T|Q], Col, Lin, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, Col, NLin, X, IdCase, Res), !.
 remplacer(L, _, _, _, L).
 /*On trouve la colonne*/
 remplacerDansLigne([(IdCase, _)|Q], 1, X, IdCase, [(IdCase, X)|Q]).

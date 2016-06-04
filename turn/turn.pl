@@ -19,10 +19,10 @@ mainLoop(_, _, _, _) :- pion(kr, _, _, out, _), setWinner(ocre), !.
 
 /*Sinon, exécution du tour, puis appel du suivant*/
 mainLoop(InBoard, rouge, humain, J2) :- playTurn(InBoard, rouge, OutBoard),
-                                        mainLoop(OutBoard, ocre, machine, J2), !.
+                                        mainLoop(OutBoard, ocre, humain, J2), !.
 
 mainLoop(InBoard, rouge, machine, J2) :- playTurnAI(InBoard, rouge, OutBoard),
-                                         mainLoop(OutBoard, ocre, humain, J2), !.
+                                         mainLoop(OutBoard, ocre, machine, J2), !.
 
 mainLoop(InBoard, ocre, J1, humain) :- playTurn(InBoard, ocre, OutBoard),
                                        mainLoop(OutBoard, rouge, J1, humain), !.
