@@ -15,52 +15,52 @@ placerPions(InBoard, Cote, ocre, OutBoard) :- placerPion(InBoard, Cote, ko, Boar
 
 /*Placement d'un pion : On initialise la valeur (saisie utilisateur), puis on vérifie si c'est correct*/
 placerPion(InBoard, Cote, TypePion, OutBoard) :-
-  initPion(TypePion, Lin, Col),
-  testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col).
+  initPion(TypePion, Col, Lin),
+  testPion(InBoard, Cote, TypePion, OutBoard, Col, Lin).
 
 /****initPion****/
 /*On récupère les positions des pions entrées par l'utilisateur*/
-initPion(kr, Lin, Col) :- print('Kalista rouge'), nl,
-                          readInitPos(Lin, Col), !.
-initPion(ko, Lin, Col) :- print('Kalista ocre'), nl,
-                          readInitPos(Lin, Col), !.
-initPion(TypePion, Lin, Col) :- element(TypePion, [r1, r2, r3, r4, r5]),
+initPion(kr, Col, Lin) :- print('Kalista rouge'), nl,
+                          readInitPos(Col, Lin), !.
+initPion(ko, Col, Lin) :- print('Kalista ocre'), nl,
+                          readInitPos(Col, Lin), !.
+initPion(TypePion, Col, Lin) :- element(TypePion, [r1, r2, r3, r4, r5]),
                                 print('Sbire rouge'), nl,
-                                readInitPos(Lin, Col), !.
-initPion(TypePion, Lin, Col) :- element(TypePion, [o1, o2, o3, o4, o5]),
+                                readInitPos(Col, Lin), !.
+initPion(TypePion, Col, Lin) :- element(TypePion, [o1, o2, o3, o4, o5]),
                                 print('Sbire ocre'), nl,
-                                readInitPos(Lin, Col), !.
+                                readInitPos(Col, Lin).
 /*Lecture ligne et colonne*/
-readInitPos(Lin, Col) :-  print('Position (Ex. a1) ? '), read(Pos), nl,
+readInitPos(Col, Lin) :-  print('Position (Ex. a1) ? '), read(Pos), nl,
                               testInitPos(Pos, Col, Lin).
 
 testInitPos(Pos, Col, Lin) :- parse(Pos, Col, Lin), Col \= 0, Lin \= 0, !.
 testInitPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la position.'), nl,
-                              readInitPos(Lin, Col).
+                              readInitPos(Col, Lin).
 
 /****testPion****/
 /*Vérification de la valeur saisie*/
-testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
-  checkCote(Cote, Lin, Col),
+testPion(InBoard, Cote, TypePion, OutBoard, Col, Lin) :-
+  checkCote(Cote, Col, Lin),
   \+pion(_, Col, Lin, _, _), !,
-  remplacer(InBoard, Lin, Col, TypePion, IdCase, OutBoard),
-  addPion(TypePion, Lin, Col, IdCase),
+  remplacer(InBoard, Col, Lin, TypePion, IdCase, OutBoard),
+  addPion(TypePion, Col, Lin, IdCase),
   afficherPlateau(OutBoard).
 
 /*Cas d'erreur 1 : La saisie ne correspond pas au côté du joueur ; on replace alors le pion*/
-testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
-  \+checkCote(Cote, Lin, Col),
+testPion(InBoard, Cote, TypePion, OutBoard, Col, Lin) :-
+  \+checkCote(Cote, Col, Lin),
   print('Erreur : vous devez placer votre pion du cote '), print(Cote), nl,
   placerPion(InBoard, Cote, TypePion, OutBoard).
 
 /*Cas d'erreur 2 : La saisie correspond à une case déjà occupée ; on replace alors le pion*/
-testPion(InBoard, Cote, TypePion, OutBoard, Lin, Col) :-
+testPion(InBoard, Cote, TypePion, OutBoard, Col, Lin) :-
   pion(_, Col, Lin, _, _),
   print('Erreur : un pion est deja present ici'), nl,
   placerPion(InBoard, Cote, TypePion, OutBoard).
 
 /*On vérifie si les pions sont placés du bon côté */
-checkCote(gauche, Lin, Col) :- Lin > 0, Lin < 7, Col > 0, Col < 3 .
-checkCote(droite, Lin, Col) :- Lin > 0, Lin < 7, Col > 4, Col < 7 .
-checkCote(haut, Lin, Col) :- Lin > 0, Lin < 3, Col > 0, Col < 7 .
-checkCote(bas, Lin, Col) :- Lin > 4, Lin < 7, Col > 0, Col < 7 .
+checkCote(gauche, Col, Lin) :- Col > 0, Col < 3, Lin > 0, Lin < 7.
+checkCote(droite, Col, Lin) :- Col > 4, Col < 7, Lin > 0, Lin < 7.
+checkCote(haut, Col, Lin) :- Col > 0, Col < 7, Lin > 0, Lin < 3.
+checkCote(bas, Col, Lin) :- Col > 0, Col < 7, Lin > 4, Lin < 7.

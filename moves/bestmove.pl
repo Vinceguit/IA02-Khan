@@ -1,4 +1,4 @@
-/**********************************************/
+ /**********************************************/
 /*Détermination du meilleur mouvement possible*/
 /**********************************************/
 
@@ -17,5 +17,5 @@ generateMove(Board, Player, Move) :- possibleMoves(Board, Player, MoveList),
   a. Si un seul mouvement possible, meilleur mouvement.
   b. Si un mouvement entraîne la perte de la kalista au tour suivant, on l'élimine.
   c. Si un mouvement permet à l'adversaire de jouer indépendamment du Khan, on l'élimine.*/
-  
+
 findBestMove(_, _).
