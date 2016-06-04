@@ -40,8 +40,8 @@ findColour(IdPion, ocre) :- element(IdPion, [ko, o1, o2, o3, o4, o5]), !.
 /*Placement effectif d'un pion en remplaçant la valeur dans le tableau initial*/
 /*Prototype : remplacer(InBoard, Lin, Col, IdPion, IdCase, OutBoard), avec IdCase et OutBoard en sortie*/
 /*On trouve la ligne*/
-remplacer([T|Q], 1, Col, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
-remplacer([T|Q], Lin, Col, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, NLin, Col, X, IdCase, Res), !.
+remplacer([T|Q], Col,1, X, IdCase, [Ligne|Q]) :- remplacerDansLigne(T, Col, X, IdCase, Ligne).
+remplacer([T|Q], Col, Lin, X, IdCase, [T|Res]) :- Lin > 0, NLin is Lin-1, remplacer(Q, Col,NLin, X, IdCase, Res), !.
 remplacer(L, _, _, _, L).
 /*On trouve la colonne*/
 remplacerDansLigne([(IdCase, _)|Q], 1, X, IdCase, [(IdCase, X)|Q]).

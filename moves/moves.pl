@@ -8,11 +8,9 @@ possibleMoves(Board, Player, PossibleMoveList) :- element(Player, [rouge, ocre])
 /*Prédicat de pion : pion(IdPion, Col, Lin, in, IdCase)/
 
 /*Procedure de mise à jour de tous les effets d'un mouvement sur le plateau et sur les pieces sur la BDD du jeu*/
-transfert(InBoard,Move,OutBoard) :- print('Il y avait une proie'),
-presenceProie(Move ,InBoard, NewBoard),!,
+transfert(InBoard,Move,OutBoard) :- presenceProie(Move ,InBoard, NewBoard),!,
                                     rechercheMarqueur(NewBoard, Move, NewMarqueur),
-                                    enregistrementMove(Move, NewMarqueur, NewBoard, OutBoard),
-                                    afficherPlateau(OutBoard).
+                                    enregistrementMove(Move, NewMarqueur, NewBoard, OutBoard).
 
 transfert(InBoard,Move,OutBoard) :- rechercheMarqueur(InBoard, Move, NewMarqueur),
                                     enregistrementMove(Move, NewMarqueur, InBoard, OutBoard), !.
@@ -42,14 +40,13 @@ rechercheMarqueurDansLigne([_|Q], Col, M) :- NCol is Col-1, rechercheMarqueurDan
 
 miseAJourMove(TypePion, Col1,Lin1, Col2, Lin2, 'in', Board1, Board3) :-
   miseAJourPlateau(TypePion, Col1, Lin1, 'out', Board1, Board2),
-  miseAJourPlateau(TypePion, Col2, Lin2, 'in', Board2, Board3),
-	setKhan(TypePion).
+  miseAJourPlateau(TypePion, Col2, Lin2, 'in', Board2, Board3).
 
 miseAJourPlateau(TypePion,Col2,Lin2,'in',Board1,Board2) :-
   remplacer(Board1, Col2, Lin2, TypePion, _, Board2),
   afficherPlateau(Board2).
 
-miseAJourPlateau(_, Col2, Lin2, 'out', Board1, Board2) :-
-  remplacer(Board1, Col2, Lin2, 'b', _, Board2),
+miseAJourPlateau(_, Col1, Lin1, 'out', Board1, Board2) :-
+  remplacer(Board1, Col1, Lin1, b, _, Board2),
   afficherPlateau(Board2).
   
