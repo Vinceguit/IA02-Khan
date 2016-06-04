@@ -8,16 +8,17 @@ possibleMoves(Board, Player, PossibleMoveList) :- element(Player, [rouge, ocre])
 /*Prédicat de pion : pion(IdPion, Col, Lin, in, IdCase)/
 
 /*Procedure de mise à jour de tous les effets d'un mouvement sur le plateau et sur les pieces sur la BDD du jeu*/
-transfert(InBoard,Move,OutBoard) :- presenceProie(Move ,InBoard, NewBoard),
+transfert(InBoard,Move,OutBoard) :- print('Il y avait une proie'),
+presenceProie(Move ,InBoard, NewBoard),!,
                                     rechercheMarqueur(NewBoard, Move, NewMarqueur),
                                     enregistrementMove(Move, NewMarqueur, NewBoard, OutBoard),
-                                    afficherPlateau(OutBoard), !.
+                                    afficherPlateau(OutBoard).
 
 transfert(InBoard,Move,OutBoard) :- rechercheMarqueur(InBoard, Move, NewMarqueur),
                                     enregistrementMove(Move, NewMarqueur, InBoard, OutBoard), !.
 
 presenceProie((Col1, Lin1, Col2, Lin2), Board, NewBoard) :-
-  pion(_, Col1, Lin1, 'in', _),
+  
   pion(TypePion, Col2, Lin2, 'in', _),
   suppressionProie(TypePion, Col2, Lin2),
   miseAJourPlateau(TypePion, Col2, Lin2, 'out', Board, NewBoard).
@@ -26,10 +27,9 @@ suppressionProie(TypePion,Col,Lin) :- retract(pion(TypePion, Col, Lin, 'in', _))
                                       asserta(pion(TypePion, Col, Lin, 'out', 0)).
 
 enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Board1, Board2) :-
-  pion(TypePion,Col1,Lin1,'in',_),
-  retract(pion(TypePion, Col1, Lin1, 'in',_)),
-  asserta(pion(TypePion, Col1, Lin1, 'out',_)),
-  asserta(pion(TypePion, Col2, Lin2, 'out', NewMarqueur)),
+  pion(TypePion,Col1,Lin1,'in',M),
+  retract(pion(TypePion, Col1, Lin1, 'in',M)),
+  asserta(pion(TypePion, Col2, Lin2, 'in', NewMarqueur)),
   miseAJourMove(TypePion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2), !.
 
 rechercheMarqueur([T|_], (_, _, Col, 1), M) :- rechercheMarqueurDansLigne(T, Col, M).

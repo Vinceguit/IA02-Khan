@@ -16,14 +16,14 @@ initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5
 
 /*Vérification de la saisie du pion et saisie de la position d'arrivée*/
 testInitMove(Colour, Pion, (Col1, Lin1, Col2, Lin2)) :- findColour(Pion, Colour),
-                                                        \+pion(Pion, Col1, Lin1, out, _), !,
+                                                        pion(Pion, Col1, Lin1, 'in', _), !,
                                                         getNewPos(Lin2, Col2).
 /*Cas d'erreur 1 : L'utilisateur a effectué une mauvaise saisie*/
 testInitMove(Colour, Pion, Move) :- \+findColour(Pion, Colour),
                                     print('Erreur de saisie du pion.'), nl,
                                     initMove(Colour, Move).
 /*Cas d'erreur 2 : Le pion n'est pas en jeu*/
-testInitMove(Colour, Pion, Move) :- pion(Pion, _, _, out, _),
+testInitMove(Colour, Pion, Move) :- pion(Pion, _, _, 'out', _),
                                     print('Erreur : le pion choisi n est pas en jeu.'), nl,
                                     initMove(Colour, Move).
 
