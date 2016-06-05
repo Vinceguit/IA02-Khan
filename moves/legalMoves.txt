@@ -7,20 +7,23 @@ equipeActive(X,Y,Equipe,Marqueur) :- membreEquipe(Equipe,X,Y),
 setof((Lind,Cold,Lina,Cola),cheminLegal(Xd,Yd,Xa,Ya),possibleMoveList).
 
 exploGraphe(Lin,Col,I,Li,Lf,Equipe) :- dir(gauche,I,L1,L2,Equipe),
-								  dir(droite,I,L1,L2,Equipe,I),
-								  dir(bas,I,L1,L2,Equipe,I),
-								  dir(haut,I,L1,L2,Equipe,I),
-								  NewI is I-1.
+								  dir(droite,I,L1,L2,Equipe),
+								  dir(bas,I,L1,L2,Equipe),
+								  dir(haut,I,L1,L2,Equipe).
+								  
 exploGraphe(_,_,0,L,_)
 								  
 dir(gauche,I,L1,L2,Equipe,I) :- caseVide(X,Y,I),exploGraphe(X,Y,I,Li,Lf,Equipe).
+dir(gauche,1,L1,L2,Equipe) :-
 
 dir(droite,I,L1,L2,Equipe,I) :- caseVide(X,Y,I),exploGraphe(X,Y,I,Li,Lf,Equipe)
+
 dir(bas,I,L1,L2,Equipe,I) :- caseVide(X,Y,I),exploGraphe(X,Y,I,Li,Lf,Equipe)
 dir(haut,I,L1,L2,Equipe,I) :- caseVide(X,Y,I),exploGraphe(X,Y,I,Li,Lf,Equipe)
-dir(gauche,I,L1,L2,Equipe,1) :-
+
 
 caseVide(X,Y,I,Equipe) :- I>1, /+pion(_,X,Y,Ok,_),element(Ok,['in','khan']).
 caseVide(X,Y,1,Equipe) :- /+pion(Equipe,X,Y,Ok,_), element(Equipe,'rouge'), element(Ok,['in','khan']).
 
-demandeChoixMove(Move,PossibleMoveList) :- prompt(Move), element(Move,)
+demandeChoixMove(Move,PossibleMoveList) :- write('Quel mouvement wesh ?'),read(Move), element(Move,PossibleMoveList),!.
+demandeChoixMove(Move,PossibleMoveList) :- demandeChoixMove(Move,PossibleMoveList).
