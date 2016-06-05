@@ -2,21 +2,24 @@
 /**Affichage du plateau de jeu**/
 /*******************************/
 
-/*Affichage du plateau : afficherPlateau(Board)*/
-testAffichage(Cote) :- etatInitial(Board), afficherPlateau(Board, Cote), !.
+/*Affichage du plateau : afficherPlateau(Board, Cote)*/
+afficherPlateau(Board, bas) :- print('   A     B     C     D     E     F   \n'),
+                               affichagePlateauBas(Board, 1),
+                               print('_____________________________________\n').
 
-afficherPlateau(Board) :- affichagePlateau(Board, 1).
-affichagePlateau([], _) :- print('_____________________________________\n').
-affichagePlateau([T|Q], Lin) :- print('_____________________________________\n'),
-                         print('|'), afficherLigne(T), print(Lin), nl,
-                         print('|     |     |     |     |     |     |\n'),
-                         NLin is Lin + 1,
-                         affichagePlateau(Q, NLin).
-afficherLigne([]):- print(' ').
-afficherLigne([(T1, X)|Q]) :- print(' '), print(T1), afficher(X), afficherLigne(Q).
+afficherPlateau(Board, haut) :- print('   F     E     D     C     B     A   \n'),
+                                affichagePlateauHaut(Board, 0),
+                                print('_____________________________________\n').
 
+afficherPlateau(Board, gauche) :- print('   1     2     3     4     5     6   \n'),
+                                  affichagePlateauGauche(Board, 6),
+                                  print('_____________________________________\n').
 
-/*On traite les différents cas d'affichage; à revoir différement une fois les pions définis*/
+afficherPlateau(Board, droite) :- print('   6     5     4     3     2     1   \n'),
+                                  affichagePlateauDroite(Board, 1),
+                                  print('_____________________________________\n').
+
+/*On traite les différents cas d'affichage*/
 afficher(b) :- print('   |'), !.
 afficher(r1) :- print(' r1|'), !.
 afficher(r2) :- print(' r2|'), !.
@@ -31,27 +34,13 @@ afficher(o4) :- print(' o4|'), !.
 afficher(o5) :- print(' o5|'), !.
 afficher(ko) :- print(' O |'), !.
 
+/*Parseur d'affichage des colonnes*/
 afficherId(1) :- print(' A').
 afficherId(2) :- print(' B').
 afficherId(3) :- print(' C').
 afficherId(4) :- print(' D').
 afficherId(5) :- print(' E').
 afficherId(6) :- print(' F').
-
-afficherPlateau(Board, bas) :- print('   A     B     C     D     E     F   \n'),
-                               affichagePlateauBas(Board, 1),
-                               print('_____________________________________\n').
-
-afficherPlateau(Board, haut) :- print('   F     E     D     C     B     A   \n'),
-                                affichagePlateauHaut(Board, 0),
-                                print('_____________________________________\n').
-
-afficherPlateau(Board, gauche) :- print('   1     2     3     4     5     6   \n'),
-                                  affichagePlateauGauche(Board, 6),
-                                  print('_____________________________________\n').
-afficherPlateau(Board, droite) :- print('   6     5     4     3     2     1   \n'),
-                                  affichagePlateauDroite(Board, 1),
-                                  print('_____________________________________\n').
 
 /*Affichage du plateau du côté bas*/
 affichagePlateauBas([], _) :- !.
