@@ -5,7 +5,7 @@ placerPionsIA(InBoard, Cote, rouge, OutBoard) :- print('Initialisation des pions
                                                  placerPionIA(Board3, Cote, r3, Board4),
                                                  placerPionIA(Board4, Cote, r4, Board5),
                                                  placerPionIA(Board5, Cote, r5, OutBoard),
-                                                 afficherPlateau(OutBoard), !.
+                                                 afficherPlateau(OutBoard, Cote), !.
 
 placerPionsIA(InBoard, Cote, ocre, OutBoard) :- print('Initialisation des pions de la machine ocre'), nl,
                                                 placerPionIA(InBoard, Cote, ko, Board1),
@@ -14,7 +14,7 @@ placerPionsIA(InBoard, Cote, ocre, OutBoard) :- print('Initialisation des pions 
                                                 placerPionIA(Board3, Cote, o3, Board4),
                                                 placerPionIA(Board4, Cote, o4, Board5),
                                                 placerPionIA(Board5, Cote, o5, OutBoard),
-                                                afficherPlateau(OutBoard), !.
+                                                afficherPlateau(OutBoard, Cote), !.
 
 /*Pour l'instant, on appelle le placement de pion humain pour faire tourner le programme*/
 placerPionIA(InBoard, Cote, TypePion, OutBoard) :- generatePos(Cote, Col, Lin),

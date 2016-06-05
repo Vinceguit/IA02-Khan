@@ -45,7 +45,7 @@ testPion(InBoard, Cote, TypePion, OutBoard, Col, Lin) :-
   \+pion(_, Col, Lin, _, _), !,
   remplacer(InBoard, Col, Lin, TypePion, IdCase, OutBoard),
   addPion(TypePion, Col, Lin, IdCase),
-  afficherPlateau(OutBoard).
+  afficherPlateau(OutBoard, Cote).
 
 /*Cas d'erreur 1 : La saisie ne correspond pas au côté du joueur ; on replace alors le pion*/
 testPion(InBoard, Cote, TypePion, OutBoard, Col, Lin) :-

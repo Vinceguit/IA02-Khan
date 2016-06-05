@@ -35,7 +35,7 @@ etatInitial([[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
 initBoard(Board) :- resetPions,
                     player(J1, rouge), player(J2, ocre),
                     etatInitial(BoardInit),
-                    afficherPlateau(BoardInit),
+                    afficherPlateau(BoardInit, bas),
                     initCouleur(BoardInit, Cote, rouge, J1, BoardInter),
                     oppose(Cote, CoteOpp),
                     initCouleur(BoardInter, CoteOpp, ocre, J2, Board), !.
@@ -55,7 +55,8 @@ oppose(haut, bas).
 oppose(bas, haut).
 
 /*Lecture du côté*/
-lireCote(Cote) :- print('Quel cote choisir ?'), nl, read(Cote), cote(Cote), !.
+lireCote(Cote) :- print('Quel cote choisir ?'), nl, read(Cote), cote(Cote), !,
+                  asserta(getCote(Cote, rouge)), oppose(Cote, CoteOpp), asserta(getCote(CoteOpp, ocre)).
 lireCote(_) :- print('Erreur de saisie'), nl, !, fail.
 
 /*Génération aléatoire d'un côté*/
@@ -64,6 +65,7 @@ convertToCote(2, droite).
 convertToCote(3, haut).
 convertToCote(4, bas).
 randomCote(Cote) :- random(1, 5, Rand), convertToCote(Rand, Cote),
+                    asserta(getCote(Cote, rouge)), oppose(Cote, CoteOpp), asserta(getCote(CoteOpp, ocre)),
                     print('Cote choisi par la machine : '), print(Cote), nl.
 
 

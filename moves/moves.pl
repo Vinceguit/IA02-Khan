@@ -26,8 +26,7 @@ suppressionProie(TypePion,Col,Lin) :- retract(pion(TypePion, Col, Lin, 'in', _))
 enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Board1, Board2) :- pion(TypePion, Col1, Lin1, 'in', M),
                                                                              retract(pion(TypePion, Col1, Lin1, 'in',M)),
                                                                              asserta(pion(TypePion, Col2, Lin2, 'in', NewMarqueur)),
-                                                                             miseAJourMove(TypePion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2),
-                                                                             afficherPlateau(Board2).
+                                                                             miseAJourMove(TypePion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2).
 
 rechercheMarqueur([T|_], (_, _, Col, 1), M) :- rechercheMarqueurDansLigne(T, Col, M).
 rechercheMarqueur([_|Q], (_, _, Col, Lin), M) :- NLin is Lin-1, rechercheMarqueur(Q, (_, _, Col, NLin), M).
