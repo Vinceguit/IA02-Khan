@@ -30,3 +30,5 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
 :- include('moves/bestmove').
+/*Import de la bibliothèque de génération de la liste des mouvements autorisés*/
+:- include('moves/legalMoves').
