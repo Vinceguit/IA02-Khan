@@ -59,10 +59,11 @@ getNewPos(Lin, Col) :-  print('Position d''arrivee'), nl,
 
 
 /**VERIFICATION DU MOUVEMENT**/
-checkMove(InBoard, _, Move, MoveList, OutBoard) :- element(Move, MoveList), !,
+checkMove(InBoard, Player, Move, PossibleMoveList, OutBoard) :- possibleMoves(Player,PossibleMoveList),
+												   element(Move, PossibleMoveList), !,
                                                    transfert(InBoard, Move, OutBoard).
 
-checkMove(InBoard, Colour, Move, MoveList, OutBoard) :- \+element(Move, MoveList),
+checkMove(InBoard, Colour, Move, PossibleMoveList, OutBoard) :- \+element(Move, PossibleMoveList),
                                                         print('Erreur : mouvement invalide.'), nl,
                                                         playTurn(InBoard, Colour, OutBoard).
 

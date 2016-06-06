@@ -3,7 +3,7 @@
 /************************/
 
 /*Gros du boulot*/
-possibleMoves(Board, Player, PossibleMoveList) :- element(Player, [rouge, ocre]).
+
 /*transfert([[(2, b),(3, r1)],[(2, b),(1, o3)]],(1,1,2,1),NewBoard) --> [[(2,b),(3,r1)],[(2,r1),(1,o3)]].*/
 /*Prédicat de pion : pion(IdPion, Col, Lin, in, IdCase)/
 
@@ -19,20 +19,20 @@ transfert(InBoard,Move,OutBoard) :- rechercheMarqueur(InBoard, Move, NewMarqueur
 presenceProie((_, _, Col2, Lin2), Board, NewBoard) :- pion(TypePion, Col2, Lin2, 'in', _),
                                                             suppressionProie(TypePion, Col2, Lin2),
                                                             miseAJourPlateau(TypePion, Col2, Lin2, 'out', Board, NewBoard).
+															
+presenceProie((_, _, Col2, Lin2), Board, NewBoard) :- pion(TypePion, Col2, Lin2, 'khan', _),
+                                                            suppressionProie(TypePion, Col2, Lin2),
+                                                            miseAJourPlateau(TypePion, Col2, Lin2, 'out', Board, NewBoard).
 
-suppressionProie(TypePion,Col,Lin) :- retract(pion(TypePion, Col, Lin, 'in', _)),
-                                      asserta(pion(TypePion, Col, Lin, 'out', 0)).
+suppressionProie(TypePion,Col,Lin) :- retract(pion(TypePion, Col, Lin, _, _)),
+                                      asserta(pion(TypePion,0,0, 'out', 0)).
 
 enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Board1, Board2) :- pion(TypePion, Col1, Lin1, 'in', M),
-                                                                             retract(pion(TypePion, Col1, Lin1, 'in',M)),
-                                                                             asserta(pion(TypePion, Col2, Lin2, 'in', NewMarqueur)),
+                                                                             retract(pion(TypePion, _, _,_,M)),
+                                                                             asserta(pion(TypePion, Col2, Lin2, 'khan', NewMarqueur)),
                                                                              miseAJourMove(TypePion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2).
 
-rechercheMarqueur([T|_], (_, _, Col, 1), M) :- rechercheMarqueurDansLigne(T, Col, M).
-rechercheMarqueur([_|Q], (_, _, Col, Lin), M) :- NLin is Lin-1, rechercheMarqueur(Q, (_, _, Col, NLin), M).
-/*On trouve la colonne*/
-rechercheMarqueurDansLigne([(M, _)|_], 1,M).
-rechercheMarqueurDansLigne([_|Q], Col, M) :- NCol is Col-1, rechercheMarqueurDansLigne(Q, NCol, M).
+
 
 miseAJourMove(TypePion, Col1,Lin1, Col2, Lin2, 'in', Board1, Board3) :- miseAJourPlateau(TypePion, Col1, Lin1, 'out', Board1, Board2),
                                                                         miseAJourPlateau(TypePion, Col2, Lin2, 'in', Board2, Board3).

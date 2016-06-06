@@ -1,17 +1,21 @@
 
+possibleMoves(Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
+											   etablirEquipeActive(Player,Marqueur,PossibleMoveList).
+
+
 
 activable(X,Y,Equipe,Marqueur) :- pion(TypePion,X,Y,Ok,Marqueur),
 								  findColour(TypePion, Equipe),
 								  element(Ok,['in','khan']).
 									 
-etablirEquipeActive(Equipe,Marqueur) :- findall((Col,Lin),activable(Col,Lin,Equipe,Marqueur),ListeActivable),print(ListeActivable),
-										recherchePionParPion(ListeActivable,Marqueur,[],Equipe).
+etablirEquipeActive(Equipe,Marqueur,PossibleMoveList) :- findall((Col,Lin),activable(Col,Lin,Equipe,Marqueur),ListeActivable),print(ListeActivable),
+										recherchePionParPion(ListeActivable,Marqueur,[],Equipe,PossibleMoveList).
     
 
-recherchePionParPion([(ColInit,LinInit)|Q],I,L1,Equipe) :- exploGraphe(I,L1,L2,Equipe,ColInit,LinInit,ColInit,LinInit),nl,
+recherchePionParPion([(ColInit,LinInit)|Q],I,L1,Equipe,PossibleMoveList) :- exploGraphe(I,L1,L2,Equipe,ColInit,LinInit,ColInit,LinInit),nl,
 																
-														   recherchePionParPion(Q,I,L2,Equipe).
-recherchePionParPion([],_,PossibleMoveList,_):- demandeChoixMove(PossibleMoveList).
+														   recherchePionParPion(Q,I,L2,Equipe,PossibleMoveList).
+recherchePionParPion([],_,PossibleMoveList,_,PossibleMoveList).
 
 exploGraphe(I,L1,L5,Equipe,ColInit,LinInit,Col,Lin) :- dir(gauche,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin),
 													   dir(droite,I,L2,L3,Equipe,ColInit,LinInit,Col,Lin),
@@ -114,6 +118,3 @@ dir(bas,_,L,L,_,_,_,_,_).
 caseVide(X,Y,I,_) :- I>1, \+ pion(_,X,Y,in,_),\+ pion(_,X,Y,khan,_).
 caseVide(X,Y,1,_) :- \+ pion(_,X,Y,in,_).
 caseVide(X,Y,1,Equipe) :- pion(TypePion,X,Y,in,_), \+ findColour(TypePion,Equipe).
-
-demandeChoixMove(PossibleMoveList) :- nl,affiche(PossibleMoveList),write('Quel mouvement wesh ?'),read(Move), element(Move,PossibleMoveList),write('ok'),!.
-demandeChoixMove(PossibleMoveList) :- demandeChoixMove(PossibleMoveList).
