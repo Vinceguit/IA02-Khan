@@ -45,7 +45,7 @@ suppressionProie(TypePion,Col,Lin) :- retract(pion(TypePion, Col, Lin, _, _)),
 
 
 
-/* Remplacement des pièces sur le plateau de jeu ASCII
+/* Remplacement des pièces sur le plateau de jeu ASCII*/
 miseAJourMove(TypePion, Col1,Lin1, Col2, Lin2, 'in', Board1, Board3) :- miseAJourPlateau(TypePion, Col1, Lin1, 'out', Board1, Board2),
                                                                         miseAJourPlateau(TypePion, Col2, Lin2, 'in', Board2, Board3).
 

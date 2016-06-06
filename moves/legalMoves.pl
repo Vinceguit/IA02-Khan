@@ -9,7 +9,7 @@ activable(X,Y,Equipe,Marqueur) :- pion(TypePion,X,Y,Ok,Marqueur),
 								  element(Ok,['in','khan']).
 
 /*Renvoie l'ensemble des pions jouables*/								  
-etablirEquipeActive(Equipe,Marqueur,PossibleMoveList) :- findall((Col,Lin),activable(Col,Lin,Equipe,Marqueur),ListeActivable),print(ListeActivable),
+etablirEquipeActive(Equipe,Marqueur,PossibleMoveList) :- findall((Col,Lin),activable(Col,Lin,Equipe,Marqueur),ListeActivable),
 										recherchePionParPion(ListeActivable,Marqueur,[],Equipe,PossibleMoveList).
     
 /*Pour chaque pion jouable, une recherche de mouvement est lancée grâce au exploGraphe*/
@@ -57,7 +57,7 @@ exploGrapheVersBas(0,_,_,_,_,_,_,_).
 /* Pour I>1, on ne peut pas manger de pièce, on doit donc continuer l'exploration du plateau si la case est vide
 Il est nécéssaire de vérifier que la pièce ne sort pas du plateau de jeu*/
 								  
-dir(gauche,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- write(I),write('gauche'),I>1,
+dir(gauche,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- I>1,
 													  NewCol is Col-1,
 													  NewCol>0,
 													  caseVide(NewCol,Lin,I,Equipe),
@@ -71,13 +71,13 @@ L2 est est une sous-partie de PossibleMoveList*/
 dir(gauche,1,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- NewCol is Col-1,
 													  NewCol>0,
 													  caseVide(NewCol,Lin,1,Equipe),
-													  write((ColInit,LinInit,NewCol,Lin)),
+													  
 													  append([(ColInit,LinInit,NewCol,Lin)],L1,L2),!.
 /*Si la case est bloquée, pas de modification dans la liste d'entrée L
 donc la liste de sortie de cette branche de l'exploration est aussi L */ 													  
 dir(gauche,_,L,L,_,_,_,_,_).
 
-dir(droite,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- write(I),write('droite'),I>1,
+dir(droite,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- I>1,
 													  NewCol is Col+1,
 													  NewCol<7,
 													  caseVide(NewCol,Lin,I,Equipe),
@@ -89,12 +89,12 @@ dir(droite,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- write(I),write('droite'),I
 dir(droite,1,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- NewCol is Col+1,
 													  NewCol<7,
 													  caseVide(NewCol,Lin,1,Equipe),
-													  write((ColInit,LinInit,NewCol,Lin)),
+													  
 													  append([(ColInit,LinInit,NewCol,Lin)],L1,L2),!.	
 													  
 dir(droite,_,L,L,_,_,_,_,_).
 
-dir(haut,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- write(I),write('haut'),I>1,
+dir(haut,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- I>1,
 													NewLin is Lin-1,
 													NewLin>0,
 													caseVide(Col,NewLin,I,Equipe),
@@ -105,11 +105,11 @@ dir(haut,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- write(I),write('haut'),I>1,
 dir(haut,1,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :- NewLin is Lin-1,
 											        NewLin>0,
 													caseVide(Col,NewLin,1,Equipe),
-													write((ColInit,LinInit,Col,NewLin)),
+													
 													append([(ColInit,LinInit,Col,NewLin)],L1,L2),!.	
 dir(haut,_,L,L,_,_,_,_,_).													
 
-dir(bas,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :-    write(I),write('bas'),I>1,
+dir(bas,I,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :-    I>1,
 												      NewLin is Lin+1,
 													  NewLin<7,
 													  caseVide(Col,NewLin,I,Equipe),
@@ -121,7 +121,7 @@ dir(bas,1,L1,L2,Equipe,ColInit,LinInit,Col,Lin) :-
 													  NewLin is Lin+1,
 													  NewLin<7,
 													  caseVide(Col,NewLin,1,Equipe),
-													  write((ColInit,LinInit,Col,NewLin)),
+													  
 													  append([(ColInit,LinInit,Col,NewLin)],L1,L2),!.
 													  
 dir(bas,_,L,L,_,_,_,_,_).

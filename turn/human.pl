@@ -18,6 +18,9 @@ initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5
 /*Vérification de la saisie du pion et saisie de la position d'arrivée*/
 testInitMove(Colour, Pion, (Col1, Lin1, Col2, Lin2)) :- findColour(Pion, Colour),
                                                         pion(Pion, Col1, Lin1, 'in', _), !,
+														/*GUILLAUME: La première pièce jouée devient d'office le Khan
+														retract(pion(TypePion, Col1, Lin1,_,M)),
+                                                        asserta(pion(TypePion, Col1, Lin1, 'khan', M)),*/
                                                         getNewPos(Col2, Lin2).
 /*Cas d'erreur 1 : L'utilisateur a effectué une mauvaise saisie*/
 testInitMove(Colour, Pion, Move) :- \+findColour(Pion, Colour),
