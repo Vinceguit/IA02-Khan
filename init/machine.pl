@@ -1,3 +1,4 @@
+/*Placement des pions d'une couleur : prédicat appelé dans l'initialisation*/
 placerPionsIA(InBoard, Cote, rouge, OutBoard) :- print('Initialisation des pions de la machine rouge'), nl,
                                                  placerPionIA(InBoard, Cote, kr, Board1),
                                                  placerPionIA(Board1, Cote, r1, Board2),
@@ -16,7 +17,6 @@ placerPionsIA(InBoard, Cote, ocre, OutBoard) :- print('Initialisation des pions 
                                                 placerPionIA(Board5, Cote, o5, OutBoard),
                                                 afficherPlateau(OutBoard, Cote), !.
 
-/*Pour l'instant, on appelle le placement de pion humain pour faire tourner le programme*/
 placerPionIA(InBoard, Cote, TypePion, OutBoard) :- generatePos(Cote, Col, Lin),
                                                    remplacer(InBoard, Col, Lin, TypePion, IdCase, OutBoard),
                                                    addPion(TypePion, Col, Lin, IdCase).
@@ -24,7 +24,6 @@ placerPionIA(InBoard, Cote, TypePion, OutBoard) :- generatePos(Cote, Col, Lin),
 /*On peut remarquer, dans la structure du plateau, que chaque côté contient 4 cases de chaque indice (1,2,3); tous les côtés sont donc équivalents sur ce plan.
 On peut entourer la Kalista de 2 à 3 sbires pour la protéger.
 On peut ne placer ses pions que sur des cases de 2 indices; ainsi, il est possible dès le début de partie de désobéir au Khan, et donc de forcer le jeu de l'adversaire.*/
-
 
 /*Génération aléatoire de la position; on utilise une liste de positions possibles dynamique, qu'on update au fur et à mesure en supprimant une position déjà prise.*/
 generatePos(Cote, Col, Lin) :- listePos(Cote, List),
