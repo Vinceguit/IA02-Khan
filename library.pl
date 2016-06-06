@@ -12,6 +12,10 @@ element(X, [_|Q]) :- element(X, Q).
 longueur(0, []).
 longueur(Long, [_|Q]) :-longueur(L,Q), Long is L+1.
 
+/* Afficher une liste*/
+affiche([]).
+affiche([X|R]) :- write(X), nl, affiche(R).
+
 /*Retirer l'élément X d'une liste*/
 retireElement(_, [], []).
 retireElement(X, [X|Q], Q) :- !.
