@@ -1,12 +1,5 @@
-/*Parseur de données*/
+/*Parseur de coordonnées*/
 /*parse(Coord, Col (Lettre), Lin (Chiffre))*/
-/* A  B  c  D  E  F
-1
-2
-3
-4
-5
-6                   */
 
 parse(a1, 1, 1) :- !.
 parse(a2, 1, 2) :- !.

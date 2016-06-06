@@ -52,3 +52,10 @@ remplacer(L, _, _, _, L).
 remplacerDansLigne([(IdCase, _)|Q], 1, X, IdCase, [(IdCase, X)|Q]).
 remplacerDansLigne([T|Q], Col, X, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, remplacerDansLigne(Q, NCol, X, IdCase, Res), !.
 remplacerDansLigne(L, _, _, _, L).
+
+/*Prédicat pour récupérer le marqueur à partir de la position*/
+rechercheMarqueur([T|_], (_, _, Col, 1), M) :- rechercheMarqueurDansLigne(T, Col, M).
+rechercheMarqueur([_|Q], (_, _, Col, Lin), M) :- NLin is Lin-1, rechercheMarqueur(Q, (_, _, Col, NLin), M).
+/*On trouve la colonne*/
+rechercheMarqueurDansLigne([(M, _)|_], 1,M).
+rechercheMarqueurDansLigne([_|Q], Col, M) :- NCol is Col-1, rechercheMarqueurDansLigne(Q, NCol, M).
