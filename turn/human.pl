@@ -2,7 +2,7 @@
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
                                        getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
                                        initMove(Colour, Move),
-                                       possibleMoves(InBoard, Colour, MoveList),
+                                       possibleMoves(Colour, KhanRespecte, MoveList),
                                        execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
 
