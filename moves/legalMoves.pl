@@ -1,6 +1,6 @@
 /*possibleMoves permet d'obtenir le listing de tous les mouvements autorisés de la forme (Coldep,Lindep,Colarrivée,Linarrivée)*/
-possibleMoves(Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
-											   etablirEquipeActive(Player,Marqueur,PossibleMoveList).
+possibleMoves(_,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
+											   etablirEquipeActive(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],!.
 
 
 /* Une pièce est activable si elle appartient à l'equipe, si elle est en jeu et si son marqueur est le même que celui du Khan*/
@@ -133,3 +133,9 @@ Une fois arrivé à I=1, au dernier mouvement, caseVide est vraie si la case est
 caseVide(X,Y,I,_) :- I>1, \+ pion(_,X,Y,in,_),\+ pion(_,X,Y,khan,_).
 caseVide(X,Y,1,_) :- \+ pion(_,X,Y,in,_).
 caseVide(X,Y,1,Equipe) :- pion(TypePion,X,Y,in,_), \+ findColour(TypePion,Equipe).
+
+/*write('Deux choix possibles:'),nl,
+										write('> soit vous remettez une pièce en jeu'),nl, 
+										write('soit vous bougez une autre pièce')*/
+
+possibleMoves(_,Player,PossibleMoveList):- 										   etablirEquipeActive(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],!.
