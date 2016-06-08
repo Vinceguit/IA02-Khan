@@ -18,7 +18,7 @@ etablirEquipeActive(Equipe,Marqueur,PossibleMoveList) :- findall((Col,Lin),activ
 										recherchePionParPion(ListeActivable,Marqueur,[],Equipe,PossibleMoveList).
 
 /*Pour chaque pion jouable, une recherche de mouvement est lancée grâce au exploGraphe*/
-recherchePionParPion([(ColInit,LinInit)|Q],I,L1,Equipe,PossibleMoveList) :- exploGraphe(I,L1,L2,Equipe,ColInit,LinInit,ColInit,LinInit),nl,
+recherchePionParPion([(ColInit,LinInit)|Q],I,L1,Equipe,PossibleMoveList) :- exploGraphe(I,L1,L2,Equipe,ColInit,LinInit,ColInit,LinInit),
 
 														   recherchePionParPion(Q,I,L2,Equipe,PossibleMoveList).
 /* Une fois que tousles pions sont testés, on récupère la PossibleMoveList, sans doublons*/
@@ -139,28 +139,25 @@ caseVide(X,Y,I,_) :- I>1, \+ pion(_,X,Y,in,_),\+ pion(_,X,Y,khan,_).
 caseVide(X,Y,1,_) :- \+ pion(_,X,Y,in,_).
 caseVide(X,Y,1,Equipe) :- pion(TypePion,X,Y,in,_), \+ findColour(TypePion,Equipe).
 
-/*write('Deux choix possibles:'),nl,
-										write('> soit vous remettez une pièce en jeu'),nl, 
-										write('soit vous bougez une autre pièce')*/
 
 otherPossibleMoves(Board,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 										   etablirEquipeActive(Player,1,L1),
 										   etablirEquipeActive(Player,2,L2),
 										   etablirEquipeActive(Player,3,L3),
-										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),
-										   ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),
-										   append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList).
+										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),affiche(ListeMouvementsLibres).
+										   /*ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),
+										   append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList)
 										   
 
 
-/*On trouve la colonne*/
-
+On trouve la colonne
+ajoutNouveauPion(_,_,_).
 ajoutNouveauPion(Board, Marqueur,ListeAjoutPion) :- rechercheCaseDispo(Board,6,6, Marqueur,[],ListeAjoutPion).
 
-rechercheCaseDispo([T|Q],Col,Lin, M, L1,L2) :- Col>1,NCol is Col-1, rechercheCaseDispoDansCol(T,M,NCol,Lin,L1,L2),
-												 rechercheCaseDispo(Q,NCol,Lin,M,L2).
-rechercheCaseDispo(_,0,_,_,L,L).
+rechercheCaseDispo([T|Q],Col,Lin, M, L1,L3) :- Col>1,NCol is Col-1, rechercheCaseDispoDansCol(T,M,NCol,Lin,L1,L2),
+												 rechercheCaseDispo(Q,NCol,Lin,M,L2,L3).
+rechercheCaseDispo([],_,_,_,_,_).
 
 rechercheCaseDispoDansCol([(M, b)|Q], M,Col,Lin,L1,L2) :- Lin>0, NLin is Lin-1,append((0,0,Col,Lin),L1,L2), rechercheCaseDispoDansCol(Q, M,Col,NLin,L2,_).
 rechercheCaseDispoDansCol([_|Q], M,Col,Lin,L1,L2) :- Lin >0,NLin is Lin-1, rechercheCaseDispoDansCol(Q,M,Col,NLin,L1,L2).
-rechercheCaseDispoDansCol([_|_],_,_,0,L,L).
+rechercheCaseDispoDansCol([],_,_,_,_,_).*/

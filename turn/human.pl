@@ -6,7 +6,7 @@ playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(',
                                        possibleMoves(InBoard,Colour, MoveList),
                                        execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
-influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),!,findcolour(TypePion,Colour).
+influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),!,findColour(TypePion,Colour).
 influenceKhan(_):- write('Desobeissance au khan !'),nl,
 				   write('Vous pouvez soit bouger n''importe quelle piece de votre equipe, soit faire revenir une ancienne piece.'),nl.
 				   
@@ -23,7 +23,7 @@ initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5
 testInitMove(Colour, Pion, (Col1, Lin1, Col2, Lin2)) :- findColour(Pion, Colour),
                                                         pion(Pion, Col1, Lin1, 'in', _), !,
 														
-                                                        getNewPos(Col2, Lin2).
+                                                        getNewPos(Col2, Lin2),write((Col1,Lin1,Col2,Lin2)).
 /*Cas d'erreur 1 : L'utilisateur a effectué une mauvaise saisie*/
 testInitMove(Colour, Pion, Move) :- \+findColour(Pion, Colour),
                                     print('Erreur de saisie du pion.'), nl,
@@ -44,8 +44,8 @@ testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la positi
 
 /**VERIFICATION ET EXECUTION DU MOUVEMENT**/
 execMove(InBoard, _, Move, MoveList, OutBoard) :- element(Move, MoveList), !,
-                                                  transfert(InBoard, Move, OutBoard).
+                                                  transfert(InBoard, Move, OutBoard),!.
 
-execMove(InBoard, Colour, Move, MoveList, OutBoard) :- \+element(Move, MoveList),
+execMove(InBoard, Colour, _, _, OutBoard) :- 
                                                         print('Erreur : mouvement invalide.'), nl,
                                                         playTurn(InBoard, Colour, OutBoard).

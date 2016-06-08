@@ -11,7 +11,8 @@
 
 Cas 1: Le mouvement saisi fait arriver la pièce sur une case occupée par une pièce ennemie*/
 
-transfert(InBoard,Move,OutBoard) :- presenceProie(Move ,InBoard, NewBoard), !,
+transfert(InBoard,Move,OutBoard) :- retract(pion(khaninit,_,_,_,_)),
+									presenceProie(Move ,InBoard, NewBoard), !,
 									/* On cherche le nouveau marqueur (1,2 ou 3) associé à la position d'arrivée*/
                                     rechercheMarqueur(NewBoard, Move, NewMarqueur),
 									/*On vient faire toutes les modifications pour modifier les infos dans la BDD*/
@@ -25,8 +26,12 @@ transfert(InBoard,Move,OutBoard) :- rechercheMarqueur(InBoard, Move, NewMarqueur
 
 /* La pièce bougée change de position et devient le khan*/
 enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Board1, Board2) :- pion(TypePion, Col1, Lin1, 'in', M),
+																			retract(pion(TypePionKhan, ColKhan, LinKhan,khan,MKhan)),
+                                                                            asserta(pion(TypePionKhan, ColKhan, LinKhan, in, MKhan)),
+
                                                                              retract(pion(TypePion, _, _,_,M)),
-                                                                             asserta(pion(TypePion, Col2, Lin2, 'khan', NewMarqueur)),
+                                                                             asserta(pion(TypePion, Col2, Lin2, khan, NewMarqueur)),!,
+																			 
                                                                              miseAJourMove(TypePion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2).
 
 
