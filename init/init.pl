@@ -33,6 +33,7 @@ etatInitial([[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
 
 /*Prédicat d'initialisation du plateau, à appeler dans le programme principal*/
 initBoard(Board) :- resetPions,
+					asserta(pion(khaninit,0,0,khan,0)),
                     player(J1, rouge), player(J2, ocre),
                     etatInitial(BoardInit),
                     afficherPlateau(BoardInit, bas),

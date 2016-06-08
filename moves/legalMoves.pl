@@ -2,13 +2,13 @@
 
 possibleMoves(_,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 											   etablirEquipeActive(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],!.
-
+possibleMoves(Board,Player,PossibleMoveList):- otherPossibleMoves(Board,Player,PossibleMoveList).
 /*possibleMoves(Player, KhanRespecte, PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
-											   etablirEquipeActive(Player,Marqueur,PossibleMoveList)*/.
+											   etablirEquipeActive(Player,Marqueur,PossibleMoveList)
 
 
 
-/* Une pièce est activable si elle appartient à l'equipe, si elle est en jeu et si son marqueur est le même que celui du Khan*/
+Une pièce est activable si elle appartient à l'equipe, si elle est en jeu et si son marqueur est le même que celui du Khan*/
 activable(X,Y,Equipe,Marqueur) :- pion(TypePion,X,Y,Ok,Marqueur),
 								  findColour(TypePion, Equipe),
 								  element(Ok,['in','khan']).
@@ -143,18 +143,24 @@ caseVide(X,Y,1,Equipe) :- pion(TypePion,X,Y,in,_), \+ findColour(TypePion,Equipe
 										write('> soit vous remettez une pièce en jeu'),nl, 
 										write('soit vous bougez une autre pièce')*/
 
-possibleMoves(Board,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
+otherPossibleMoves(Board,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 										   etablirEquipeActive(Player,1,L1),
 										   etablirEquipeActive(Player,2,L2),
 										   etablirEquipeActive(Player,3,L3),
-										   append(L1,L2,L), append (L,L3,ListeMouvementsLibres),
-										   append(ListeMouvementLibres,ListeAjoutPiece,PossibleMoveList),
-										   ajoutNouvellePiece(Board, Marqueur,ListeAjoutPiece).
+										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),
+										   ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),
+										   append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList).
 										   
 
-rechercheCaseVide([T|Q], M, L) :- NLin is Lin-1, rechercheCaseVide(T,M,L),
-												 rechercheCaseVide(Q,M,L).
-/*On trouve la colonne*/
-rechercheCaseVideDansLigne([(M, b)|_], 1,M).
-rechercheCaseVideDansLigne([_|Q], Col, M) :- NCol is Col-1, rechercheCaseVideDansLigne(Q, NCol, M).
 
+/*On trouve la colonne*/
+
+ajoutNouveauPion(Board, Marqueur,ListeAjoutPion) :- rechercheCaseDispo(Board,6,6, Marqueur,[],ListeAjoutPion).
+
+rechercheCaseDispo([T|Q],Col,Lin, M, L1,L2) :- Col>1,NCol is Col-1, rechercheCaseDispoDansCol(T,M,NCol,Lin,L1,L2),
+												 rechercheCaseDispo(Q,NCol,Lin,M,L2).
+rechercheCaseDispo(_,0,_,_,L,L).
+
+rechercheCaseDispoDansCol([(M, b)|Q], M,Col,Lin,L1,L2) :- Lin>0, NLin is Lin-1,append((0,0,Col,Lin),L1,L2), rechercheCaseDispoDansCol(Q, M,Col,NLin,L2,_).
+rechercheCaseDispoDansCol([_|Q], M,Col,Lin,L1,L2) :- Lin >0,NLin is Lin-1, rechercheCaseDispoDansCol(Q,M,Col,NLin,L1,L2).
+rechercheCaseDispoDansCol([_|_],_,_,0,L,L).

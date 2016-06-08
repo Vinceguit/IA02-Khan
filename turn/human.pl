@@ -1,16 +1,16 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
                                        getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
-									   /*influenceKhan(Colour)*/,
+									   influenceKhan(Colour),
                                        initMove(Colour, Move),
-                                       possibleMoves(Colour, KhanRespecte, MoveList),
+                                       possibleMoves(InBoard,Colour, MoveList),
                                        execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
-/* influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),!,findcolour(TypePion,Colour).
-influenceKhan(_):- write('Désobéissance au khan !'),nl,
-				   write('Vous pouvez soit bouger n''importe quelle pièce de votre équipe, soit faire revenir une ancienne pièce.').
+influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),!,findcolour(TypePion,Colour).
+influenceKhan(_):- write('Desobeissance au khan !'),nl,
+				   write('Vous pouvez soit bouger n''importe quelle piece de votre equipe, soit faire revenir une ancienne piece.'),nl.
 				   
-SAISIE DU MOUVEMENT*/
+/*SAISIE DU MOUVEMENT*/
 initMove(rouge, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (kr, r1..r5) ? '),
                                              read(Pion),
                                              testInitMove(rouge, Pion, (Col1, Lin1, Col2, Lin2)).
