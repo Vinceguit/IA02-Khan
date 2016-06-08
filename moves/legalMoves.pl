@@ -144,13 +144,13 @@ otherPossibleMoves(Board,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 										   etablirEquipeActive(Player,1,L1),
 										   etablirEquipeActive(Player,2,L2),
 										   etablirEquipeActive(Player,3,L3),
-										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),affiche(ListeMouvementsLibres).
-										   /*ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),
-										   append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList)
+										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),affiche(ListeMouvementsLibres),
+										   ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),
+										   append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList).
 										   
 
 
-On trouve la colonne
+
 ajoutNouveauPion(_,_,_).
 ajoutNouveauPion(Board, Marqueur,ListeAjoutPion) :- rechercheCaseDispo(Board,6,6, Marqueur,[],ListeAjoutPion).
 
@@ -160,4 +160,4 @@ rechercheCaseDispo([],_,_,_,_,_).
 
 rechercheCaseDispoDansCol([(M, b)|Q], M,Col,Lin,L1,L2) :- Lin>0, NLin is Lin-1,append((0,0,Col,Lin),L1,L2), rechercheCaseDispoDansCol(Q, M,Col,NLin,L2,_).
 rechercheCaseDispoDansCol([_|Q], M,Col,Lin,L1,L2) :- Lin >0,NLin is Lin-1, rechercheCaseDispoDansCol(Q,M,Col,NLin,L1,L2).
-rechercheCaseDispoDansCol([],_,_,_,_,_).*/
+rechercheCaseDispoDansCol([],_,_,_,_,_).

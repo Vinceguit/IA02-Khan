@@ -1,12 +1,12 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
-                                       getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
-									   influenceKhan(Colour),
-                                       initMove(Colour, Move),
-                                       possibleMoves(InBoard,Colour, MoveList),
-                                       execMove(InBoard, Colour, Move, MoveList, OutBoard).
+                                       write('Bug0'),getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
+									   write('Bug1'),influenceKhan(Colour),
+                                       write('Bug2'),initMove(Colour, Move),
+                                       write('Bug3'),possibleMoves(InBoard,Colour, MoveList),
+                                       write('Bug4'),execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
-influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),!,findColour(TypePion,Colour).
+influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),findColour(TypePion,Colour).
 influenceKhan(_):- write('Desobeissance au khan !'),nl,
 				   write('Vous pouvez soit bouger n''importe quelle piece de votre equipe, soit faire revenir une ancienne piece.'),nl.
 				   
@@ -43,7 +43,7 @@ testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la positi
 
 
 /**VERIFICATION ET EXECUTION DU MOUVEMENT**/
-execMove(InBoard, _, Move, MoveList, OutBoard) :- element(Move, MoveList), !,
+execMove(InBoard, _, Move, MoveList, OutBoard) :- write('Mouvement accepté'),element(Move, MoveList), !,
                                                   transfert(InBoard, Move, OutBoard),!.
 
 execMove(InBoard, Colour, _, _, OutBoard) :- 
