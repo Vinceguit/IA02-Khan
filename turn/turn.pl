@@ -1,6 +1,7 @@
 /*********************/
 /*****Tour de jeu*****/
 /*********************/
+/*C'est le bon turn.pl !*/
 
 /****IMPORTS****/
 /*Import des prédicats d'initialisation pour un humain*/

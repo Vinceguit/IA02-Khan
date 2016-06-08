@@ -4,7 +4,7 @@
 
 /*On appelle possibleMoves pour récupérer la liste des mouvements possibles.
 MoveList est sous la forme [[(X1, Y1, X2, Y2)],...] où X est la colonne, Y est la ligne, (X1,Y1) est la position de départ et (X2, Y2) la position d'arrivée*/
-generateMove(Board, Player, Move) :- possibleMoves(Board, Player, MoveList),
+generateMove(Board, Player, Move) :- possibleMoves(Player, KhanRespecte, MoveList),
                                      findBestMove(MoveList, Move).
 
 /*Considérer les mouvements à 2 ou 3 tours en avant*/

@@ -1,12 +1,16 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
                                        getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
+									   /*influenceKhan(Colour)*/,
                                        initMove(Colour, Move),
-                                       possibleMoves(InBoard, Colour, MoveList),
+                                       possibleMoves(Colour, KhanRespecte, MoveList),
                                        execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
-
-/**SAISIE DU MOUVEMENT**/
+/* influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),!,findcolour(TypePion,Colour).
+influenceKhan(_):- write('Désobéissance au khan !'),nl,
+				   write('Vous pouvez soit bouger n''importe quelle pièce de votre équipe, soit faire revenir une ancienne pièce.').
+				   
+SAISIE DU MOUVEMENT*/
 initMove(rouge, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (kr, r1..r5) ? '),
                                              read(Pion),
                                              testInitMove(rouge, Pion, (Col1, Lin1, Col2, Lin2)).
@@ -18,9 +22,7 @@ initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5
 /*Vérification de la saisie du pion et saisie de la position d'arrivée*/
 testInitMove(Colour, Pion, (Col1, Lin1, Col2, Lin2)) :- findColour(Pion, Colour),
                                                         pion(Pion, Col1, Lin1, 'in', _), !,
-														/*GUILLAUME: La première pièce jouée devient d'office le Khan
-														retract(pion(TypePion, Col1, Lin1,_,M)),
-                                                        asserta(pion(TypePion, Col1, Lin1, 'khan', M)),*/
+														
                                                         getNewPos(Col2, Lin2).
 /*Cas d'erreur 1 : L'utilisateur a effectué une mauvaise saisie*/
 testInitMove(Colour, Pion, Move) :- \+findColour(Pion, Colour),

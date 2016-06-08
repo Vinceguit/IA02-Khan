@@ -26,13 +26,13 @@ afficher(r2) :- print(' r2|'), !.
 afficher(r3) :- print(' r3|'), !.
 afficher(r4) :- print(' r4|'), !.
 afficher(r5) :- print(' r5|'), !.
-afficher(kr) :- print(' R |'), !.
+afficher(kr) :- print(' KR|'), !.
 afficher(o1) :- print(' o1|'), !.
 afficher(o2) :- print(' o2|'), !.
 afficher(o3) :- print(' o3|'), !.
 afficher(o4) :- print(' o4|'), !.
 afficher(o5) :- print(' o5|'), !.
-afficher(ko) :- print(' O |'), !.
+afficher(ko) :- print(' KO|'), !.
 
 /*Parseur d'affichage des colonnes*/
 afficherId(1) :- print(' A').
@@ -51,6 +51,7 @@ affichagePlateauBas([T|Q], Lin) :- print('_____________________________________\
                                         affichagePlateauBas(Q, NLin).
 afficherLigneBas([]):- print(' ').
 afficherLigneBas([(T1, X)|Q]) :- print(' '), print(T1), afficher(X), afficherLigneBas(Q).
+
 
 /*Affichage du plateau du côté haut*/
 affichagePlateauHaut([], _) :- !.
