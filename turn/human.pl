@@ -1,15 +1,16 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
-                                       write('Bug0'),getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
+									   write('Bug0'),getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
 									   write('Bug1'),influenceKhan(Colour),
                                        write('Bug2'),initMove(Colour, Move),
                                        write('Bug3'),possibleMoves(InBoard,Colour, MoveList),
                                        write('Bug4'),execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
-influenceKhan(Colour):- pion(_,_,_,khan,Marqueur),pion(TypePion,_,_,in,Marqueur),findColour(TypePion,Colour).
+influenceKhan(_) :- pion(kinit, _, _, khan, _), !.
+influenceKhan(Colour):- pion(_,_,_,khan,Marqueur), pion(TypePion,_,_,in,Marqueur), findColour(TypePion,Colour), !.
 influenceKhan(_):- write('Desobeissance au khan !'),nl,
-				   write('Vous pouvez soit bouger n''importe quelle piece de votre equipe, soit faire revenir une ancienne piece.'),nl.
-				   
+			             write('Vous pouvez soit bouger n''importe quelle piece de votre equipe, soit faire revenir une ancienne piece.'), nl.
+
 /*SAISIE DU MOUVEMENT*/
 initMove(rouge, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (kr, r1..r5) ? '),
                                              read(Pion),
@@ -22,7 +23,7 @@ initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5
 /*Vérification de la saisie du pion et saisie de la position d'arrivée*/
 testInitMove(Colour, Pion, (Col1, Lin1, Col2, Lin2)) :- findColour(Pion, Colour),
                                                         pion(Pion, Col1, Lin1, 'in', _), !,
-														
+
                                                         getNewPos(Col2, Lin2),write((Col1,Lin1,Col2,Lin2)).
 /*Cas d'erreur 1 : L'utilisateur a effectué une mauvaise saisie*/
 testInitMove(Colour, Pion, Move) :- \+findColour(Pion, Colour),
@@ -46,6 +47,6 @@ testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la positi
 execMove(InBoard, _, Move, MoveList, OutBoard) :- write('Mouvement accepté'),element(Move, MoveList), !,
                                                   transfert(InBoard, Move, OutBoard),!.
 
-execMove(InBoard, Colour, _, _, OutBoard) :- 
+execMove(InBoard, Colour, _, _, OutBoard) :-
                                                         print('Erreur : mouvement invalide.'), nl,
                                                         playTurn(InBoard, Colour, OutBoard).
