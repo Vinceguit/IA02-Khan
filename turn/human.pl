@@ -1,7 +1,7 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
-									   write('Bug0'),getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
-									   write('Bug1'),influenceKhan(Colour),
+									                     write('Bug0'),getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
+									                     write('Bug1'),influenceKhan(Colour),
                                        write('Bug2'),initMove(Colour, Move),
                                        write('Bug3'),possibleMoves(InBoard,Colour, MoveList),
                                        write('Bug4'),execMove(InBoard, Colour, Move, MoveList, OutBoard).
