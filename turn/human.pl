@@ -1,12 +1,12 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
-									   write('Bug0'),getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
-									   write('Bug1'),influenceKhan(Colour),
-                                       write('Bug2'),initMove(Colour, Move),
-                                       write('Bug3'),possibleMoves(InBoard,Colour, MoveList),
-                                       write('Bug4'),execMove(InBoard, Colour, Move, MoveList, OutBoard).
+									   getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
+									   influenceKhan(Colour),
+                                       initMove(Colour, Move),
+                                       possibleMoves(InBoard,Colour, MoveList),
+                                       write('Bug ici'), execMove(InBoard, Colour, Move, MoveList, OutBoard).
 
-influenceKhan(_) :- pion(kinit, _, _, khan, _), !.
+influenceKhan(_) :-pion(kinit, _, _, khan, _), !.
 influenceKhan(Colour):- pion(_,_,_,khan,Marqueur), pion(TypePion,_,_,in,Marqueur), findColour(TypePion,Colour), !.
 influenceKhan(_):- write('Desobeissance au khan !'),nl,
 			             write('Vous pouvez soit bouger n''importe quelle piece de votre equipe, soit faire revenir une ancienne piece.'), nl.
