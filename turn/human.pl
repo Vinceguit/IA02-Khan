@@ -3,22 +3,23 @@ playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(',
 
 									   getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
 									   influenceKhan(Colour),
-                                       initMove(Colour, Move),
-                                       possibleMoves(InBoard,Colour, MoveList),
-                                      execMove(InBoard, Colour, Move, MoveList, OutBoard).
+                                       initMove(Colour, Move,Pion),
+                                       
+									  possibleMoves(InBoard,Colour, MoveList),!,
+                                      execMove(InBoard, Colour, Move,Pion, MoveList, OutBoard).
 
 
-influenceKhan(_) :-pion(kinit, _, _, khan, _), !.
-influenceKhan(Colour):- pion(_,_,_,khan,Marqueur), pion(TypePion,_,_,in,Marqueur), findColour(TypePion,Colour), !.
-influenceKhan(_):- write('Desobeissance au khan !'),nl,
+influenceKhan(_) :-pion(kinit, _, _, khan, _),write('Mouvement Libre'),nl, !.
+influenceKhan(Colour):- pion(_,_,_,khan,Marqueur), etablirEquipeActive(Colour,Marqueur,L),L\=[], write('Joueur '), print(Colour), write(', le khan te dit '),print(Marqueur),nl, !.
+influenceKhan(Colour):- write('Joueur '), print(Colour),write('Le khan te dit '),pion(_,_,_,khan,Marqueur),print(Marqueur),write(' ...mais non !'),nl,write('Desobeissance au khan !'),nl,
 			             write('Vous pouvez soit bouger n''importe quelle piece de votre equipe, soit faire revenir une ancienne piece.'), nl.
 
 /*SAISIE DU MOUVEMENT*/
-initMove(rouge, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (kr, r1..r5) ? '),
+initMove(rouge, (Col1, Lin1, Col2, Lin2),Pion) :- print('Pion à déplacer (kr, r1..r5) ? '),
                                              read(Pion),
                                              testInitMove(rouge, Pion, (Col1, Lin1, Col2, Lin2)).
 
-initMove(ocre, (Col1, Lin1, Col2, Lin2)) :- print('Pion à déplacer (ko, o1..o5) ? '),
+initMove(ocre, (Col1, Lin1, Col2, Lin2),Pion) :- print('Pion à déplacer (ko, o1..o5) ? '),
                                             read(Pion),
                                             testInitMove(ocre, Pion, (Col1, Lin1, Col2, Lin2)).
 
@@ -27,6 +28,10 @@ testInitMove(Colour, Pion, (Col1, Lin1, Col2, Lin2)) :- findColour(Pion, Colour)
                                                         pion(Pion, Col1, Lin1, 'in', _), !,
 
                                                         getNewPos(Col2, Lin2),write((Col1,Lin1,Col2,Lin2)).
+testInitMove(Colour, Pion, (0, 0, Col2, Lin2)) :- findColour(Pion, Colour),
+                                                        pion(Pion, 0, 0, 'out', _), !,
+
+                                                        getNewPos(Col2, Lin2),write((0,0,Col2,Lin2)).
 /*Cas d'erreur 1 : L'utilisateur a effectué une mauvaise saisie*/
 testInitMove(Colour, Pion, Move) :- \+findColour(Pion, Colour),
                                     print('Erreur de saisie du pion.'), nl,
@@ -46,9 +51,19 @@ testPos(Pos, Col, Lin) :- parse(Pos, 0, 0), print('Erreur de saisie de la positi
 
 
 /**VERIFICATION ET EXECUTION DU MOUVEMENT**/
-execMove(InBoard, _, Move, MoveList, OutBoard) :- write('Mouvement accepté'),element(Move, MoveList), !,
-                                                  transfert(InBoard, Move, OutBoard),!.
+execMove(InBoard,_, Move,Pion, MoveList, OutBoard) :- write('Mouvement accepté'),element(Move, MoveList), !,
+                                                  transfert(InBoard, Move,Pion, OutBoard),!.
 
-execMove(InBoard, Colour, _, _, OutBoard) :-
+execMove(InBoard, Colour, _, _,_, OutBoard) :-
                                                         print('Erreur : mouvement invalide.'), nl,
                                                         playTurn(InBoard, Colour, OutBoard).
+
+														
+														
+														
+														
+														
+														
+														
+														
+			

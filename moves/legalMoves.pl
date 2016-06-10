@@ -1,7 +1,7 @@
 /*possibleMoves permet d'obtenir le listing de tous les mouvements autorisés de la forme (Coldep,Lindep,Colarrivée,Linarrivée)*/
 
 possibleMoves(_,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
-											   etablirEquipeActive(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],!.
+											   etablirEquipeActive(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],write('liste vide'),!.
 possibleMoves(Board,Player,PossibleMoveList):- otherPossibleMoves(Board,Player,PossibleMoveList).
 /*possibleMoves(Player, KhanRespecte, PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 											   etablirEquipeActive(Player,Marqueur,PossibleMoveList)
@@ -16,6 +16,7 @@ activable(X,Y,Equipe,Marqueur) :- pion(TypePion,X,Y,Ok,Marqueur),
 /*Renvoie l'ensemble des pions jouables*/
 etablirEquipeActive(Equipe,Marqueur,PossibleMoveList) :- findall((Col,Lin),activable(Col,Lin,Equipe,Marqueur),ListeActivable),ListeActivable\=[],
 										recherchePionParPion(ListeActivable,Marqueur,[],Equipe,PossibleMoveList).
+etablirEquipeActive(_,_,[]).
 
 /*Pour chaque pion jouable, une recherche de mouvement est lancée grâce au exploGraphe*/
 recherchePionParPion([(ColInit,LinInit)|Q],I,L1,Equipe,PossibleMoveList) :- exploGraphe(I,L1,L2,Equipe,ColInit,LinInit,ColInit,LinInit),
@@ -144,24 +145,25 @@ otherPossibleMoves(Board,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 										   etablirEquipeActive(Player,1,L1),
 										   etablirEquipeActive(Player,2,L2),
 										   etablirEquipeActive(Player,3,L3),
-										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),affiche(ListeMouvementsLibres),
-										   ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),write('Bug ici 2'),
+										   
+										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),write('Les append fonctionnent'),affiche(ListeMouvementsLibres),
+										   ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),affiche(ListeAjoutPion),write('Bug ici 2'),
 										   append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList).
 										   
 
 
 
 
-ajoutNouveauPion(Board, Marqueur,ListeAjoutPion) :- rechercheCaseDispo(Board,6,6, Marqueur,[],ListeAjoutPion).
+ajoutNouveauPion(Board, Marqueur,ListeAjoutPion) :- rechercheCaseDispo(Board,1,1, Marqueur,[],ListeAjoutPion).
 
-rechercheCaseDispo([T|Q],Col,Lin, M, L1,L3) :- Lin>1,NLin is Lin-1, rechercheCaseDispoDansLigne(T,M,Col,Lin,L1,L2),
+rechercheCaseDispo([T|Q],Col,Lin, M, L1,L3) :- Lin<7,NLin is Lin+1, rechercheCaseDispoDansLigne(T,M,Col,Lin,L1,L2),
 												 rechercheCaseDispo(Q,Col,NLin,M,L2,L3),!.
-rechercheCaseDispo(_,_,_,_,L,L).
+rechercheCaseDispo(_,_,7,_,L,L).
 
-rechercheCaseDispoDansLigne([(M, b)|Q], M,Col,Lin,L1,L3) :- Col>0, NCol is Col-1,append([(0,0,Lin,Col)],L1,L2),!, rechercheCaseDispoDansLigne(Q, M,NCol,Lin,L2,L3).
-rechercheCaseDispoDansLigne([_|Q], M,Col,Lin,L1,L2) :- Col >0,NCol is Col-1,!, rechercheCaseDispoDansLigne(Q,M,NCol,Lin,L1,L2),!.
-rechercheCaseDispoDansLigne([],_,0,_,L,L).
-rechercheCaseDispoDansLigne(_,_,_,_,L,L).
+rechercheCaseDispoDansLigne([(M, b)|Q], M,Col,Lin,L1,L3) :- Col<7, NCol is Col+1,append([(0,0,Col,Lin)],L1,L2),!, rechercheCaseDispoDansLigne(Q, M,NCol,Lin,L2,L3).
+rechercheCaseDispoDansLigne([_|Q], M,Col,Lin,L1,L2) :- Col <7,NCol is Col+1,!, rechercheCaseDispoDansLigne(Q,M,NCol,Lin,L1,L2),!.
+rechercheCaseDispoDansLigne([],_,7,_,L,L).
+rechercheCaseDispoDansLigne(_,_,7,_,L,L).
 
 /*[[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
              [(2, b),(1, b),(3, b),(1, b),(3, b),(1, b)],
