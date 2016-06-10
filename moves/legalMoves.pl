@@ -1,7 +1,7 @@
 /*possibleMoves permet d'obtenir le listing de tous les mouvements autorisés de la forme (Coldep,Lindep,Colarrivée,Linarrivée)*/
 
 possibleMoves(_,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
-											   etablirEquipeActive(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],write('liste vide'),!.
+											   etablirEquipeActive(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],!.
 possibleMoves(Board,Player,PossibleMoveList):- otherPossibleMoves(Board,Player,PossibleMoveList).
 /*possibleMoves(Player, KhanRespecte, PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 											   etablirEquipeActive(Player,Marqueur,PossibleMoveList)
@@ -146,8 +146,8 @@ otherPossibleMoves(Board,Player,PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
 										   etablirEquipeActive(Player,2,L2),
 										   etablirEquipeActive(Player,3,L3),
 										   
-										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),write('Les append fonctionnent'),affiche(ListeMouvementsLibres),
-										   ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),affiche(ListeAjoutPion),write('Bug ici 2'),
+										   append(L1,L2,L), append(L,L3,ListeMouvementsLibres),
+										   ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),
 										   append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList).
 										   
 
