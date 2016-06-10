@@ -1,10 +1,12 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :- print('Joueur '), print(Colour), print(', à votre tour !'), nl,
+
 									   getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
 									   influenceKhan(Colour),
                                        initMove(Colour, Move),
                                        possibleMoves(InBoard,Colour, MoveList),
-                                       write('Bug ici'), execMove(InBoard, Colour, Move, MoveList, OutBoard).
+                                      execMove(InBoard, Colour, Move, MoveList, OutBoard).
+
 
 influenceKhan(_) :-pion(kinit, _, _, khan, _), !.
 influenceKhan(Colour):- pion(_,_,_,khan,Marqueur), pion(TypePion,_,_,in,Marqueur), findColour(TypePion,Colour), !.
