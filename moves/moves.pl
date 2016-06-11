@@ -11,29 +11,29 @@
 
 Cas 1: Le mouvement saisi fait arriver la pièce sur une case occupée par une pièce ennemie*/
 
-transfert(InBoard,Move,OutBoard) :-
+transfert(InBoard,Move,Pion,OutBoard) :-
 									presenceProie(Move ,InBoard, NewBoard), !,
 									/* On cherche le nouveau marqueur (1,2 ou 3) associé à la position d'arrivée*/
                                     rechercheMarqueur(NewBoard, Move, NewMarqueur),
 									/*On vient faire toutes les modifications pour modifier les infos dans la BDD*/
-                                    enregistrementMove(Move, NewMarqueur, NewBoard, OutBoard),
-                                    print('Pièce adverse capturée !'), nl.
+                                    enregistrementMove(Move, NewMarqueur, Pion, NewBoard, OutBoard).
 
 /* Cas 2: La case d'arrivée est vide*/
-
-transfert(InBoard,Move,OutBoard) :- write('Init du transfert...\n'), rechercheMarqueur(InBoard, Move, NewMarqueur),
-                                    enregistrementMove(Move, NewMarqueur, InBoard, OutBoard).
+transfert(InBoard,Move,Pion,OutBoard) :-  rechercheMarqueur(InBoard, Move, NewMarqueur),
+                                    enregistrementMove(Move, NewMarqueur,Pion, InBoard, OutBoard).
 
 /* La pièce bougée change de position et devient le khan*/
-enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Board1, Board2) :- write('Debut du transfert...\n'), pion(TypePion, Col1, Lin1, 'in', M),
-																			retract(pion(TypePionKhan, ColKhan, LinKhan,khan,MKhan)),
-                                                                            asserta(pion(TypePionKhan, ColKhan, LinKhan, in, MKhan)),
+enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Pion, Board1, Board2) :-
+	retract(pion(TypePionKhan, ColKhan, LinKhan,khan,MKhan)),
+	asserta(pion(TypePionKhan, ColKhan, LinKhan, in, MKhan)),
+	retract(pion(Pion,_, _,_,_)),
+	asserta(pion(Pion, Col2, Lin2, khan, NewMarqueur)),
+	miseAJourMove(Pion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2),!.
 
-                                                                             retract(pion(TypePion, _, _,_,M)),
-                                                                             asserta(pion(TypePion, Col2, Lin2, khan, NewMarqueur)),
-																			 write('Transfert reussi\n'),
-
-                                                                             miseAJourMove(TypePion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2).
+enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Pion, Board1, Board2) :-
+  retract(pion(Pion, _, _,_,_)),
+	asserta(pion(Pion, Col2, Lin2, khan, NewMarqueur)),
+	miseAJourMove(Pion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2),!.
 
 
 /* Suppression de la pièce présente au point de chute de la pièce bougée*/
@@ -56,4 +56,5 @@ miseAJourMove(TypePion, Col1,Lin1, Col2, Lin2, 'in', Board1, Board3) :- miseAJou
                                                                         miseAJourPlateau(TypePion, Col2, Lin2, 'in', Board2, Board3).
 
 miseAJourPlateau(TypePion,Col2,Lin2,'in',Board1,Board2) :- remplacer(Board1, Col2, Lin2, TypePion, _, Board2).
+miseAJourPlateau(_,0,0,'out',B,B).
 miseAJourPlateau(_, Col1, Lin1, 'out', Board1, Board2) :- remplacer(Board1, Col1, Lin1, b, _, Board2).

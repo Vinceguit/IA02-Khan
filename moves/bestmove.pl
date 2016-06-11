@@ -20,7 +20,7 @@ minimax(p) = MIN(minimax(O1), …, minimax(On)) si p est un nœud Opposant avec 
 miniMax(Player, 0, Board, BestMove, Value) :-
   print('MINIMAX TERMINAL - Frontiere:0  Valeur:'),
   transfertAI(Board, BestMove, OutBoard),
-  heuristic(OutBoard, Player, Value),
+  heuristic(OutBoard, Player, 0, Value),
   print(Value), nl, !.
 
 miniMax(Player, Frontier, Board, BestMove, Value) :-
@@ -62,10 +62,9 @@ betterOf(_, _, _, Move2, Value2, Move2, Value2).
 /**Algorithme Alpha-Beta**/
 /*alphaBeta(Player, Frontier, Board, Alpha, Beta, Move, Value) où Value est l'heuristique*/
 
-/*Cas 1 : si la frontière est à 0, on arrête l'exploration et on calcule l'heuristique
-alphaBeta(Player, 0, Board, Alpha, Beta, _, Value) :-
-  heuristic(Board, Player, Value),
-  print('   ALPHABETA TERMINAL - a:'), print(Alpha), print(' b:'), print(Beta), print(' - Value:'), print(Value),nl.
+/*Cas 1 : si la frontière est à 0, on arrête l'exploration et on calcule l'heuristique*/
+alphaBeta(Colour, 0, Board, _, _, Move, Value) :-
+  heuristic(Board, Colour, 0, Value).
 
 %Cas 2 : On récupère les mouvements possibles pour le joueur, puis on évalue les mouvements possibles
 alphaBeta(Player, Frontier, Board, Alpha, Beta, Move, Value) :-
@@ -103,7 +102,7 @@ coupure(Player, Move, Value, Frontier, Alpha, Beta, Moves, Board, _, BestMove, B
 coupure(Player, _, Value, Frontier, Alpha, Beta, Moves, Board, Record, BestMove, BestValue) :-
   Value =< Alpha, !,
   print('      CUTOFF - Val <= Alpha\n'),
-  evaluerEtChoisir(Player, Moves, Board, Frontier, Alpha, Beta, Record, BestMove, BestValue).*/
+  evaluerEtChoisir(Player, Moves, Board, Frontier, Alpha, Beta, Record, BestMove, BestValue).
 
 
 /*Petit prédicat pour trouver le joueur adverse*/
@@ -128,4 +127,40 @@ getIdInLine([_|Q], Col, IdPion) :- Col > 0, NCol is Col-1, getIdInLine(Q, NCol, 
 /**Calcul de la fonction heuristique**/
 /*On maximise pour l'IA; on minimise pour son adversaire*/
 
-heuristic(Board, Player, Value):- random(-30, 30, Rand), Value is Rand.
+heuristic(Board, Colour, V1, V10):-
+								listingPionsEquipe(Board,L1,L2),
+								listingPionsEnnemis(Board,L3,L4),
+								nbPositionAttaque(0.2,Board,V1,V2),
+								nbPositionVictime(0.2,Board,V2,V3),
+								nbSbiresEnnemisEnJeu(0.2,Board,V4,V5),
+								distanceSbiresKalista(0.2,Board,V5,V6),
+								defenseKalista(0.2,Board,V7,V8),
+								gagne(Board,Colour,V8,V9),
+								perdu(Board,Colour,V9,V10).
+
+gagne(Board,rouge,_,Vb):- Vb is 100,element(Q,Board),\+ element((ko,_),Q),!.
+gagne(Board,ocre,_,Vb):- Vb is 100,element(Q,Board),\+element((kr,_),Q),!.
+gagne(_,_,V,V).
+perdu(Board,rouge,_,Vb):- element(Q,Board),\+element((kr,_),Q),Vb is 0,!.
+perdu(Board,ocre,_,Vb):-element(Q,Board),\+ element((ko,_),Q),Vb is 0,!.
+perdu(_,_,V,V).
+
+nbSbiresEnnemiEnJeu(Coeff,Board,Colour,Va,Vb):- oppPlayer(Colour,Ennemi),
+												rechercheNombreDispo(Board,Ennemi,1,1,0,V),
+												calculNbSbires(Coeff,Va,Vb,V).
+
+rechercheNombreDispo([T|Q],Colour,Col,Lin, V1,V3) :- Lin<7,NLin is Lin+1, rechercheNombreDispoDansLigne(T,Colour,Col,Lin,V1,V2),
+												 rechercheNombreDispo(Q,Colour,Col,NLin,V2,V3),!.
+rechercheNombreDispo(_,_,_,7,V,V).
+
+rechercheNombreDispoDansLigne([(_, Pion)|Q], Colour,Col,Lin,V1,V3) :- Col<7, NCol is Col+1,findColour(Pion,Colour),V2 is V1+1,print(V2),!, rechercheNombreDispoDansLigne(Q, Colour,NCol,Lin,V2,V3).
+rechercheNombreDispoDansLigne([_|Q], Colour,Col,Lin,V1,V2) :- Col <7,NCol is Col+1,!, rechercheNombreDispoDansLigne(Q,Colour,NCol,Lin,V1,V2),!.
+rechercheNombreDispoDansLigne([],_,7,_,V,V).
+rechercheNombreDispoDansLigne(_,_,7,_,V,V).
+
+calculNbSbires(Coeff,Va,Vb,1):- Vb is Va+Coeff*(0),!.
+calculNbSbires(Coeff,Va,Vb,2):- Vb is Va+Coeff*(33),!.
+calculNbSbires(Coeff,Va,Vb,3):- Vb is Va+Coeff*(66),!.
+calculNbSbires(Coeff,Va,Vb,4):- Vb is Va+Coeff*(100),!.
+calculNbSbires(Coeff,Va,Vb,5):- Vb is Va+Coeff*(50),!.
+calculNbSbires(Coeff,Va,Vb,6):- Vb is Va+Coeff*(0),!.
