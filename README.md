@@ -97,10 +97,17 @@ Ce prédicat retire tous les prédicats `player(Colour, TypePlayer)` éventuelle
 	possibleMoves(Board, Player, PossibleMoveList)
 ```
 
-####Détermination du meilleur mouvement possible
+####Détermination du meilleur mouvement possible (Intelligence artificielle)
 ```prolog
 	generateMove(Board, Player, Move)
 ```
+
+###Dossier turn
+####Tour de jeu principal
+
+####Côté humain
+
+####Côté machine
 
 ##Déroulement du jeu
 

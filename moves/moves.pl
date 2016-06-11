@@ -11,7 +11,7 @@
 
 Cas 1: Le mouvement saisi fait arriver la pièce sur une case occupée par une pièce ennemie*/
 
-transfert(InBoard,Move,OutBoard) :- 
+transfert(InBoard,Move,OutBoard) :-
 									presenceProie(Move ,InBoard, NewBoard), !,
 									/* On cherche le nouveau marqueur (1,2 ou 3) associé à la position d'arrivée*/
                                     rechercheMarqueur(NewBoard, Move, NewMarqueur),
@@ -21,31 +21,31 @@ transfert(InBoard,Move,OutBoard) :-
 
 /* Cas 2: La case d'arrivée est vide*/
 
-transfert(InBoard,Move,OutBoard) :- write('initiation du transfert'), rechercheMarqueur(InBoard, Move, NewMarqueur),
+transfert(InBoard,Move,OutBoard) :- write('Init du transfert...\n'), rechercheMarqueur(InBoard, Move, NewMarqueur),
                                     enregistrementMove(Move, NewMarqueur, InBoard, OutBoard).
 
 /* La pièce bougée change de position et devient le khan*/
-enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Board1, Board2) :- write('debut du trnasfert'),pion(TypePion, Col1, Lin1, 'in', M),
+enregistrementMove((Col1, Lin1, Col2, Lin2), NewMarqueur, Board1, Board2) :- write('Debut du transfert...\n'), pion(TypePion, Col1, Lin1, 'in', M),
 																			retract(pion(TypePionKhan, ColKhan, LinKhan,khan,MKhan)),
                                                                             asserta(pion(TypePionKhan, ColKhan, LinKhan, in, MKhan)),
 
                                                                              retract(pion(TypePion, _, _,_,M)),
                                                                              asserta(pion(TypePion, Col2, Lin2, khan, NewMarqueur)),
-																			 write('Transfert reussi'),
-																			 
+																			 write('Transfert reussi\n'),
+
                                                                              miseAJourMove(TypePion, Col1, Lin1, Col2, Lin2, 'in', Board1, Board2).
 
 
-/* Suppression de la pièce présente au point de chute de la pièce bougée*/									
+/* Suppression de la pièce présente au point de chute de la pièce bougée*/
 presenceProie((_, _, Col2, Lin2), Board, NewBoard) :- pion(TypePion, Col2, Lin2, 'in', _),
                                                             suppressionProie(TypePion, Col2, Lin2),
                                                             miseAJourPlateau(TypePion, Col2, Lin2, 'out', Board, NewBoard).
-															
+
 presenceProie((_, _, Col2, Lin2), Board, NewBoard) :- pion(TypePion, Col2, Lin2, 'khan', _),
                                                             suppressionProie(TypePion, Col2, Lin2),
                                                             miseAJourPlateau(TypePion, Col2, Lin2, 'out', Board, NewBoard).
 
-/*Passage de la pièce de in à out*/															
+/*Passage de la pièce de in à out*/
 suppressionProie(TypePion,Col,Lin) :- retract(pion(TypePion, Col, Lin, _, _)),
                                       asserta(pion(TypePion,0,0, 'out', 0)).
 
