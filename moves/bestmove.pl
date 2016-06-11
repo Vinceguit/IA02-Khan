@@ -13,6 +13,7 @@ generateMove(Board, Player, Move) :- alphaBeta(Player, 4, Board, -100, 100, Move
 /*Cas 1 : si la frontière est à 0, on arrête l'exploration et on calcule l'heuristique*/
 alphaBeta(_, 0, Board, _, _, _, Value) :-
   heuristic(Board, Value).
+  
 
 /*Cas 2 : On récupère les mouvements possibles pour le joueur, puis on évalue les mouvements possibles*/
 alphaBeta(Player, Frontier, Board, Alpha, Beta, Move, Value) :-
@@ -55,4 +56,21 @@ oppPlayer(ocre, rouge).
 
 /**Calcul de la fonction heuristique**/
 
-heuristic(Board, Value):- !.
+heuristic(Board,Colour,V1, V10):- 
+								nbPositionAttaque(0.2,Board,V1,V2),
+								nbPositionVictime(0.2,Board,V2,V3),
+								nbSbiresEnnemisEnJeu(0.2,Board,V4,V5), 
+								distanceSbiresKalista(0.2,Board,V5,V6),
+								defenseKalista(0.2,Board,V7,V8),
+								gagné(Board,Colour,V8,V9),
+								perdu(Board,Colour,V9,V10).
+								
+gagné(Board,rouge,_,Vb):- pion(ko,_,_,out,_),Vb is 100.
+gagné(Board,ocre,_,Vb):- pion(kr,_,_,out,_),Vb is 100.
+gagné(Board,_,V,V).
+
+perdu(Board,rouge,_,Vb):- pion(kr,_,_,out,_),Vb is 0
+perdu(Board,ocre,_,Vb):-pion(ko,_,_,out,_),Vb is 0
+perdu(Board,_,V,V).
+
+nbSbiresEnnemiEnJeu(Coeff,Board,Va,Vb) :-
