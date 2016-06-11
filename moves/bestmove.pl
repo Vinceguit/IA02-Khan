@@ -11,8 +11,8 @@ generateMove(Board, Player, Move) :- alphaBeta(Player, 4, Board, -100, 100, Move
 /*alphaBeta(Player, Frontier, Board, Alpha, Beta, Move, Value) où Value est l'heuristique*/
 
 /*Cas 1 : si la frontière est à 0, on arrête l'exploration et on calcule l'heuristique*/
-alphaBeta(_, 0, Board, _, _, _, Value) :-
-  heuristic(Board, Value).
+alphaBeta(Colour, 0, Board, _, _, Move, Value) :-
+  heuristic(Board, Colour, Move,0,Value).
   
 
 /*Cas 2 : On récupère les mouvements possibles pour le joueur, puis on évalue les mouvements possibles*/
@@ -56,21 +56,41 @@ oppPlayer(ocre, rouge).
 
 /**Calcul de la fonction heuristique**/
 
-heuristic(Board,Colour,V1, V10):- 
+heuristic(Board,Colour,Move,V1, V10):- 
+								listingPionsEquipe(Board,L1,L2),
+								listingPionsEnnemis(Board,L3,L4),
 								nbPositionAttaque(0.2,Board,V1,V2),
 								nbPositionVictime(0.2,Board,V2,V3),
 								nbSbiresEnnemisEnJeu(0.2,Board,V4,V5), 
 								distanceSbiresKalista(0.2,Board,V5,V6),
 								defenseKalista(0.2,Board,V7,V8),
-								gagné(Board,Colour,V8,V9),
+								gagne(Board,Colour,V8,V9),
 								perdu(Board,Colour,V9,V10).
 								
-gagné(Board,rouge,_,Vb):- pion(ko,_,_,out,_),Vb is 100.
-gagné(Board,ocre,_,Vb):- pion(kr,_,_,out,_),Vb is 100.
-gagné(Board,_,V,V).
+gagne(Board,rouge,_,Vb):- Vb is 100,element(Q,Board),\+ element((ko,_),Q),!.
+gagne(Board,ocre,_,Vb):- Vb is 100,element(Q,Board),\+element((kr,_),Q),!.
+gagne(_,_,V,V).
+perdu(Board,rouge,_,Vb):- element(Q,Board),\+element((kr,_),Q),Vb is 0,!.
+perdu(Board,ocre,_,Vb):-element(Q,Board),\+ element((ko,_),Q),Vb is 0,!.
+perdu(_,_,V,V).
 
-perdu(Board,rouge,_,Vb):- pion(kr,_,_,out,_),Vb is 0
-perdu(Board,ocre,_,Vb):-pion(ko,_,_,out,_),Vb is 0
-perdu(Board,_,V,V).
+nbSbiresEnnemiEnJeu(Coeff,Board,Colour,Va,Vb):- oppPlayer(Colour,Ennemi),
+												rechercheNombreDispo(Board,Ennemi,1,1,0,V),
+												calculNbSbires(Coeff,Va,Vb,V).
 
-nbSbiresEnnemiEnJeu(Coeff,Board,Va,Vb) :-
+rechercheNombreDispo([T|Q],Colour,Col,Lin, V1,V3) :- Lin<7,NLin is Lin+1, rechercheNombreDispoDansLigne(T,Colour,Col,Lin,V1,V2),
+												 rechercheNombreDispo(Q,Colour,Col,NLin,V2,V3),!.
+rechercheNombreDispo(_,_,_,7,V,V).
+
+rechercheNombreDispoDansLigne([(_, Pion)|Q], Colour,Col,Lin,V1,V3) :- Col<7, NCol is Col+1,findColour(Pion,Colour),V2 is V1+1,print(V2),!, rechercheNombreDispoDansLigne(Q, Colour,NCol,Lin,V2,V3).
+rechercheNombreDispoDansLigne([_|Q], Colour,Col,Lin,V1,V2) :- Col <7,NCol is Col+1,!, rechercheNombreDispoDansLigne(Q,Colour,NCol,Lin,V1,V2),!.
+rechercheNombreDispoDansLigne([],_,7,_,V,V).
+rechercheNombreDispoDansLigne(_,_,7,_,V,V).
+
+calculNbSbires(Coeff,Va,Vb,1):- Vb is Va+Coeff*(0),!.
+calculNbSbires(Coeff,Va,Vb,2):- Vb is Va+Coeff*(33),!.
+calculNbSbires(Coeff,Va,Vb,3):- Vb is Va+Coeff*(66),!.
+calculNbSbires(Coeff,Va,Vb,4):- Vb is Va+Coeff*(100),!.
+calculNbSbires(Coeff,Va,Vb,5):- Vb is Va+Coeff*(50),!.
+calculNbSbires(Coeff,Va,Vb,6):- Vb is Va+Coeff*(0),!.
+												

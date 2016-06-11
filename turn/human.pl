@@ -19,8 +19,7 @@ initMove(rouge, (Col1, Lin1, Col2, Lin2),Pion) :- print('Pion à déplacer (kr, 
                                              read(Pion),
                                              testInitMove(rouge, Pion, (Col1, Lin1, Col2, Lin2)).
 
-initMove(ocr
-e, (Col1, Lin1, Col2, Lin2),Pion) :- print('Pion à déplacer (ko, o1..o5) ? '),
+initMove(ocre, (Col1, Lin1, Col2, Lin2),Pion) :- print('Pion à déplacer (ko, o1..o5) ? '),
                                             read(Pion),
                                             testInitMove(ocre, Pion, (Col1, Lin1, Col2, Lin2)).
 

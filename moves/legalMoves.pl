@@ -165,9 +165,9 @@ rechercheCaseDispoDansLigne([_|Q], M,Col,Lin,L1,L2) :- Col <7,NCol is Col+1,!, r
 rechercheCaseDispoDansLigne([],_,7,_,L,L).
 rechercheCaseDispoDansLigne(_,_,7,_,L,L).
 
-/*[[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
-             [(2, b),(1, b),(3, b),(1, b),(3, b),(1, b)],
-             [(1, b),(3, b),(2, b),(3, b),(1, b),(2, b)],
+/*[[(2, b),(ko, b),(1, b),(2, b),(r1, b),(3, b)],
+             [(o4, b),(1, b),(3, b),(1, b),(3, b),(1, b)],
+             [(1, b),(3, b),(r2, b),(3, b),(1, b),(o2, b)],
              [(3, b),(1, b),(2, b),(1, b),(3, b),(2, b)],
-             [(2, b),(3, b),(1, b),(3, b),(1, b),(3, b)],
+             [(2, b),(r5, b),(1, b),(o3, b),(1, b),(3, b)],
              [(2, b),(1, b),(3, b),(2, b),(2, b),(1, b)]]*/
