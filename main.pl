@@ -2,13 +2,14 @@
 /*Programme Principal*/
 /*********************/
 
-play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
-        initPlayers,
-        initBoard(Board),
-        asserta(plateau(Board)),
-        main(Board),
-        winner(WColour, WType), !,
-        print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
+play :-
+  print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
+  initPlayers,
+  initBoard(Board),
+  asserta(plateau(Board)),
+  main(Board),
+  winner(WColour, WType), !,
+  print('Le gagnant est le joueur '), print(WColour), print(' ('), print(WType), print(') !').
 
 /*Import de la bibliothèque principale*/
 :- include('./library').
@@ -36,5 +37,7 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 :- include('moves/legalMovesMinimax').
 /*Import de la bibliothèque de modification de la BDD lors du mouvement dans le cas du minimax*/
 :- include('moves/movesMinimax').
+
 /*Import des heuristiques*/
 :- include('moves/heuristic').
+
