@@ -13,7 +13,7 @@ element(X, [_|Q]) :- element(X, Q).
 
 /*Longueur d'une liste*/
 longueur(0, []).
-longueur(Long, [_|Q]) :-longueur(L,Q), Long is L+1.
+longueur(Long, [_|Q]) :- longueur(L,Q), Long is L+1.
 
 /* Afficher une liste*/
 affiche([]).
@@ -26,20 +26,26 @@ retireElement(X, [T|Q], [T|R]) :- retireElement(X, Q, R).
 
 /*Suppression des pions de la dernière exécution; reset des listes de positions*/
 /*listePos : Position en (Col, Lin) ou (X,Y)*/
-resetPions :- retractall(pion(_, _, _, _, _)),
-              retractall(getCote(_, _)),
-              retractall(listePos(_, _)),
-              asserta(listePos(haut, [(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2)])),
-              asserta(listePos(bas, [(1, 5), (2, 5), (3, 5), (4, 5), (5, 5), (6, 5), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6)])),
-              asserta(listePos(gauche, [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6)])),
-              asserta(listePos(droite, [(5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6)])).
+resetPions :-
+  retractall(pion(_, _, _, _, _)),
+  retractall(getCote(_, _)),
+  retractall(listePos(_, _)),
+  asserta(listePos(haut, [(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (1, 2), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2)])),
+  asserta(listePos(bas, [(1, 5), (2, 5), (3, 5), (4, 5), (5, 5), (6, 5), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6)])),
+  asserta(listePos(gauche, [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6)])),
+  asserta(listePos(droite, [(5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6)])).
+
+/*Petit prédicat pour trouver le joueur adverse*/
+oppPlayer(rouge, ocre).
+oppPlayer(ocre, rouge).
 
 /*Déclaration d'un pion*/
 addPion(IdPion, Col, Lin, IdCase) :- asserta(pion(IdPion, Col, Lin, in, IdCase)).
 
 /*Affectation du Khan à un pion*/
-setKhan(IdPion) :- retract(pion(IdPion, Col, Lin, _, IdCase)),
-                   asserta(pion(IdPion, Col, Lin, khan, IdCase)).
+setKhan(IdPion) :-
+  retract(pion(IdPion, Col, Lin, _, IdCase)),
+  asserta(pion(IdPion, Col, Lin, khan, IdCase)).
 
 /*Renvoie la couleur d'un pion à partir de son type*/
 findColour(IdPion, rouge) :- element(IdPion, [kr, r1, r2, r3, r4, r5]), !.
@@ -57,6 +63,7 @@ remplacerDansLigne([T|Q], Col, X, IdCase, [T|Res]) :- Col > 0, NCol is Col-1, re
 remplacerDansLigne(L, _, _, _, L).
 
 /*Prédicat pour récupérer le marqueur à partir de la position*/
+/*On trouve la ligne*/
 rechercheMarqueur([T|_], (_, _, Col, 1), M) :- rechercheMarqueurDansLigne(T, Col, M).
 rechercheMarqueur([_|Q], (_, _, Col, Lin), M) :- NLin is Lin-1, rechercheMarqueur(Q, (_, _, Col, NLin), M).
 /*On trouve la colonne*/

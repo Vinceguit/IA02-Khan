@@ -12,10 +12,13 @@
 /****CHOIX DES JOUEURS (Humain/Machine)****/
 typePlayer(humain).
 typePlayer(machine).
+
 initPlayers :- retractall(player(_, _)), getPlayer(rouge), getPlayer(ocre).
-getPlayer(Colour) :- print('Joueur '), print(Colour), print(' : humain ou machine ?'), nl,
-                     read(Player),
-                     testPlayer(Player, Colour).
+
+getPlayer(Colour) :-
+  print('Joueur '), print(Colour), print(' : humain ou machine ?'), nl,
+  read(Player),
+  testPlayer(Player, Colour).
 
 testPlayer(Player, Colour) :- typePlayer(Player), asserta(player(Player, Colour)), !.
 testPlayer(_, _) :-  print('Erreur de saisie'), !, fail.
@@ -32,13 +35,14 @@ etatInitial([[(2, b),(3, b),(1, b),(2, b),(2, b),(3, b)],
              [(2, b),(1, b),(3, b),(2, b),(2, b),(1, b)]]).
 
 /*Prédicat d'initialisation du plateau, à appeler dans le programme principal*/
-initBoard(Board) :- resetPions,
-					          asserta(pion(kinit,0,0,khan,0)),
-                    player(J1, rouge), player(J2, ocre),
-                    etatInitial(BoardInit),
-                    initCouleur(BoardInit, Cote, rouge, J1, BoardInter),
-                    oppose(Cote, CoteOpp),
-                    initCouleur(BoardInter, CoteOpp, ocre, J2, Board), !.
+initBoard(Board) :-
+  resetPions,
+  asserta(pion(kinit,0,0,khan,0)),
+  player(J1, rouge), player(J2, ocre),
+  etatInitial(BoardInit),
+  initCouleur(BoardInit, Cote, rouge, J1, BoardInter),
+  oppose(Cote, CoteOpp),
+  initCouleur(BoardInter, CoteOpp, ocre, J2, Board), !.
 
 
 /****CÔTÉS****/
@@ -55,8 +59,10 @@ oppose(haut, bas).
 oppose(bas, haut).
 
 /*Lecture du côté*/
-lireCote(Cote) :- print('Quel cote choisir ?'), nl, read(Cote), cote(Cote), !,
-                  asserta(getCote(Cote, rouge)), oppose(Cote, CoteOpp), asserta(getCote(CoteOpp, ocre)).
+lireCote(Cote) :-
+  print('Quel cote choisir ?'), nl, read(Cote), cote(Cote), !,
+  asserta(getCote(Cote, rouge)), oppose(Cote, CoteOpp), asserta(getCote(CoteOpp, ocre)).
+
 lireCote(_) :- print('Erreur de saisie'), nl, !, fail.
 
 /*Génération aléatoire d'un côté*/
@@ -64,19 +70,25 @@ convertToCote(1, gauche).
 convertToCote(2, droite).
 convertToCote(3, haut).
 convertToCote(4, bas).
-randomCote(Cote) :- random(1, 5, Rand), convertToCote(Rand, Cote),
-                    asserta(getCote(Cote, rouge)), oppose(Cote, CoteOpp), asserta(getCote(CoteOpp, ocre)),
-                    print('Cote choisi par la machine : '), print(Cote), nl.
+
+randomCote(Cote) :-
+  random(1, 5, Rand), convertToCote(Rand, Cote),
+  asserta(getCote(Cote, rouge)), oppose(Cote, CoteOpp), asserta(getCote(CoteOpp, ocre)),
+  print('Cote choisi par la machine : '), print(Cote), nl.
 
 
 /****INITIALISATION DES PIONS****/
 /*Initialisation des pions d'une couleur; c'est lui qu'on appelle dans initBoard*/
-initCouleur(InBoard, Cote, rouge, humain, OutBoard) :- lireCote(Cote),
-                                                       placerPions(InBoard, Cote, rouge, OutBoard), !.
+initCouleur(InBoard, Cote, rouge, humain, OutBoard) :-
+  lireCote(Cote),
+  placerPions(InBoard, Cote, rouge, OutBoard), !.
 
-initCouleur(InBoard, Cote, ocre, humain, OutBoard) :- placerPions(InBoard, Cote, ocre, OutBoard), !.
+initCouleur(InBoard, Cote, ocre, humain, OutBoard) :-
+  placerPions(InBoard, Cote, ocre, OutBoard), !.
 
-initCouleur(InBoard, Cote, rouge, machine, OutBoard) :- randomCote(Cote),
-                                                        placerPionsIA(InBoard, Cote, rouge, OutBoard), !.
+initCouleur(InBoard, Cote, rouge, machine, OutBoard) :-
+  randomCote(Cote),
+  placerPionsIA(InBoard, Cote, rouge, OutBoard), !.
 
-initCouleur(InBoard, Cote, ocre, machine, OutBoard) :- placerPionsIA(InBoard, Cote, ocre, OutBoard), !.
+initCouleur(InBoard, Cote, ocre, machine, OutBoard) :-
+  placerPionsIA(InBoard, Cote, ocre, OutBoard), !.

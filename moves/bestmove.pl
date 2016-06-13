@@ -114,11 +114,6 @@ coupure(Player, _, Value, Frontier, Alpha, Beta, Moves, Board, Record, BestMove,
   evaluerEtChoisir(Player, Moves, Board, Frontier, Alpha, Beta, Record, BestMove, BestValue).
 
 
-/*Petit prédicat pour trouver le joueur adverse*/
-oppPlayer(rouge, ocre).
-oppPlayer(ocre, rouge).
-
-
 /**Transfert d'un pion sur le plateau sans passer par les prédicats externes**/
 transfertAI(InBoard, (Col1, Lin1, Col2, Lin2), OutBoard) :-
   getIdPion(InBoard, Col1, Lin1, IdPion),
