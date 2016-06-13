@@ -29,10 +29,12 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 :- include('moves/moves').
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
-:- include('moves/bestmove2').
+:- include('moves/graphe').
 /*Import de la bibliothèque de génération de la liste des mouvements autorisés*/
 :- include('moves/legalMoves').
 /*Import de la bibliothèque de génération de la liste des mouvements autorisés dans le cas de la recherche AI, le prédicat pion étant remplacé par le prédicat temporaire minimaxPion*/
 :- include('moves/legalMovesMinimax').
 /*Import de la bibliothèque de modification de la BDD lors du mouvement dans le cas du minimax*/
 :- include('moves/movesMinimax').
+/*Import des heuristiques*/
+:- include('moves/heuristic').
