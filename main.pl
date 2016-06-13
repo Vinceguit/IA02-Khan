@@ -25,10 +25,14 @@ play :- print('~~~~~~~~~~~~~~~~KHAN~~~~~~~~~~~~~~~~\n'),
 /*Import de la bibliothèque d'exécution des tours*/
 :- include('./turn/turn').
 
-/*Import de la bibliothèque d'affichage des mouvements possibles*/
+/*Import de la bibliothèque de modification de la BDD lors du mouvement*/
 :- include('moves/moves').
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
-:- include('moves/bestmove').
+:- include('moves/bestmove2').
 /*Import de la bibliothèque de génération de la liste des mouvements autorisés*/
 :- include('moves/legalMoves').
+/*Import de la bibliothèque de génération de la liste des mouvements autorisés dans le cas de la recherche AI, le prédicat pion étant remplacé par le prédicat temporaire minimaxPion*/
+:- include('moves/legalMovesMinimax').
+/*Import de la bibliothèque de modification de la BDD lors du mouvement dans le cas du minimax*/
+:- include('moves/movesMinimax').

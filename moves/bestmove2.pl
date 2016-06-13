@@ -2,135 +2,97 @@
 /*Détermination du meilleur mouvement possible*/
 /**********************************************/
 
-/*On appelle possibleMoves pour récupérer la liste des mouvements possibles.
-MoveList est sous la forme [[(X1, Y1, X2, Y2)],...] où X est la colonne, Y est la ligne, (X1,Y1) est la position de départ et (X2, Y2) la position d'arrivée*/
+/*generateMove utilise l'algorithme AlphaBeta pour renvoyer Move, le meilleur mouvement*/
 
 generateMove(Board, Player, Move) :-
-/*On supprime les infos de la recherche précédente*/
-  retractall(playerState(_,_)),
-  oppPlayer(Player, Player2),
-  asserta(playerState(Player, max)),
-  asserta(playerState(Player2, min)),
-/* Pour le temps de la recherche, on vient créer la copie conforme detous les prédicats pions sous le nom de miniMaxPion(_,_,_,_,_)*/
-  findall((IdPion,Col,Lin,Etat,Marq),pion(IdPion,Col,Lin,Etat,Marq),ListePionsPourRecherche),
-  recopiagePions(ListePionsPourRecherche),
-  /On lance ici la recherche minimax qui nous renvoie le meilleur move*/
-  miniMax(Player, 2, Board, BestMove, _),
- /* Une fois la recherche terminée, on supprime tous les prédicats fantômes*/
-  retractall(miniMaxPion(_,_,_,_,_)).
+
+									/*On crée une copie temporaires des prédicats pion sous le nom de miniMaxPion*/
+									findall((IdPion,Col,Lin,Etat,Marq),pion(IdPion,Col,Lin,Etat,Marq),ListePionsMinimax),
+									recopiagePions(ListePionsMinimax),
+									/* idNoeud(minoumax,alpha,beta,Move,Board,Listing des parametres de ListePionsMinimax,Valeur de départ de l'heuristique)*/
+									asserta(idNoeud(min,-100,100,(0,0,0,0),Board,ListePionsMinimax,H)),
+									miniMax(Player, 3, _,Board),
+									bestMove(Move,_),
+									retractall(miniMaxPion(_,_,_,_,_)).
 
 
-  recopiagePions([IdPion,Col,Lin,Etat,Marq)|Q]) :- asserta(miniMaxPion(IdPion,Col,Lin,Etat,Marq)),recopiagePions(Q).
+
+  recopiagePions([(IdPion,Col,Lin,Etat,Marq)|Q]) :- asserta(miniMaxPion(IdPion,Col,Lin,Etat,Marq)),recopiagePions(Q).
   recopiagePions([]).
 
-/**Algorithme Minimax**/
-
-miniMax(Player, 0, Board, BestMove, Value) :-
-												print('MINIMAX TERMINAL - Frontiere:0  Valeur:'),
-												transfertAI(Board, BestMove, OutBoard),
-												heuristic(OutBoard, Player, 0, Value),
-
-												print(Value), nl, !.
-
-miniMax(Player, Frontier, Board, BestMove, Value) :-
-												print('MINIMAX - Frontiere:'), print(Frontier), print('  Joueur:'), print(Player), nl,
-												possibleMovesMiniMax(Board, Player, MoveList),
-												best(Player, Frontier, Board, MoveList, BestMove, Value).
-% BoardList : liste de tuples (Move, Board) pour retrouver un mouvement correspondant à un état du plateau plus facilement
-
-
-%On trouve le meilleur mouvement
-best(Player, Frontier, Board, [Move], Move, Value) :-
-														print('Mouvement:'), print(Move), nl,
-														NFrontier is Frontier - 1,
-														oppPlayer(Player, Player2),
-														transfertAI(Board, Move, Board2),
-														miniMax(Player2, NFrontier, Board2,  _, Value), !.
-
-best(Player, Frontier, Board, [Move1|MoveList], BestMove, BestValue) :-
-  print('Mouvement:'), print(Move1), nl,
-  NFrontier is Frontier - 1,
-  oppPlayer(Player, Player2),
-  transfertAI(Board, Move1, Board2),
-  miniMax(Player2, NFrontier, Board2, _, Value1),
-  best(Player, Frontier, Board, MoveList, Move2, Value2),
-  betterOf(Player, Move1, Value1, Move2, Value2, BestMove, BestValue),
-  print('Best move : '), print(BestMove), print(' - Best value : '), print(BestValue), nl.
+miniMax(Player, 0,MoveCreateur,Board) :-
+												heuristic(Board, Player, NewHeuristique),
+												bestMove(_,Heuristique),
+												NewHeuristique>Heuristique,
+												retract(bestMove(_,_)),
+												asserta(bestMove(MoveCreateur,NewHeuristique)),
+												retract(idNoeud(MinOuMax,Alpha,Beta,Move,Board,_,_)),
+												modifNoeudBottom(MinOuMax,Alpha,Beta,Move,Board,NewHeuristique),
+												retractall(miniMaxPion(_,_,_,_,_)),
+												recopiagePions(ListePions).
+miniMax(Player, 0,_,Board) :-
+												heuristic(Board, Player, NewHeuristique),
+												idNoeud(MinOuMax,Alpha,Beta,Move,Board,_,_),
+												retract(idNoeud(MinOuMax,Alpha,Beta,Move,Board,_,_)),
+												modifNoeudBottom(MinOuMax,Alpha,Beta,Move,Board,NewHeuristique),
+												retractall(miniMaxPion(_,_,_,_,_)),
+												recopiagePions(ListePions).
+												
+												
+												
+miniMax(Player,Strate,_,Board) :- idNoeud(_,_,_,_,Board,ListePions,_),
+											 possibleMovesMiniMax(Board,Player,PossibleMoveList),
+											 enregistrement(ListePions),
+											 exploMiniMax(PossibleMoveList,Player,Strate,Board,ListePions).
 
 
-betterOf(Player, Move1, Value1, _, Value2, Move1, Value1) :-
-    playerState(Player, min),
-    Value1 > Value2, !.
+initNoeud(min,Alpha,Beta,Move,NewBoard,ListePions):- asserta(idNoeud(max,Alpha,Beta,Move,NewBoard,Beta,ListePions)).
+initNoeud(max,Alpha,Beta,Move,NewBoard,ListePions):- asserta(idNoeud(min,Alpha,Beta,Move,NewBoard,Alpha,ListePions)).
 
-betterOf(Player, Move1, Value1, _, Value2, Move1, Value1) :-
-    playerState(Player, max),
-    Value1 < Value2, !.
+modifNoeudBottom(min,Alpha,_,Move,Board,NewHeuristique):- asserta(idNoeud(max,Alpha,NewHeuristique,Move,Board,NewHeuristique)).
+modifNoeudBottom(max,_,Beta,Move,Board,NewHeuristique):- asserta(idNoeud(min,NewHeuristique,Beta,Move,Board,NewHeuristique)).
 
-betterOf(_, _, _, Move2, Value2, Move2, Value2).
+enregistrement(ListeEnregistrement):- findall((IdPion,Col,Lin,Etat,Marq),miniMaxPion(IdPion,Col,Lin,Etat,Marq),ListeEnregistrement).
 
-/**Algorithme Alpha-Beta**/
-/*alphaBeta(Player, Frontier, Board, Alpha, Beta, Move, Value) où Value est l'heuristique*/
+exploMiniMax([(Col1,Lin1,Col2,Lin2)|Res],Player,Strate,InBoard,ListePions) :-    
+																				miniMaxPion(Pion,Col1,Lin1,_,_),
+																				transfertMiniMax(InBoard,(Col1,Lin1,Col2,Lin2),Pion,OutBoard),
+																				idNoeud(MinOuMax,Alpha,Beta,(Col1,Lin1,Col2,Lin2),OutBoard,_,_),
+																				opposeMinMax(MinOuMax,Oppose),
+																				initNoeud(Oppose,Alpha,Beta,ListePions),
+																				Strate-1 is NewStrate,
+																				miniMax(Player,NewStrate,(Col1,Lin1,Col2,Lin2),OutBoard),
+																				testElagage(MinOuMax,OutBoard),
+																				exploMiniMax(Res,Player,Strate,InBoard).
 
-/*Cas 1 : si la frontière est à 0, on arrête l'exploration et on calcule l'heuristique*/
-alphaBeta(Colour, 0, Board, _, _, Move, Value) :-
-  heuristic(Board, Colour, Value).
+																				
+exploMiniMax([(Col1,Lin1,Col2,Lin2)|_],Player,Strate,InBoard) :-  				
+																				miniMaxPion(Pion,Col1,Lin1,_,_),
+																				transfertMiniMax(InBoard,(Col1,Lin1,Col2,Lin2),Pion,OutBoard),
+																				idNoeud(MinOuMax,Alpha,Beta,(Col1,Lin1,Col2,Lin2),OutBoard,ListePions,_),
+																				opposeMinMax(MinOuMax,Oppose),
+																				initNoeud(Oppose,Alpha,Beta,ListePions),
+					
+					Strate-1 is NewStrate,
+																				miniMax(Player,NewStrate,(Col1,Lin1,Col2,Lin2),OutBoard).
+exploMiniMax([],_,_,_).
+																				
+testElagage(min,Board):- idNoeud(min,Alpha,_,_,Board,_,Value),Value>Alpha.
+testElagage(max,Board):- idNoeud(max,_,Beta,_,Board,_,Value),Value<Beta.
 
-%Cas 2 : On récupère les mouvements possibles pour le joueur, puis on évalue les mouvements possibles
-alphaBeta(Player, Frontier, Board, Alpha, Beta, Move, Value) :-
-  print('ALPHABETA - Frontiere '), print(Frontier), print(' - a:'), print(Alpha), print(' b:'), print(Beta), nl,
-  Frontier > 0, % On vérifie que la frontière est bien positive !
-  possibleMovesMiniMax(Board, Player, MoveList), % On récupère les mouvements possibles
-  NAlpha is -Beta, % On change de joueur; on passe donc de MAX à MIN ou vice-versa.
-  NBeta is -Alpha,
-  NFrontier is Frontier - 1, % On décrémente la frontière car on traite des cas plus profonds de l'arbre
-  evaluerEtChoisir(Player, MoveList, Board, NFrontier, NAlpha, NBeta, nil, Move, Value). %On récupère le meilleur mouvement
-
-
-%Evaluation des différents mouvements possibles, et choix du meilleur
-evaluerEtChoisir(Player, [Move|MoveList], Board, Frontier, Alpha, Beta, Record, BestMove, BestValue) :-
-  nl, print('EVALUERCHOISIR\n'),
-  transfertAI(Board, Move, OutBoard), % On récupère un Board avec le mouvement de l'arbre à tester
-  oppPlayer(Player, OtherPlayer), % On change de joueur (pour minimiser les chances de l'adversaire / maximiser celles de l'IA)
-  alphaBeta(OtherPlayer, Frontier, OutBoard, Alpha, Beta, _, Value), % On rappelle alphaBeta à la profondeur suivante. _ : OtherMove
-  NValue is -Value,
-  coupure(Player, Move, NValue, Frontier, Alpha, Beta, MoveList, Board, Record, BestMove, BestValue).
-
-evaluerEtChoisir(_, [], _, _, Alpha, _, Move, Move, Alpha):- print('EVALUERCHOISIR TERMINAL\n'). %Si on n'a plus de mouvement à traiter dans la liste, on renvoie la valeur de Alpha ainsi que le mouvement.
+opposeMinMax(min,max).
+opposeMinMax(max,min).
 
 
-%Traitement selon la valeur de Value par rapport à Alpha et Beta
-coupure(_, Move, Value, _, _, Beta, _, _, _, Move, Value) :-
-  Beta =< Value, !,
-  print('      CUTOFF - Beta <= Val\n'), !.
+																			
 
-coupure(Player, Move, Value, Frontier, Alpha, Beta, Moves, Board, _, BestMove, BestValue) :-
-  Alpha < Value, Value < Beta, !,
-  print('      CUTOFF - Alpha < Val < Beta\n'),
-  evaluerEtChoisir(Player, Moves, Board, Frontier, Value, Beta, Move, BestMove, BestValue), !.
-
-coupure(Player, _, Value, Frontier, Alpha, Beta, Moves, Board, Record, BestMove, BestValue) :-
-  Value =< Alpha, !,
-  print('      CUTOFF - Val <= Alpha\n'),
-  evaluerEtChoisir(Player, Moves, Board, Frontier, Alpha, Beta, Record, BestMove, BestValue).
+									 
+bestMove((0,0,0,0),-100).
 
 
-/*Petit prédicat pour trouver le joueur adverse*/
-oppPlayer(rouge, ocre).
-oppPlayer(ocre, rouge).
 
 
-/**Transfert d'un pion sur le plateau sans passer par les prédicats externes**/
-transfertAI(InBoard, (Col1, Lin1, Col2, Lin2), OutBoard) :-
-  getIdPion(InBoard, Col1, Lin1, IdPion),
-  miseAJourMove(IdPion, Col1, Lin1, Col2, Lin2, 'in', InBoard, OutBoard).
 
-/*On trouve IdPion*/
-/*On trouve la ligne*/
-getIdPion([T|_], Col, 1, IdPion) :- getIdInLine(T, Col, IdPion).
-getIdPion([_|Q], Col, Lin, IdPion) :- Lin > 0, NLin is Lin-1, getIdPion(Q, Col, NLin, IdPion).
-/*On trouve la colonne*/
-getIdInLine([(_, IdPion)|_], 1, IdPion).
-getIdInLine([_|Q], Col, IdPion) :- Col > 0, NCol is Col-1, getIdInLine(Q, NCol, IdPion).
 
 
 
@@ -139,6 +101,8 @@ getIdInLine([_|Q], Col, IdPion) :- Col > 0, NCol is Col-1, getIdInLine(Q, NCol, 
 /**Calcul de la fonction heuristique**/
 /*On maximise pour l'IA; on minimise pour son adversaire*/
 
+
+								
 heuristic(Board,Colour,V9) :- listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
 								oppPlayer(Colour,Ennemi),
 								listingPionsEquipe(Board,Ennemi,1,1,[],Lennemie),
@@ -148,9 +112,9 @@ heuristic(Board,Colour,V9) :- listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
 								distanceSbiresKalista(0.2,KE,Lequipe,V3,V5),print(V5),nl,
 								defenseKalistaAlliee(0.2,Lequipe,KA,V5,V6),print(V6),nl,
 								defenseKalistaEnnemie(0.2,Lennemie,KE,V6,V7),print(V7),nl,
-								gagne(KE,V7,V8),
-								perdu(KA,V8,V9),write('Heuristique de '), print(V9),
-
+								gagne(Lennemie,Colour,V7,V8),
+								perdu(Lequipe,Colour,V8,V9),write('Heuristique de '), print(V9),
+								
 								print(Ennemi),nl,
 								print(Lequipe),nl,
 								print(Lennemie),nl,
@@ -158,11 +122,14 @@ heuristic(Board,Colour,V9) :- listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
 								print(KE),nl.
 
 /* Ce coup passe à 100 si le joueur a gagné*/
-gagne(KE,_,Vb):- KE==(0,0),Vb is 100,!.
-gagne(_,V,V).
+gagne(L,rouge,_,Vb):- \+ element((_,_,ko),L),Vb is 100,!.
+gagne(L,ocre,_,Vb):- \+ element((_,_,kr),L),Vb is 100,!.
+
+gagne(_,_,V,V).
 /*Ce coup passeà -100 si le joueur a perdu*/
-perdu(KA,_,Vb):- KA==(0,0),Vb is 100,!.
-perdu(_,V,V).
+perdu(L,rouge,_,Vb):- \+element((_,_,kr),L),Vb is 0,!.
+perdu(L,ocre,_,Vb):- \+element((_,_,ko),L),Vb is 0,!.
+perdu(_,_,V,V).
 
 
 /* Cette heuristique cherche à laisser le plus souvent possible 4 pièces à l'ennemi, kalista comprise*/
@@ -194,7 +161,7 @@ nbPositionVictime(Coeff,Colour,Board,Lequipe,V1,V2) :- possibleMoves(Board,Colou
 															  findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lequipe),ListeMenaces),
 															  longueur(L,ListeMenaces),
 															  calculNbPositionVictime(Coeff,V1,V2,L).
-
+															  
 /*Recherche de la position des kalistas
 listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)).*/
 listingKalistas([T|Q],Colour,Col,Lin,(KAin,KEin),(KAout,KEout)) :- Lin<7,NLin is Lin+1, listingKalistasDansLigne(T,Colour,Col,Lin,(KAin,KEin),(KA2,KE2)),
@@ -207,7 +174,7 @@ listingKalistasDansLigne([(_, ko)|Q], rouge,Col,Lin,(KalistaAlliee,_),(KA,KE)) :
 listingKalistasDansLigne([(_, kr)|Q], ocre,Col,Lin,(KalistaAlliee,_),(KA,KE)) :- Col<7, NCol is Col+1,!, listingKalistasDansLigne(Q, ocre,NCol,Lin,(KalistaAlliee,(Col,Lin)),(KA,KE)),!.
 listingKalistasDansLigne([_|Q], Colour,Col,Lin,(K1,K2),(K3,K4)) :- Col <7,NCol is Col+1,!, listingKalistasDansLigne(Q,Colour,NCol,Lin,(K1,K2),(K3,K4)),!.
 listingKalistasDansLigne(_,_,7,_,(K1,K2),(K1,K2)).
-
+															  
 /*Recherche du nombre de sbires autour de la Kalista*/
 
 defenseKalistaAlliee(Coeff,ListePion,(Col,Lin),Va,Vb) :- ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
@@ -215,26 +182,26 @@ defenseKalistaAlliee(Coeff,ListePion,(Col,Lin),Va,Vb) :- ColA is Col+1,defenseur
 												 LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
 												 LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
 												 calculDefenseKalistaAlliee(Coeff,Va,Vb,V5).
-
+												 
 defenseKalistaEnnemie(Coeff,ListePion,(Col,Lin),Va,Vb) :- ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
 												 ColB is Col-1,defenseur((ColB,Lin),ListePion,V2,V3),
 												 LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
 												 LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
 												 calculDefenseKalistaEnnemie(Coeff,Va,Vb,V5).
-
-defenseur((Col,Lin),ListePion,Va,Vb) :- element((Col,Lin),ListePion), Vb is Va+1,!.
+												 
+defenseur((Col,Lin),ListePion,Va,Vb) :- element((Col,Lin,_),ListePion), Vb is Va+1,!.
 defenseur(_,_,V,V).
 
 distanceSbiresKalista(Coeff,(ColK,LinK),Lequipe,Va,Vb):- findall((Col,Lin),distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK),ListePionsACote),
 														 longueur(L,ListePionsACote),
 														 calculDistanceSbireKalista(Coeff,Va,Vb,L).
-
+														 
 distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK):- element((Col,Lin,_),Lequipe),Col=<ColK+2,Col>=ColK-2,
 												Lin>=LinK-2,Lin=<LinK+2,!.
 /*Listing des calculs d'heuristiques*/
 
 calculDefenseKalistaAlliee(Coeff,Va,Vb,NbDefenseurs):- Vb is Va+Coeff*NbDefenseurs*100*0.25.
-
+														 
 calculDefenseKalistaEnnemie(Coeff,Va,Vb,NbDefenseurs):-Vb is Va+Coeff*(4-NbDefenseurs)*100*0.25.
 
 calculDistanceSbireKalista(Coeff,Va,Vb,L):- Vb is Va+Coeff*L*100/6.
@@ -253,3 +220,6 @@ calculNbPositionAttaque(Coeff,Va,Vb,_) :- Vb is Va+Coeff*100.
 
 calculNbPositionVictime(Coeff,Va,Vb,L) :-Vb is Va+Coeff*(15-L)*100/15,Vb>Va+Coeff*100,!.
 calculNbPositionVictime(Coeff,Va,Vb,_) :- Vb is Va+Coeff*100.
+
+
+

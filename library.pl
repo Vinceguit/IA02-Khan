@@ -3,6 +3,9 @@
 /***********************************************************/
 
 :-dynamic(pion/5).
+:-dynamic(miniMaxPion/5).
+:-dynamic(idNoeud/7).
+:-dynamic(bestMove/2).
 
 /*element(X, L) s'efface si X est élément de la liste L*/
 element(X, [X|_]).
