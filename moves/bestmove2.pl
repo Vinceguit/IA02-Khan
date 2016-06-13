@@ -6,14 +6,14 @@
 
 generateMove(Board, Player, Move) :-
 
-/*On crée une copie temporaires des prédicats pion sous le nom de miniMaxPion*/
-  findall((IdPion,Col,Lin,Etat,Marq),pion(IdPion,Col,Lin,Etat,Marq),ListePionsMinimax),
-  recopiagePions(ListePionsMinimax),
-/* idNoeud(minoumax,alpha,beta,Move,Board,Listing des parametres de ListePionsMinimax,Valeur de départ de l'heuristique)*/
-  asserta(idNoeud(min,-100,100,(0,0,0,0),Board,ListePionsMinimax,H)),
-  miniMax(Player, 3, _,Board),
-  bestMove(Move,_),
-  retractall(miniMaxPion(_,_,_,_,_)).
+									/*On crée une copie temporaires des prédicats pion sous le nom de miniMaxPion*/
+									findall((IdPion,Col,Lin,Etat,Marq),pion(IdPion,Col,Lin,Etat,Marq),ListePionsMinimax),
+									recopiagePions(ListePionsMinimax),
+									/* idNoeud(minoumax,alpha,beta,Move,Board,Listing des parametres de ListePionsMinimax,Valeur de départ de l'heuristique)*/
+									asserta(idNoeud(min,-100,100,(0,0,0,0),Board,ListePionsMinimax,H)),
+									miniMax(Player, 3, _,Board),
+									bestMove(Move,_),
+									retractall(miniMaxPion(_,_,_,_,_)).
 
 
 
@@ -72,7 +72,8 @@ exploMiniMax([(Col1,Lin1,Col2,Lin2)|_],Player,Strate,InBoard) :-
 																				idNoeud(MinOuMax,Alpha,Beta,(Col1,Lin1,Col2,Lin2),OutBoard,ListePions,_),
 																				opposeMinMax(MinOuMax,Oppose),
 																				initNoeud(Oppose,Alpha,Beta,ListePions),
-																				Strate-1 is NewStrate,
+					
+					Strate-1 is NewStrate,
 																				miniMax(Player,NewStrate,(Col1,Lin1,Col2,Lin2),OutBoard).
 exploMiniMax([],_,_,_).
 																				
