@@ -63,7 +63,7 @@ betterOf(_, _, _, Move2, Value2, Move2, Value2).
 /*alphaBeta(Player, Frontier, Board, Alpha, Beta, Move, Value) où Value est l'heuristique*/
 
 /*Cas 1 : si la frontière est à 0, on arrête l'exploration et on calcule l'heuristique*/
-alphaBeta(Colour, 0, Board, _, _, Move, Value) :-
+alphaBeta(Colour, 0, Board, _, _, _, Value) :-
   heuristic(Board, Colour, 0, Value).
 
 %Cas 2 : On récupère les mouvements possibles pour le joueur, puis on évalue les mouvements possibles

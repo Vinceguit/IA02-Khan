@@ -36,7 +36,6 @@ initBoard(Board) :- resetPions,
 					          asserta(pion(kinit,0,0,khan,0)),
                     player(J1, rouge), player(J2, ocre),
                     etatInitial(BoardInit),
-                    afficherPlateau(BoardInit, bas),
                     initCouleur(BoardInit, Cote, rouge, J1, BoardInter),
                     oppose(Cote, CoteOpp),
                     initCouleur(BoardInter, CoteOpp, ocre, J2, Board), !.
@@ -73,9 +72,9 @@ randomCote(Cote) :- random(1, 5, Rand), convertToCote(Rand, Cote),
 /****INITIALISATION DES PIONS****/
 /*Initialisation des pions d'une couleur; c'est lui qu'on appelle dans initBoard*/
 initCouleur(InBoard, Cote, rouge, humain, OutBoard) :- lireCote(Cote),
-                                                       placerPionsIA(InBoard, Cote, rouge, OutBoard), !.
+                                                       placerPions(InBoard, Cote, rouge, OutBoard), !.
 
-initCouleur(InBoard, Cote, ocre, humain, OutBoard) :- placerPionsIA(InBoard, Cote, ocre, OutBoard), !.
+initCouleur(InBoard, Cote, ocre, humain, OutBoard) :- placerPions(InBoard, Cote, ocre, OutBoard), !.
 
 initCouleur(InBoard, Cote, rouge, machine, OutBoard) :- randomCote(Cote),
                                                         placerPionsIA(InBoard, Cote, rouge, OutBoard), !.

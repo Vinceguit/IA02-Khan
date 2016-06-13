@@ -5,19 +5,19 @@
 /*Affichage du plateau : afficherPlateau(Board, Cote)*/
 afficherPlateau(Board, bas) :- print('   A     B     C     D     E     F   \n'),
                                affichagePlateauBas(Board, 1),
-                               print('_____________________________________\n').
+                               print('_____________________________________\n'), nl.
 
 afficherPlateau(Board, haut) :- print('   F     E     D     C     B     A   \n'),
                                 affichagePlateauHaut(Board, 0),
-                                print('_____________________________________\n').
+                                print('_____________________________________\n'), nl.
 
 afficherPlateau(Board, gauche) :- print('   1     2     3     4     5     6   \n'),
                                   affichagePlateauGauche(Board, 6),
-                                  print('_____________________________________\n').
+                                  print('_____________________________________\n'), nl.
 
 afficherPlateau(Board, droite) :- print('   6     5     4     3     2     1   \n'),
                                   affichagePlateauDroite(Board, 1),
-                                  print('_____________________________________\n').
+                                  print('_____________________________________\n'), nl.
 
 /*On traite les différents cas d'affichage*/
 afficher(b) :- print('   |'), !.

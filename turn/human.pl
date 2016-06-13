@@ -1,7 +1,7 @@
 /****TOUR HUMAIN****/
 playTurn(InBoard, Colour, OutBoard) :-
 	print('Joueur '), print(Colour), print(', à votre tour !'), nl,
-	getCote(Cote, rouge), afficherPlateau(InBoard, Cote),
+	getCote(Cote, Colour), afficherPlateau(InBoard, Cote),
 	influenceKhan(Colour),
 	initMove(Colour, Move,Pion),
 	possibleMoves(InBoard,Colour, MoveList),!,
