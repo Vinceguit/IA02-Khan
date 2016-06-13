@@ -1,5 +1,6 @@
 /*Placement des pions d'une couleur : prédicat appelé dans l'initialisation*/
 placerPions(InBoard, Cote, rouge, OutBoard) :-
+  afficherPlateau(InBoard, Cote),
   placerPion(InBoard, Cote, kr, Board1),
   placerPion(Board1, Cote, r1, Board2),
   placerPion(Board2, Cote, r2, Board3),
@@ -8,6 +9,7 @@ placerPions(InBoard, Cote, rouge, OutBoard) :-
   placerPion(Board5, Cote, r5, OutBoard).
 
 placerPions(InBoard, Cote, ocre, OutBoard) :-
+  afficherPlateau(InBoard, Cote),
   placerPion(InBoard, Cote, ko, Board1),
   placerPion(Board1, Cote, o1, Board2),
   placerPion(Board2, Cote, o2, Board3),

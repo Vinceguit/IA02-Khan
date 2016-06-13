@@ -1,6 +1,7 @@
 /*******************************/
 /**Affichage du plateau de jeu**/
 /*******************************/
+testAffichage(Cote) :- etatInitial(Board), afficherPlateau(Board, Cote).
 
 /*Affichage du plateau : afficherPlateau(Board, Cote)*/
 afficherPlateau(Board, bas) :-
