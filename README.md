@@ -65,13 +65,13 @@ Prédicat | Action
 
 ###Exécution principale
 ```prolog
-	play
+play
 ```
 Il s'agit du prédicat d'exécution du jeu. Dans un premier temps, il appelle `initPlayers`, le prédicat d'initialisation des types de joueurs (humain/machine). Il appelle ensuite `initBoard(?Board)`, qui effectue l'initialisation des pions et renvoie le résultat dans un plateau. On entre ensuite dans la boucle de jeu principale, avec le prédicat `main(+Board)`; cette boucle s'arrête dès qu'une Kalista est prise. Elle asserte alors un prédicat `winner(+Player, +Type)` afin de récupérer le gagnant dans `play`. On affiche le gagnant, et l'exécution est terminée.
 
 ###Initialisation
 ```prolog
-	initBoard(?Board)
+initBoard(?Board)
 ```
 Il s'agit du prédicat d'initialisation du plateau. Dans un premier temps, il remet à zéro toutes les assertions de l'exécution précédente (`resetPions`). On récupère ensuite le plateau vierge, déclaré dans un prédicat `etatInitial(+Plateau)`. On initialise ensuite les couleurs rouge, puis ocre, en assertant l'information dans un prédicat dynamique `getCote(Cote, Couleur)`.
 
@@ -81,7 +81,7 @@ Ensuite, on appelle pour chaque joueur `placerPions(+InBoard, +Cote, +Colour, -O
 
 ###Boucle principale
 ```prolog
-	main(+Board)
+main(+Board)
 ```
 Il s'agit de la boucle principale du jeu. On récupère d'abord le statut de chaque joueur (humain ou machine) par unification avec un prédicat `player(?Statut, +Couleur)` pour chaque joueur. On rentre ensuite dans la boucle principale. On appelle alors le prédicat de tour `playTurn` si le joueur est humain, `playTurnAI` sinon. On récupère ensuite le côté du joueur courant (déclaré dans le prédicat `getCote(Cote, Colour)`, afin d'afficher le plateau. On appelle ensuite de nouveau la boucle principale pour le joueur adverse, avec le plateau mis à jour.
 
@@ -89,7 +89,7 @@ La boucle principale s'arrête lorsqu'une Kalista a été prise, c'est-à-dire q
 
 ####Tour humain
 ```prolog
-	playTurn(+InBoard, +Player, ?OutBoard)
+playTurn(+InBoard, +Player, ?OutBoard)
 ```
 Ici, on affiche tout d'abord le plateau au joueur. On appelle ensuite le prédicat `influenceKhan(Colour)`, qui affiche au joueur quelle est la valeur de la case où se situe le Khan, et s'il peut le respecter ou non. On appelle ensuite `initMove(+Colour, ?Move, ?Pion)`, qui initialise le mouvement du joueur, en récupérant l'identifiant du pion à déplacer, ainsi que la position d'arrivée de celui-ci - on traite au passage les cas d'erreur. On appelle ensuite `possibleMoves(+Board, +Colour, -MoveList)` afin de comparer, par la suite, le mouvement saisi par l'utilisateur avec la liste de mouvements possibles pour s'assurer de la validité du mouvement saisi.
 
@@ -97,19 +97,19 @@ On appelle alors `execMove(+InBoard, +Colour, +Move, +Pion, +MoveList, ?OutBoard
 
 ####Tour machine
 ```prolog
-	playTurnAI(+InBoard, +Player, ?OutBoard)
+playTurnAI(+InBoard, +Player, ?OutBoard)
 ```
 Ici, on appelle `generateMove(+InBoard, +Colour, -Move)`, qui génère le meilleur mouvement possible pour l'ordinateur, considérant un état du plateau donné et le joueur courant. Une fois ce mouvement obtenu, on l'effectue à l'aide du prédicat `transfert(+InBoard, +Move, +Pion, ?OutBoard)`, puis on renvoie le nouveau plateau.
 
 ###Transfert d'un pion
 ```prolog
-	transfert(+InBoard, +Move, +Pion, ?OutBoard)
+transfert(+InBoard, +Move, +Pion, ?OutBoard)
 ```
 Ce prédicat transfert une pièce d'une case à un autre; s'il y a une pièce adverse sur la case, il modifie son statut en `'out'`, et la remplace par la nouvelle pièce. Le prédicat enlève également le Khan de la pièce précédente, pour la réaffecter à la pièce qui vient d'être déplacée. Si la pièce était hors plateau, elle est replacée sans problème, vu qu'on considère qu'une pièce sorti du plateau est en position `(0, 0)`.
 
 ###Mouvements possibles
 ```prolog
-	possibleMoves(+Board, +Player, -PossibleMoveList)
+possibleMoves(+Board, +Player, -PossibleMoveList)
 ```
 Ce prédicat explore l'ensemble des mouvements possibles, et renvoie ces derniers sous forme de liste. Si un pion est hors-jeu et que le Khan ne peut pas être respecté, on rajoute sa remise sur le plateau dans la liste des mouvements possibles; on rajoute également tous les mouvements possibles dans ce cas là.
 
@@ -119,16 +119,16 @@ Si aucune règle n'interfère avec l'exploration jusqu'à la position terminale 
 
 ###Génération de mouvement
 ```prolog
-	generateMove(+Board, +Player, -Move)
+generateMove(+Board, +Player, -Move)
 ```
 
 Le prédicat `generateMove(+Board, +Player, -Move)` permet au programme de rechercher dans la liste des tuples (heuristique, Move) la mouvement avec l'heuristique la plus élevée.
 
-Nous aurions souhaité réaliser cette recherche à l'aide de l'algorithme de recherche minimax Alpha-Beta. Bien que nous ayons bien compris les règles de fonctionnement de cet algorithme, en particulier grâce à des vidéos Youtube de l'UC Berkeley (https://www.youtube.com/watch?v=xBXHtz4Gbdo), il a été difficile de mettre en place cet algorithme pour ce programme. Notre travail sur l'algorithme $\alpha$ $\beta$ n'est donc pas intégré au projet mais consultable et commenté dans le fichier alphabeta2.pl.
+Nous aurions souhaité réaliser cette recherche à l'aide de l'algorithme de recherche minimax Alpha-Beta. Bien que nous ayons bien compris les règles de fonctionnement de cet algorithme, en particulier grâce à des vidéos Youtube de l'UC Berkeley (https://www.youtube.com/watch?v=xBXHtz4Gbdo), il a été difficile de mettre en place cet algorithme pour ce programme. Notre travail sur l'algorithme Alpha-Beta n'est donc pas intégré au projet mais consultable et commenté dans le fichier alphabeta2.pl.
 
 ###Heuristique
 ```prolog
-	heuristic(+Board, +Player, -Value)
+heuristic(+Board, +Player, -Value)
 ```
 En mode "machine", l'heuristique se base sur les 7 prédicats suivants :
 * nbSbiresAlliesenJeu qui calcule le nombre d'Allies en Jeu, le but est de les avoir tous en jeu;
@@ -144,7 +144,7 @@ Prédicat | Action
 
 ###main.pl
 ```prolog
-	initBoard(Board).
+initBoard(Board).
 ```
 Ce prédicat retourne en paramètre le plateau de jeu initialisé, sous forme de liste de ligne [L1, ..., L6], chaque ligne étant une liste de tuples `[(Indice1, Type1), ..., (Indice6, Type6)]` contenant l'indice de la case (de 1 à 3) et le type de pion sur cette case (`b` = case blanche, `kr` = Kalista rouge, `ko` = Kalista ocre, `r1` à `r5` = sbires rouges, `o1` à `o5` = sbires ocres).
 
@@ -178,7 +178,6 @@ Si le joueur est une machine, on affiche le plateau une fois le pion déplacé, 
 ###Fin de jeu
 Dès que l'une des deux Kalistas est prise, on sort de la boucle principale et on renvoie le joueur qui a pris la Kalista; on affiche ainsi à l'utilisateur le gagnant, s'il était humain ou machine, puis l'exécution se termine.
 
-\newpage
 
 ##Problèmes rencontrés
 
@@ -193,7 +192,7 @@ Compte tenu du fait que le nombre d'opération afin d'effectuer le placement (ou
 
 Nous avons dû nous limiter à une simple recherche du meilleur mouvement parmi la PossibleMoveList étant donné la difficulté de l'algorithme minimax Alpha Beta.
 
-\newpage
+
 ##Améliorations possibles
 ###Erreurs de saisie
 Certaines erreurs de saisie ne sont pas gérées, e.g. l'initialisation du joueur (humain ou machine); de plus, certaines saisies provoquent de la casse, et font échouer l'exécution du jeu. Nous pensons qu'une interface graphique avec interactions par clics serait la meilleur solution pour éviter ce genre de problèmes.
