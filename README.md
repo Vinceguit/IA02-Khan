@@ -1,6 +1,6 @@
-# Khan (jeu)
+#Le Khan (jeu)
 
-Ce projet est un jeu de Khan disposant d'une IA permettant des parties humain-humain, humain-machine et machine-machine; il s'inscrit dans le cadre de l'UV IA02 de l'Université de Technologie de Compiègne.
+Ce projet est un jeu de Khan en Prolog disposant d'une Intelligence Artificielle permettant des parties humain-humain, humain-machine et machine-machine; il s'inscrit dans le cadre de l'UV IA02 de l'Université de Technologie de Compiègne. L'interpréteur Prolog que nous avons utilisé est GNU-Prolog.
 
 ##Présentation et règles du jeu
 
@@ -198,4 +198,4 @@ Actuellement, l'IA du jeu place aléatoirement les pions sur le plateau. Nous po
 * Les pions doivent être placés de façon à alterner régulièrement entre les deux lignes de placement possibles; ainsi, les pions ne seront placés que sur 2 valeurs de cases différentes, et il sera alors plus facile de désobéir au Khan.
 
 ###Optimisation de l'algorithme de recherche du meilleur mouvement
-Nous avons tenté d'implémenter un algorithme Alpha Beta, sans succès; nous nous sommes donc arrêtés à une recherche simple du meilleur mouvement, sans explorer les mouvements suivants dans l'arbre des possibilités; une amélioration possible serait de terminer l'implémentation de cet algorithme.
+Nous avons tenté d'implémenter un algorithme Alpha Beta, sans succès. Nous nous sommes donc arrêtés à une recherche simple du meilleur mouvement, sans explorer les mouvements suivants dans l'arbre des possibilités; une amélioration possible serait de terminer l'implémentation de cet algorithme.
