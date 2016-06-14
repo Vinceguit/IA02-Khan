@@ -30,7 +30,7 @@ play :-
 :- include('moves/moves').
 
 /*Import de la bibliothèque de génération du meilleur mouvement possible*/
-:- include('moves/graphe').
+:- include('moves/graphesimple').
 /*Import de la bibliothèque de génération de la liste des mouvements autorisés*/
 :- include('moves/legalMoves').
 /*Import de la bibliothèque de génération de la liste des mouvements autorisés dans le cas de la recherche AI, le prédicat pion étant remplacé par le prédicat temporaire minimaxPion*/

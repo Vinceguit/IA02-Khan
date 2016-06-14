@@ -9,19 +9,15 @@ heuristic(Board,Colour,V9) :- listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
 								oppPlayer(Colour,Ennemi),
 								listingPionsEquipe(Board,Ennemi,1,1,[],Lennemie),
 								listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)),
-								nbSbiresAlliesEnJeu(0.2,Lequipe,0,V2),print(V2),nl,
-								nbSbiresEnnemisEnJeu(0.2,Lennemie,V2,V3),print(V3), nl,
-								distanceSbiresKalista(0.2,KE,Lequipe,V3,V5),print(V5),nl,
-								defenseKalistaAlliee(0.2,Lequipe,KA,V5,V6),print(V6),nl,
-								defenseKalistaEnnemie(0.2,Lennemie,KE,V6,V7),print(V7),nl,
+								nbSbiresAlliesEnJeu(0.2,Lequipe,0,V2),
+								nbSbiresEnnemisEnJeu(0.2,Lennemie,V2,V3),
+								distanceSbiresKalista(0.35,KE,Lequipe,V3,V5),
+								defenseKalistaAlliee(0.05,Lequipe,KA,V5,V6),
+								defenseKalistaEnnemie(0.2,Lennemie,KE,V6,V7),
 								gagne(Lennemie,Colour,V7,V8),
-								perdu(Lequipe,Colour,V8,V9),write('Heuristique de '), print(V9),
+								perdu(Lequipe,Colour,V8,V9).
 								
-								print(Ennemi),nl,
-								print(Lequipe),nl,
-								print(Lennemie),nl,
-								print(KA),nl,
-								print(KE),nl.
+				
 
 /* Ce coup passe à 100 si le joueur a gagné*/
 gagne(L,rouge,_,Vb):- \+ element((_,_,ko),L),Vb is 100,!.
@@ -68,7 +64,7 @@ nbPositionVictime(Coeff,Colour,Board,Lequipe,V1,V2) :- possibleMoves(Board,Colou
 listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)).*/
 listingKalistas([T|Q],Colour,Col,Lin,(KAin,KEin),(KAout,KEout)) :- Lin<7,NLin is Lin+1, listingKalistasDansLigne(T,Colour,Col,Lin,(KAin,KEin),(KA2,KE2)),
 												 listingKalistas(Q,Colour,Col,NLin,(KA2,KE2),(KAout,KEout)),!.
-listingKalistas(_,_,_,7,(K1,K2),(K1,K2)):- print(K1),nl,print(K2).
+listingKalistas(_,_,_,7,(K1,K2),(K1,K2)).
 
 listingKalistasDansLigne([(_, ko)|Q], ocre,Col,Lin,(_,KalistaEnnemie),(KA,KE)) :- Col<7, NCol is Col+1,!, listingKalistasDansLigne(Q, ocre,NCol,Lin,((Col,Lin),KalistaEnnemie),(KA,KE)),!.
 listingKalistasDansLigne([(_, kr)|Q], rouge,Col,Lin,(_,KalistaEnnemie),(KA,KE)) :- Col<7, NCol is Col+1,!, listingKalistasDansLigne(Q, rouge,NCol,Lin,((Col,Lin),KalistaEnnemie),(KA,KE)),!.

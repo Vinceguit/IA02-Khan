@@ -24,12 +24,12 @@ influenceKhan(Colour):-
 
 /*SAISIE DU MOUVEMENT*/
 initMove(rouge, (Col1, Lin1, Col2, Lin2),Pion) :-
-	print('Pion à déplacer (kr, r1..r5) ? '),
+	print('Pion à deplacer (kr, r1..r5) ? '),
 	read(Pion),
 	testInitMove(rouge, Pion, (Col1, Lin1, Col2, Lin2)).
 
 initMove(ocre, (Col1, Lin1, Col2, Lin2),Pion) :-
-	print('Pion à déplacer (ko, o1..o5) ? '),
+	print('Pion à deplacer (ko, o1..o5) ? '),
 	read(Pion),
 	testInitMove(ocre, Pion, (Col1, Lin1, Col2, Lin2)).
 

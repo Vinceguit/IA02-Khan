@@ -4,8 +4,8 @@
 
 :-dynamic(pion/5).
 :-dynamic(miniMaxPion/5).
-:-dynamic(idNoeud/7).
-:-dynamic(bestMove/2).
+
+
 
 /*element(X, L) s'efface si X est élément de la liste L*/
 element(X, [X|_]).
@@ -69,3 +69,9 @@ rechercheMarqueur([_|Q], (_, _, Col, Lin), M) :- NLin is Lin-1, rechercheMarqueu
 /*On trouve la colonne*/
 rechercheMarqueurDansLigne([(M, _)|_], 1,M).
 rechercheMarqueurDansLigne([_|Q], Col, M) :- NCol is Col-1, rechercheMarqueurDansLigne(Q, NCol, M).
+
+getIdPion([T|_], Col, 1, IdPion) :- getIdInLine(T, Col, IdPion).
+getIdPion([_|Q], Col, Lin, IdPion) :- Lin > 0, NLin is Lin-1, getIdPion(Q, Col, NLin, IdPion).
+/*On trouve la colonne*/
+getIdInLine([(_, IdPion)|_], 1, IdPion).
+getIdInLine([_|Q], Col, IdPion) :- Col > 0, NCol is Col-1, getIdInLine(Q, NCol, IdPion).
