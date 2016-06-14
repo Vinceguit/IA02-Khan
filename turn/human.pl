@@ -3,9 +3,10 @@ playTurn(InBoard, Colour, OutBoard) :-
 	print('Joueur '), print(Colour), print(', à votre tour !'), nl,
 	getCote(Cote, Colour), afficherPlateau(InBoard, Cote),
 	influenceKhan(Colour),
-	initMove(Colour, Move,Pion),
+	initMove(Colour, (Col1, Lin1, Col2, Lin2)),
 	possibleMoves(InBoard,Colour, MoveList),!,
-	execMove(InBoard, Colour, Move,Pion, MoveList, OutBoard).
+	getIdPion(InBoard, Col1, Lin1, Pion),
+	execMove(InBoard, Colour, (Col1, Lin1, Col2, Lin2), Pion, MoveList, OutBoard).
 
 
 /*DÉTERMINATION DE L'INFLUENCE DU KHAN*/
@@ -23,12 +24,12 @@ influenceKhan(Colour):-
 
 
 /*SAISIE DU MOUVEMENT*/
-initMove(rouge, (Col1, Lin1, Col2, Lin2),Pion) :-
+initMove(rouge, (Col1, Lin1, Col2, Lin2)) :-
 	print('Pion à deplacer (kr, r1..r5) ? '),
 	read(Pion),
 	testInitMove(rouge, Pion, (Col1, Lin1, Col2, Lin2)).
 
-initMove(ocre, (Col1, Lin1, Col2, Lin2),Pion) :-
+initMove(ocre, (Col1, Lin1, Col2, Lin2)) :-
 	print('Pion à deplacer (ko, o1..o5) ? '),
 	read(Pion),
 	testInitMove(ocre, Pion, (Col1, Lin1, Col2, Lin2)).
@@ -58,7 +59,7 @@ testInitMove(Colour, Pion, Move) :-
 
 /*Saisie de la position d'arrivée*/
 getNewPos(Col, Lin) :-
-	print('Position d''arrivee (Ex. a1) ? '), nl,
+	print('Position d''arrivee (a1..f6) ? '),
 	read(Pos), testPos(Pos, Col, Lin).
 
 /*Test de la saisie de la position d'arrivée (On boucle tant qu'on n'a pas une saisie correcte)*/
