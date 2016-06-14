@@ -51,17 +51,27 @@ Un mouvement est défini par un tuple `(Col1, Lin1, Col2, Lin2)`, où `(Col1, Li
 ###library.pl
 Prédicat | Action
 -------- | --------
-`element(Element, List)` | S'efface si `Element` est un élément de la liste `List`
-`longueur(Long, List)` | Renvoie la longueur de la liste `List` dans `Long`
-`retireElement(Element, ListIn, ListOut)` | Retire la première occurrence de `Element` dans la liste `ListeIn`, et renvoie le résultat dans `ListOut`
-`findColour(IdPion, Colour)` | Renvoie la couleur (rouge ou ocre) du pion `IdPion` dans `Colour`
-`setKhan(IdPion)` | Change le statut `Status` de `pion(IdPion, Col, Lin, Status, IdCase)` de `in` à `khan`
-`remplacer(InBoard, Lin, Col, IdPion, IdCase, OutBoard)` | Place le pion `IdPion` à la ligne `Lin` et à la colonne `Col` du plateau `InBoard`, et renvoie l'indice de la case correspondante `IdCase`, ainsi que le plateau édité `OutBoard`
+`element(+Element, +List)` | S'efface si `Element` est un élément de la liste `List`
+`longueur(-Long, +List)` | Renvoie la longueur de la liste `List` dans `Long`
+`affiche(+List)` | Affiche la liste `List` dans la console (Non utilisé dans la version finale, mais utile en cas de debug)
+`retireElement(+Element, +ListIn, -ListOut)` | Retire la première occurrence de `Element` dans la liste `ListeIn`, et renvoie le résultat dans `ListOut`
+`oppPlayer(+P1, ?P2)` | Permet de trouver le joueur adverse `P2`au joueur `P1`; `P1` prend les valeurs `rouge` ou `ocre`
+`findColour(+IdPion, ?Colour)` | Renvoie la couleur (rouge ou ocre) du pion `IdPion` dans `Colour`
+`setKhan(+IdPion)` | Change le statut `Status` de `pion(IdPion, Col, Lin, Status, IdCase)` de `in` à `khan`
+`remplacer(+InBoard, +Lin, +Col, +IdPion, -IdCase, -OutBoard)` | Place le pion `IdPion` à la ligne `Lin` et à la colonne `Col` du plateau `InBoard`, et renvoie l'indice de la case correspondante `IdCase`, ainsi que le plateau édité `OutBoard`
+`rechercheMarqueur(+Board, +Move, ?Marqueur)` | Renvoie dans `Marqueur` la valeur de la case d'arrivée  du mouvement `Move`.
+`addPion(IdPion, Col, Lin, IdCase)` | Déclare les informations d'un pion à l'aide d'un prédicat `pion(IdPion, Col, Lin, in, IdCase)`; on utilise ce prédicat lors du placement initial des pions.
+`getIdPion(+Board, +Col, +Lin, ?IdPion)` | Renvoie l'identifiant `IdPion` d'un pion situé sur la case `(Col, Lin)` du plateau `Board`. Si la case n'est pas occupée, `IdPion` vaut `b`.
 
 ###coord_parser.pl
 Prédicat | Action
 -------- | --------
 `parse(Coord,Col,Lin)` | Convertit une coordonnée saisie sous la forme 'LettreChiffre' en position sur le plateau (Col : colonne, Lin : ligne); si mauvaise saisie utilisateur, renvoie la coordonnée (0, 0)
+
+###display.pl
+Prédicat | Action
+-------- | --------
+`afficherPlateau(Board, Cote)` | Affiche le plateau Board dans la console du point de vue du côté `Cote`
 
 ###Exécution principale
 ```prolog
@@ -131,16 +141,11 @@ Nous aurions souhaité réaliser cette recherche à l'aide de l'algorithme de re
 heuristic(+Board, +Player, -Value)
 ```
 En mode "machine", l'heuristique se base sur les 7 prédicats suivants :
-* nbSbiresAlliesenJeu qui calcule le nombre d'Allies en Jeu, le but est de les avoir tous en jeu;
-* nbSbiresEnnemisEnJeu qui calcule le nombre d'ennemis en jeu, et cherche dans l'idéal à stabiliser ce nombre autour de 4 pions;
-* distanceSbiresKalista calcule le nombre de sbires alliés dans un rayon de trois cases autour de la Kalista ennemie;
-* defenseKalistaAlliee et defenseKalistaEnnemie calculent le nombre de pions bloquant l'accès aux kalistas, le but du jeu étant d'en avoir maximum 2 pour soi et 0 pour l'adversaire;
-* les prédicats gagne et perdu qui renvoient respectivement 100 et 0 en cas de victoire de l'un des joueurs.
-
-###display.pl
-Prédicat | Action
--------- | --------
-`afficherPlateau(Board, Cote)` | Affiche le plateau Board dans la console du point de vue du côté `Cote`.
+* `nbSbiresAlliesenJeu` qui calcule le nombre d'alliés en Jeu, le but est de les avoir tous en jeu;
+* `nbSbiresEnnemisEnJeu` qui calcule le nombre d'ennemis en jeu, et cherche dans l'idéal à stabiliser ce nombre autour de 4 pions;
+* `distanceSbiresKalista` calcule le nombre de sbires alliés dans un rayon de trois cases autour de la Kalista ennemie;
+* `defenseKalistaAlliee` et defenseKalistaEnnemie calculent le nombre de pions bloquant l'accès aux kalistas, le but du jeu étant d'en avoir maximum 2 pour soi et 0 pour l'adversaire;
+* les prédicats `gagne` et `perdu` qui renvoient respectivement `100` et `0` en cas de victoire de l'un des joueurs.
 
 
 ##Interface utilisateur
