@@ -18,7 +18,7 @@ Le but du jeu est de capturer la Kalista adverse en respectant les règles suiva
 
 ##Structures de données
 ###Le plateau
-Le plateau est une liste de lignes, chaque ligne étant elle-même une liste de tuples `(Val, Type)`, où `Val` est la valeur de la case (de 1 à 3), et `Type` est le type de pion qui s'y trouve : `kr`, `r1`..`r5` pour les rouges; `ko`, `o1`...`o5` pour les ocres et `b` si la case est vide.
+Le plateau est une liste de lignes, chaque ligne étant elle-même une liste de tuples `(Val, Type)`, où `Val` est la valeur de la case (de 1 à 3), et `Type` est le type de pion qui s'y trouve : `kr` (Kalista), `r1`..`r5` (sbires) pour les rouges; `ko` (Kalista), `o1`...`o5` (sbires) pour les ocres et `b` si la case est vide.
 
 En début de jeu, on a :
 ```prolog
@@ -142,17 +142,6 @@ Prédicat | Action
 -------- | --------
 `afficherPlateau(Board, Cote)` | Affiche le plateau Board dans la console du point de vue du côté `Cote`.
 
-###main.pl
-```prolog
-initBoard(Board).
-```
-Ce prédicat retourne en paramètre le plateau de jeu initialisé, sous forme de liste de ligne [L1, ..., L6], chaque ligne étant une liste de tuples `[(Indice1, Type1), ..., (Indice6, Type6)]` contenant l'indice de la case (de 1 à 3) et le type de pion sur cette case (`b` = case blanche, `kr` = Kalista rouge, `ko` = Kalista ocre, `r1` à `r5` = sbires rouges, `o1` à `o5` = sbires ocres).
-
-Lors de l'appel d'`initBoard(Board)`, chaque pion est généré dynamiquement  sous la forme d'un prédicat  
-```prolog
-	pion(IdPion, Col, Lin, Status, IdCase).
-```
-où `IdPion` est l'identifiant unique du pion, `Col` et `Lin` sa position sur le plateau, `Status` son statut (`in` s'il est en jeu; `khan` s'il porte le Khan; `out` s'il est hors-jeu), et `IdCase` l'indice de la case sur lequel il se trouve (1, 2 ou 3).
 
 ##Interface utilisateur
 L'affichage et les entrées du jeu se font intégralement en console.
