@@ -4,94 +4,212 @@
 
 /*generateMove utilise l'algorithme AlphaBeta pour renvoyer Move, le meilleur mouvement*/
 
-generateMove(BoardInit, Player, BestMove) :-
-
-									/*On crée une copie temporaires des prédicats pion sous le nom de miniMaxPion*/
-									write('Bug1.1'),findall((IdPion,Col,Lin,Etat,Marq),pion(IdPion,Col,Lin,Etat,Marq),ListePionsMinimax),
-									write('Bug1.2'),recopiagePions(ListePionsMinimax),
-									write('Bug1.3'),possibleMovesMiniMax(BoardInit,Player,List),
-									write('Bug1.4'),sort(List,PossibleMoveList),
-									asserta(idNoeud(max,-100,100,BoardInit,_,-100)),
-                                    write('Bug1.5'),exploMiniMax(PossibleMoveList,Player,2,BoardInit),
-									write('Bug1.6'),findall((Board,H),idNoeud(_,_,_,BoardInit,Board,H),L),
-									write('Bug1.7'),meilleurBoard(0,L,BestBoard),!,nl,affiche(BestBoard),nl,
-									write('Bug1.8'),findall(Board,idNoeud(_,_,_,BoardInit,Board,_),ListeIdNoeud).
-									
-									/*write('Bug1.9'),tupleBoardMove(PossibleMoveList,ListeIdNoeud,[],ListeTuples),
-									write('Bug1.10'),element((BestMove,BestBoard),ListeTuples),
-									
-									write('Bug11'),retractall(miniMaxPion(_,_,_,_,_)).*/
-									
-meilleurBoard(Max,[(Board,H)|L],B) :- H>Max, H is Max, B is Board, meilleurBoard(Max,L,B).
-meilleurBoard(Max,[_|L],B) :- meilleurBoard(Max,L,B).
-meilleurBoard(_,[],_).
-
-tupleBoardMove([Move|Q],[T|(_,_,_,_,Board,_)],L1,L3):- append([(Move,Board)],L1,L2),tupleBoardMove(Q,T,L2,L3).
-tupleBoardMove([],[],L,L).
+generateMove(Board, Player, Move) :-
+	/*On crée une copie temporaires des prédicats pion sous le nom de miniMaxPion*/
+	findall((IdPion,Col,Lin,Etat,Marq),pion(IdPion,Col,Lin,Etat,Marq),ListePionsMinimax),
+	recopiagePions(ListePionsMinimax),
+	/* idNoeud(minoumax,alpha,beta,Move,Board,Listing des parametres de ListePionsMinimax,Valeur de départ de l'heuristique)*/
+	asserta(idNoeud(min,-100,100,(0,0,0,0),Board,ListePionsMinimax,-100)),
+	miniMax(Player, 3, _,Board),
+	bestMove(Move,_),
+	retractall(miniMaxPion(_,_,_,_,_)).
 
 
-
-  recopiagePions([(IdPion,Col,Lin,Etat,Marq)|Q]) :- asserta(miniMaxPion(IdPion,Col,Lin,Etat,Marq)),recopiagePions(Q).
-  recopiagePions([]).
+recopiagePions([(IdPion,Col,Lin,Etat,Marq)|Q]) :- asserta(miniMaxPion(IdPion,Col,Lin,Etat,Marq)),recopiagePions(Q).
+recopiagePions([]).
 
 /*Cas1: Si on atteint une feuille  */
-miniMax(Player, 0,InBoard,Board) :-
-												write('Bug6.1'),heuristic(Board, Player, Heuristique),
-												write('Bug6.2'),modifNoeud(InBoard,Board,Heuristique).
-												
-
-												
-/*Cas2 si on atteint un noeud*/										
-miniMax(Player,Strate,InBoard,Board) :-            
-											 write('Bug5.2'),possibleMovesMiniMax(Board,Player,List),
-											 write('Bug5.3'),sort(List,PossibleMoveList),
-											 write('Bug5.4'),exploMiniMax(PossibleMoveList,Player,Strate,Board),
-											 write('Bugdelamort'), idNoeud(_,_,_,Board,_,Value),
-											 write('Bug5.5'),modifNoeud(InBoard,Board,Value).
-											 
-
-modifNoeud(InBoard,Board,H):- idNoeud(MinOuMax,Alpha,Beta,InBoard,Board,_),H>Alpha,retract(idNoeud(MinOuMax,Alpha,Beta,InBoard,Board,_)),
-													  asserta(idNoeud(MinOuMax,Alpha,Beta,InBoard,Board,H)).
-modifNoeud(_,_,_,_).
+miniMax(Player, 0,MoveCreateur,Board) :-
+	heuristic(Board, Player, NewHeuristique),
+	idNoeud(1,MinOuMax,Alpha,Beta,Move,Board,_,_),
+	retract(idNoeud(MinOuMax,Alpha,Beta,Move,Board,_,_)),
+	modifNoeudBottom(MinOuMax,Alpha,Beta,Move,Board,NewHeuristique),
+	retractall(miniMaxPion(_,_,_,_,_)),
+	recopiagePions(ListePions).
 
 
+/*Cas2 si on atteint un noeud*/
+miniMax(Player,Strate,_,Board) :-
+	idNoeud(_,_,_,_,Board,ListePions,_),
+	possibleMovesMiniMax(Board,Player,PossibleMoveList),
+	enregistrement(ListePions),
+	exploMiniMax(PossibleMoveList,Player,Strate,Board,ListePions).
 
 
-initNoeud(min,Alpha,Beta,InBoard,NewBoard):- write('Bug3.1'),idNoeud(_,Alpha,Beta,_,InBoard,_),
-													 write('Bug3.2'),asserta(idNoeud(min,Alpha,Beta,InBoard,NewBoard,Beta)).
-initNoeud(max,Alpha,Beta,InBoard,NewBoard):- write('Bug3.3'),idNoeud(_,Alpha,Beta,_,InBoard,_),write('Bug3.4'),asserta(idNoeud(max,Alpha,Beta,InBoard,NewBoard,Alpha)).
+initNoeud(min,Alpha,Beta,Move,NewBoard,ListePions):-
+	idNoeud(MinOuMax,Alpha,Beta,Move,Board,_,_),
+	asserta(idNoeud(max,Alpha,Beta,Move,NewBoard,Beta,ListePions)).
+
+initNoeud(max,Alpha,Beta,Move,NewBoard,ListePions):-
+	idNoeud(MinOuMax,Alpha,Beta,Move,Board,_,_),
+	asserta(idNoeud(min,Alpha,Beta,Move,NewBoard,Alpha,ListePions)).
+
+modifNoeudBottom(min,Alpha,Beta,Move,Board,NewHeuristique):- asserta(idNoeud(max,Alpha,NewHeuristique,Move,Board,NewHeuristique)).
+modifNoeudBottom(max,Alpha,Beta,Move,Board,NewHeuristique):- asserta(idNoeud(min,NewHeuristique,Beta,Move,Board,NewHeuristique)).
 
 enregistrement(ListeEnregistrement):- findall((IdPion,Col,Lin,Etat,Marq),miniMaxPion(IdPion,Col,Lin,Etat,Marq),ListeEnregistrement).
 
-exploMiniMax([(Col1,Lin1,Col2,Lin2)|Res],Player,Strate,InBoard) :-    			Strate>=0,
-																				write('Bug2.findall'),findall((IdPion,Col,Lin,Etat,Marq),miniMaxPion(IdPion,Col,Lin,Etat,Marq),ListePions),
-																				write('Bug2.0'),idNoeud(MinOuMax,Alpha,Beta,_,InBoard,Value),
-																				write('Bug2.1'),Value<Beta,
-																				write('Bug2.2'),miniMaxPion(Pion,Col1,Lin1,_,_),!,
-																				write('Bug2.3'),transfertMiniMax(InBoard,(Col1,Lin1,Col2,Lin2),Pion,OutBoard),
-																				
-																				write('Bug2.5'),opposeMinMax(MinOuMax,Oppose),
-																				write('Bug2.6'),initNoeud(Oppose,Alpha,Beta,InBoard,OutBoard),
-																				write('Bug2.7'), print(Strate),NewStrate is Strate-1,
-																				
-																				write('Bug2.8'),miniMax(Player,NewStrate,InBoard,OutBoard),
-																				write('Bug2.9'),retractall(miniMaxPion(_,_,_,_,_)),
-																				write('Bug2.10'),recopiagePions(ListePions),
-																				write('Bug2.11'),exploMiniMax(Res,Player,Strate,InBoard).
-																				
+exploMiniMax([(Col1,Lin1,Col2,Lin2)|Res],Player,Strate,InBoard,ListePions) :-
+	miniMaxPion(Pion,Col1,Lin1,_,_),
+	transfertMiniMax(InBoard,(Col1,Lin1,Col2,Lin2),Pion,OutBoard),
+	idNoeud(MinOuMax,Alpha,Beta,(Col1,Lin1,Col2,Lin2),OutBoard,_,_),
+	opposeMinMax(MinOuMax,Oppose),
+	initNoeud(Oppose,Alpha,Beta,ListePions),
+	Strate-1 is NewStrate,
+	miniMax(Player,NewStrate,(Col1,Lin1,Col2,Lin2),OutBoard),
+	testElagage(MinOuMax,OutBoard),
+	retractall(miniMaxPion(_,_,_,_,_),
+	recopiagePions(ListePions).
+	exploMiniMax(Res,Player,Strate,InBoard,ListePions).
 
-																				
-exploMiniMax([(Col1,Lin1,Col2,Lin2)|_],Player,Strate,InBoard) :-  				
-																				write('Bug4.1'),miniMaxPion(Pion,Col1,Lin1,_,_),
-																				write('Bug4.2'),transfertMiniMax(InBoard,(Col1,Lin1,Col2,Lin2),Pion,OutBoard),!,
-																				write('Bug4.3'),idNoeud(MinOuMax,Alpha,Beta,_,InBoard,_),
-																				write('Bug4.4'),opposeMinMax(MinOuMax,Oppose),
-																				write('Bug4.5'),initNoeud(Oppose,Alpha,Beta,InBoard,OutBoard),
-																				write('Bug4.6'),NewStrate is Strate-1,
-																				write('Bug4.findall'),findall((IdPion,Col,Lin,Etat,Marq),miniMaxPion(IdPion,Col,Lin,Etat,Marq),ListePions),
-																				write('Bug4.7'),miniMax(Player,NewStrate,InBoard,OutBoard),
-																				write('Bug4.8'),recopiagePions(ListePions).
+
+exploMiniMax([(Col1,Lin1,Col2,Lin2)|_],Player,Strate,InBoard,ListePions) :-
+	miniMaxPion(Pion,Col1,Lin1,_,_),
+	transfertMiniMax(InBoard,(Col1,Lin1,Col2,Lin2),Pion,OutBoard),
+	idNoeud(MinOuMax,Alpha,Beta,(Col1,Lin1,Col2,Lin2),OutBoard,ListePions,_),
+	opposeMinMax(MinOuMax,Oppose),
+	initNoeud(Oppose,Alpha,Beta,ListePions),
+	Strate-1 is NewStrate,
+	miniMax(Player,NewStrate,(Col1,Lin1,Col2,Lin2),OutBoard).
+
 exploMiniMax([],_,_,_).
+
+testElagage(min,Board):- idNoeud(min,Alpha,_,_,Board,_,Value),Value>Alpha.
+testElagage(max,Board):- idNoeud(max,_,Beta,_,Board,_,Value),Value<Beta.
 
 opposeMinMax(min,max).
 opposeMinMax(max,min).
+
+bestMove((0,0,0,0),-100).
+
+
+
+/**Calcul de la fonction heuristique**/
+/*On maximise pour l'IA; on minimise pour son adversaire*/
+heuristic(Board,Colour,V9) :-
+	listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
+	oppPlayer(Colour,Ennemi),
+	listingPionsEquipe(Board,Ennemi,1,1,[],Lennemie),
+	listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)),
+	nbSbiresAlliesEnJeu(0.2,Lequipe,0,V2),print(V2),nl,
+	nbSbiresEnnemisEnJeu(0.2,Lennemie,V2,V3),print(V3), nl,
+	distanceSbiresKalista(0.2,KE,Lequipe,V3,V5),print(V5),nl,
+	defenseKalistaAlliee(0.2,Lequipe,KA,V5,V6),print(V6),nl,
+	defenseKalistaEnnemie(0.2,Lennemie,KE,V6,V7),print(V7),nl,
+	gagne(Lennemie,Colour,V7,V8),
+	perdu(Lequipe,Colour,V8,V9),write('Heuristique de '), print(V9),
+	print(Ennemi),nl,
+	print(Lequipe),nl,
+	print(Lennemie),nl,
+	print(KA),nl,
+	print(KE),nl.
+
+/* Ce coup passe à 100 si le joueur a gagné*/
+gagne(L,rouge,_,Vb):- \+ element((_,_,ko),L),Vb is 100,!.
+gagne(L,ocre,_,Vb):- \+ element((_,_,kr),L),Vb is 100,!.
+
+gagne(_,_,V,V).
+/*Ce coup passeà -100 si le joueur a perdu*/
+perdu(L,rouge,_,Vb):- \+element((_,_,kr),L),Vb is 0,!.
+perdu(L,ocre,_,Vb):- \+element((_,_,ko),L),Vb is 0,!.
+perdu(_,_,V,V).
+
+
+/* Cette heuristique cherche à laisser le plus souvent possible 4 pièces à l'ennemi, kalista comprise*/
+nbSbiresEnnemisEnJeu(Coeff,L,Va,Vb):-
+	longueur(V,L),
+	calculNbSbiresEnnemis(Coeff,Va,Vb,V).
+
+nbSbiresAlliesEnJeu(Coeff,L,Va,Vb):-
+	longueur(V,L),
+	calculNbSbiresAllies(Coeff,Va,Vb,V).
+
+/* Determine le nombre de pions dans l'équipe adverse*/
+listingPionsEquipe([T|Q],Colour,Col,Lin, V1,V3) :-
+	Lin<7,NLin is Lin+1,
+	listingPionsEquipeDansLigne(T,Colour,Col,Lin,V1,V2),
+	listingPionsEquipe(Q,Colour,Col,NLin,V2,V3),!.
+
+listingPionsEquipe(_,_,_,7,V,V).
+
+listingPionsEquipeDansLigne([(_, Pion)|Q], Colour,Col,Lin,V1,V3) :- Col<7, NCol is Col+1,findColour(Pion,Colour),append([(Col,Lin,Pion)],V1,V2),!, listingPionsEquipeDansLigne(Q, Colour,NCol,Lin,V2,V3).
+listingPionsEquipeDansLigne([_|Q], Colour,Col,Lin,V1,V2) :- Col <7,NCol is Col+1,!, listingPionsEquipeDansLigne(Q,Colour,NCol,Lin,V1,V2),!.
+listingPionsEquipeDansLigne([],_,7,_,V,V).
+listingPionsEquipeDansLigne(_,_,7,_,V,V).
+
+/*Determine le nombre de mouvements possibles susceptibles de supprimer des pièces adverses*/
+
+nbPositionAttaque(Coeff,Colour,Board,Lennemi,V1,V2) :-
+	possibleMoves(Board,Colour,PossibleMoveList),
+  findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lennemi),ListeMenaces),
+  longueur(L,ListeMenaces),
+  calculNbPositionAttaque(Coeff,V1,V2,L).
+
+menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lennemi) :- element((Col1,Lin1,Col2,Lin2),PossibleMoveList),element((Col2,Lin2,_),Lennemi).
+/* Determine le nombre de mouvements adverses susceptibles de supprimer ses pièces*/
+nbPositionVictime(Coeff,Colour,Board,Lequipe,V1,V2) :-
+	possibleMoves(Board,Colour,PossibleMoveList),
+  findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lequipe),ListeMenaces),
+  longueur(L,ListeMenaces),
+  calculNbPositionVictime(Coeff,V1,V2,L).
+
+/*Recherche de la position des kalistas
+listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)).*/
+listingKalistas([T|Q],Colour,Col,Lin,(KAin,KEin),(KAout,KEout)) :- Lin<7,NLin is Lin+1, listingKalistasDansLigne(T,Colour,Col,Lin,(KAin,KEin),(KA2,KE2)),
+												 listingKalistas(Q,Colour,Col,NLin,(KA2,KE2),(KAout,KEout)),!.
+listingKalistas(_,_,_,7,(K1,K2),(K1,K2)):- print(K1),nl,print(K2).
+
+listingKalistasDansLigne([(_, ko)|Q], ocre,Col,Lin,(_,KalistaEnnemie),(KA,KE)) :- Col<7, NCol is Col+1,!, listingKalistasDansLigne(Q, ocre,NCol,Lin,((Col,Lin),KalistaEnnemie),(KA,KE)),!.
+listingKalistasDansLigne([(_, kr)|Q], rouge,Col,Lin,(_,KalistaEnnemie),(KA,KE)) :- Col<7, NCol is Col+1,!, listingKalistasDansLigne(Q, rouge,NCol,Lin,((Col,Lin),KalistaEnnemie),(KA,KE)),!.
+listingKalistasDansLigne([(_, ko)|Q], rouge,Col,Lin,(KalistaAlliee,_),(KA,KE)) :- Col<7, NCol is Col+1,!, listingKalistasDansLigne(Q, rouge,NCol,Lin,(KalistaAlliee,(Col,Lin)),(KA,KE)),!.
+listingKalistasDansLigne([(_, kr)|Q], ocre,Col,Lin,(KalistaAlliee,_),(KA,KE)) :- Col<7, NCol is Col+1,!, listingKalistasDansLigne(Q, ocre,NCol,Lin,(KalistaAlliee,(Col,Lin)),(KA,KE)),!.
+listingKalistasDansLigne([_|Q], Colour,Col,Lin,(K1,K2),(K3,K4)) :- Col <7,NCol is Col+1,!, listingKalistasDansLigne(Q,Colour,NCol,Lin,(K1,K2),(K3,K4)),!.
+listingKalistasDansLigne(_,_,7,_,(K1,K2),(K1,K2)).
+
+/*Recherche du nombre de sbires autour de la Kalista*/
+
+defenseKalistaAlliee(Coeff,ListePion,(Col,Lin),Va,Vb) :-
+	ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
+	ColB is Col-1,defenseur((ColB,Lin),ListePion,V2,V3),
+	LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
+	LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
+	calculDefenseKalistaAlliee(Coeff,Va,Vb,V5).
+
+defenseKalistaEnnemie(Coeff,ListePion,(Col,Lin),Va,Vb) :-
+	ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
+	ColB is Col-1,defenseur((ColB,Lin),ListePion,V2,V3),
+	LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
+	LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
+	calculDefenseKalistaEnnemie(Coeff,Va,Vb,V5).
+
+defenseur((Col,Lin),ListePion,Va,Vb) :- element((Col,Lin,_),ListePion), Vb is Va+1,!.
+defenseur(_,_,V,V).
+
+distanceSbiresKalista(Coeff,(ColK,LinK),Lequipe,Va,Vb):-
+	findall((Col,Lin),distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK),ListePionsACote),
+	longueur(L,ListePionsACote),
+	calculDistanceSbireKalista(Coeff,Va,Vb,L).
+
+distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK):-
+	element((Col,Lin,_),Lequipe),Col=<ColK+2,Col>=ColK-2,
+	Lin>=LinK-2,Lin=<LinK+2,!.
+
+/*Listing des calculs d'heuristiques*/
+calculDefenseKalistaAlliee(Coeff,Va,Vb,NbDefenseurs):- Vb is Va+Coeff*NbDefenseurs*100*0.25.
+calculDefenseKalistaEnnemie(Coeff,Va,Vb,NbDefenseurs):-Vb is Va+Coeff*(4-NbDefenseurs)*100*0.25.
+calculDistanceSbireKalista(Coeff,Va,Vb,L):- Vb is Va+Coeff*L*100/6.
+
+calculNbSbiresEnnemis(Coeff,Va,Vb,1):- Vb is Va+Coeff*(0),!.
+calculNbSbiresEnnemis(Coeff,Va,Vb,2):- Vb is Va+Coeff*(33),!.
+calculNbSbiresEnnemis(Coeff,Va,Vb,3):- Vb is Va+Coeff*(66),!.
+calculNbSbiresEnnemis(Coeff,Va,Vb,4):- Vb is Va+Coeff*(100),!.
+calculNbSbiresEnnemis(Coeff,Va,Vb,5):- Vb is Va+Coeff*(50),!.
+calculNbSbiresEnnemis(Coeff,Va,Vb,6):- Vb is Va+Coeff*(0),!.
+
+calculNbSbiresAllies(Coeff,Va,Vb,V):- Vb is Va+Coeff*V.
+
+calculNbPositionAttaque(Coeff,Va,Vb,L) :- Vb is Va+Coeff*L*100/15,Vb < Va+Coeff*100,!.
+calculNbPositionAttaque(Coeff,Va,Vb,_) :- Vb is Va+Coeff*100.
+
+calculNbPositionVictime(Coeff,Va,Vb,L) :-Vb is Va+Coeff*(15-L)*100/15,Vb>Va+Coeff*100,!.
+calculNbPositionVictime(Coeff,Va,Vb,_) :- Vb is Va+Coeff*100.
