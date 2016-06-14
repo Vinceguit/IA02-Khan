@@ -71,7 +71,7 @@ Prédicat | Action
 ###display.pl
 Prédicat | Action
 -------- | --------
-`afficherPlateau(Board, Cote)` | Affiche le plateau Board dans la console du point de vue du côté `Cote`
+`afficherPlateau(Board, Cote)` | Affiche le plateau `Board` dans la console du point de vue du côté `Cote`
 
 ###Exécution principale
 ```prolog
