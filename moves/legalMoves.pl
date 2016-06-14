@@ -1,3 +1,6 @@
+/*Le système de prédicats de legalMoves.pl renvoie la liste des mouvements possibles*/
+
+
 /*possibleMoves permet d'obtenir le listing de tous les mouvements autorisés de la forme (Coldep,Lindep,Colarrivée,Linarrivée)*/
 
 possibleMoves(_,Player,PossibleMoveList):-
@@ -6,10 +9,9 @@ possibleMoves(_,Player,PossibleMoveList):-
 
 possibleMoves(Board,Player,PossibleMoveList):-
 	otherPossibleMoves(Board,Player,PossibleMoveList).
-/*possibleMoves(Player, KhanRespecte, PossibleMoveList):- pion(_,_,_,'khan',Marqueur),
-											   etablirEquipeActive(Player,Marqueur,PossibleMoveList)
 
-Une pièce est activable si elle appartient à l'equipe, si elle est en jeu et si son marqueur est le même que celui du Khan*/
+
+/*Une pièce est activable si elle appartient à l'equipe, si elle est en jeu et si son marqueur est le même que celui du Khan*/
 activable(X,Y,Equipe,Marqueur) :-
 	pion(TypePion,X,Y,Ok,Marqueur),
 	findColour(TypePion, Equipe),
@@ -150,9 +152,9 @@ Une fois arrivé à I=1, au dernier mouvement, caseVide est vraie si la case est
 
 caseVide(X,Y,I,_) :- I>1, \+ pion(_,X,Y,in,_),\+ pion(_,X,Y,khan,_).
 caseVide(X,Y,1,_) :- \+ pion(_,X,Y,in,_).
-caseVide(X,Y,1,Equipe) :- pion(TypePion,X,Y,in,_), \+ findColour(TypePion,Equipe).
+caseVide(X,Y,1,Equipe) :- pion(TypePion,X,Y,in,_),\+findColour(TypePion,Equipe).
 
-
+/*Ce prédicat traite le cas de la démission au Khan, ou de l'absence de khan en début de partie*/
 otherPossibleMoves(Board,Player,PossibleMoveList):-
 	pion(_,_,_,'khan',Marqueur),
 	etablirEquipeActive(Player,1,L1),
@@ -163,7 +165,7 @@ otherPossibleMoves(Board,Player,PossibleMoveList):-
 	ajoutNouveauPion(Board,Marqueur,ListeAjoutPion),
 	append(ListeMouvementsLibres,ListeAjoutPion,PossibleMoveList).
 
-
+/*Cas où un pion out revient en jeu*/
 ajoutNouveauPion(Board, Marqueur,ListeAjoutPion) :- rechercheCaseDispo(Board,1,1, Marqueur,[],ListeAjoutPion).
 
 rechercheCaseDispo([T|Q],Col,Lin, M, L1,L3) :-
@@ -171,6 +173,7 @@ rechercheCaseDispo([T|Q],Col,Lin, M, L1,L3) :-
 	rechercheCaseDispoDansLigne(T,M,Col,Lin,L1,L2),
 	rechercheCaseDispo(Q,Col,NLin,M,L2,L3),!.
 
+/*Outil de recherche pour trouver des cases non occupées pour les pièces revenant en jeu*/
 rechercheCaseDispo(_,_,7,_,L,L).
 
 rechercheCaseDispoDansLigne([(M, b)|Q], M,Col,Lin,L1,L3) :- Col<7, NCol is Col+1,append([(0,0,Col,Lin)],L1,L2),!, rechercheCaseDispoDansLigne(Q, M,NCol,Lin,L2,L3).
@@ -178,30 +181,3 @@ rechercheCaseDispoDansLigne([_|Q], M,Col,Lin,L1,L2) :- Col <7,NCol is Col+1,!, r
 rechercheCaseDispoDansLigne([],_,7,_,L,L).
 rechercheCaseDispoDansLigne(_,_,7,_,L,L).
 
-wqt(M) :- generateMove([[(2, b),(3, ko),(1, b),(2, b),(2, b),(3, b)],
-             [(2, b),(1, r1),(3, b),(1, kr),(3, o5),(1, b)],
-             [(1, b),(3, b),(2, b),(3, b),(1, b),(2, o1)],
-             [(3, b),(1, b),(2, b),(1, o1),(3, b),(2, b)],
-             [(2, b),(3, b),(1, b),(3, b),(1, o3),(3, b)],
-             [(2, b),(1, b),(3, r2),(2, b),(2, b),(1, b)]], rouge, M).
-
-/*[[(2, b),(3, ko),(1, b),(2, b),(2, b),(3, b)],
-             [(2, b),(1, b),(3, r1),(1, kr),(3, o5),(1, b)],
-             [(1, b),(3, b),(2, b),(3, b),(1, b),(2, o1)],
-             [(3, b),(1, b),(2, b),(1, o1),(3, b),(2, b)],
-             [(2, b),(3, b),(1, b),(3, b),(1, o3),(3, b)],
-             [(2, b),(1, b),(3, r2),(2, b),(2, b),(1, b)]]
-
-
-
-[[(2, b),(3, ko),(1, b),(2, b),(2, b),(3, b)],
-             [(2, b),(1, r1),(3, b),(1, kr),(3, o5),(1, b)],
-             [(1, b),(3, b),(2, b),(3, b),(1, b),(2, o1)],
-             [(3, b),(1, b),(2, b),(1, o1),(3, b),(2, b)],
-             [(2, b),(3, b),(1, b),(3, b),(1, o3),(3, b)],
-             [(2, b),(1, b),(3, r2),(2, b),(2, b),(1, b)]]
-
-
-
-			 [(3,6),(4,2),(3,2)]
-[(5,5,o3),(2,2,o1),(2,1,ko)]*/
