@@ -2,6 +2,8 @@
 
 Ce projet est un jeu de Khan en Prolog disposant d'une Intelligence Artificielle permettant des parties humain-humain, humain-machine et machine-machine; il s'inscrit dans le cadre de l'UV IA02 de l'Université de Technologie de Compiègne. L'interpréteur Prolog que nous avons utilisé est GNU-Prolog.
 
+Pour exécuter le code, consultez le fichier `main.pl` à la racine du projet, puis appelez le prédicat `play`.
+
 ##Présentation et règles du jeu
 
 Le Khan est un jeu de type abstrait. Il est composé d'un plateau de 6x6 cases; chaque case possède une valeur de 1 à 3.
