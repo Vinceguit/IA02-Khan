@@ -1,18 +1,29 @@
-/**Calcul de la fonction heuristique**/
-/*On maximise pour l'IA; on minimise pour son adversaire*/
+/*Calcul de la fonction heuristique
 
 
-								
-heuristic(Board,Colour,V9) :- listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
+Calcule un indicateur allant de 0 à 100 en fonction des informations du plateau de jeu*/
+							
+heuristic(Board,Colour,V9) :-   /*On récupère la liste des pions de chaque équipe, ces données seront utiles pour le calcul des heuristiques*/
+								listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
 								oppPlayer(Colour,Ennemi),
 								listingPionsEquipe(Board,Ennemi,1,1,[],Lennemie),
+								/* Avoir la position des kalistas est aussi primordiale pour determiner la victoire et la defaite*/
 								listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)),
-								nbSbiresAlliesEnJeu(0.2,Lequipe,0,V2),
-								nbSbiresEnnemisEnJeu(0.2,Lennemie,V2,V3),
-								distanceSbiresKalista(0.35,KE,Lequipe,V3,V5),
-								defenseKalistaAlliee(0.05,Lequipe,KA,V5,V6),
-								defenseKalistaEnnemie(0.2,Lennemie,KE,V6,V7),
+								/* Heuristiques, dont la somme des coeffs fait 1, ces coeffs peuvent être changés en fonction des envies du programmeur (IA défensive ou aggressive)
+								Calcule le nombre d'Allies en Jeu, le but est de les avoir tous*/
+								nbSbiresAlliesEnJeu(0.1,Lequipe,0,V1),
+								/*Calcule le nombre d'ennemis en jeu, et cherche dans l'idéal à stabiliser ce nombre autour de 4 pions*/
+								nbSbiresEnnemisEnJeu(0.15,Lennemie,V1,V2),
+								/*Calcule le nombre de sbires alliés dans un rayon de trois cases autour de la Kalista ennemie*/
+								distanceSbiresKalista(0.15,KE,Lequipe,V2,V3),
+								nbPositionAttaque(0.2,Colour,Board,Lennemie,V3,V4),
+								nbPositionVictime(0.1,Colour,Board,Lequipe,V4,V5),
+								/*Calcule le nombre de pions bloquant l'accès à la Kalista*/
+								defenseKalistaAlliee(0.2,Lequipe,KA,V5,V6),
+								defenseKalistaEnnemie(0.1,Lennemie,KE,V6,V7),
+								/*Fait passer l'heuristique à 100 si un mouvement est gagnant...*/
 								gagne(Lennemie,Colour,V7,V8),
+								/*... et à zéro si perdant*/
 								perdu(Lequipe,Colour,V8,V9).
 								
 				
@@ -53,7 +64,7 @@ listingPionsEquipeDansLigne(_,_,7,_,V,V).
 
 /*Determine le nombre de mouvements possibles susceptibles de supprimer des pièces adverses*/
 nbPositionAttaque(Coeff,Colour,Board,Lennemi,V1,V2) :-
-	possibleMoves(Board,Colour,PossibleMoveList),
+	possibleMovesMiniMax(Board,Colour,PossibleMoveList),
 	findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lennemi),ListeMenaces),
 	longueur(L,ListeMenaces),
 	calculNbPositionAttaque(Coeff,V1,V2,L).
@@ -62,7 +73,7 @@ menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lennemi) :- element((Col1,Lin1
 
 /* Determine le nombre de mouvements adverses susceptibles de supprimer ses pièces*/
 nbPositionVictime(Coeff,Colour,Board,Lequipe,V1,V2) :-
-	possibleMoves(Board,Colour,PossibleMoveList),
+	possibleMovesMiniMax(Board,Colour,PossibleMoveList),
 	findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lequipe),ListeMenaces),
 	longueur(L,ListeMenaces),
 	calculNbPositionVictime(Coeff,V1,V2,L).
@@ -99,12 +110,12 @@ defenseKalistaEnnemie(Coeff,ListePion,(Col,Lin),Va,Vb) :-
 defenseur((Col,Lin),ListePion,Va,Vb) :- element((Col,Lin,_),ListePion), Vb is Va+1,!.
 defenseur(_,_,V,V).
 
-distanceSbiresKalista(Coeff,(ColK,LinK),Lequipe,Va,Vb):- findall((Col,Lin),distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK),ListePionsACote),
+distanceSbiresKalista(Coeff,(ColK,LinK),Lequipe,Va,Vb):- findall((Col,Lin),distanceTroisCases(Lequipe,Col,Lin,ColK,LinK),ListePionsACote),
 														 longueur(L,ListePionsACote),
 														 calculDistanceSbireKalista(Coeff,Va,Vb,L).
 
-distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK):- element((Col,Lin,_),Lequipe),Col=<ColK+2,Col>=ColK-2,
-												Lin>=LinK-2,Lin=<LinK+2,!.
+distanceTroisCases(Lequipe,Col,Lin,ColK,LinK):- element((Col,Lin,_),Lequipe),Col=<ColK+3,Col>=ColK-3,
+												Lin>=LinK-3,Lin=<LinK+3,!.
 /*Listing des calculs d'heuristiques*/
 
 calculDefenseKalistaAlliee(Coeff,Va,Vb,NbDefenseurs):- Vb is Va+Coeff*NbDefenseurs*100*0.25.

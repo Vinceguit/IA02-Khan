@@ -1,11 +1,3 @@
-/************************/
-/*Gestion des mouvements*/
-/************************/
-
-/*Gros du boulot*/
-
-/*transfert([[(2, b),(3, r1)],[(2, b),(1, o3)]],(1,1,2,1),NewBoard) --> [[(2,b),(3,r1)],[(2,r1),(1,o3)]].*/
-/*Prédicat de pion : pion(IdPion, Col, Lin, in, IdCase)/
 
 /*Procedure de mise à jour de tous les effets d'un mouvement sur le plateau et sur les pieces sur la BDD du jeu
 

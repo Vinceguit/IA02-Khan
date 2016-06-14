@@ -1,4 +1,4 @@
-/*possibleMoves permet d'obtenir le listing de tous les mouvements autorisés de la forme (Coldep,Lindep,Colarrivée,Linarrivée)*/
+/*legalMovesMinimax.pl est une variante de legalMoves.pl adaptée au prédicat de gestion des pion miniMaxPion, un prédicat temporaire utilisé dans les graphes de recherche*/
 
 possibleMovesMiniMax(_,Player,PossibleMoveList):- miniMaxPion(_,_,_,'khan',Marqueur),
 											   etablirEquipeActiveMiniMax(Player,Marqueur,PossibleMoveList),PossibleMoveList\=[],!.
