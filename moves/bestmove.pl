@@ -6,46 +6,44 @@
 MoveList est sous la forme [[(X1, Y1, X2, Y2)],...] où X est la colonne, Y est la ligne, (X1,Y1) est la position de départ et (X2, Y2) la position d'arrivée*/
 
 generateMove(Board, Player, Move) :-
-/*On supprime les infos de la recherche précédente*/
+  /*On supprime les infos de la recherche précédente*/
   retractall(playerState(_,_)),
   oppPlayer(Player, Player2),
   asserta(playerState(Player, max)),
   asserta(playerState(Player2, min)),
-/* Pour le temps de la recherche, on vient créer la copie conforme detous les prédicats pions sous le nom de miniMaxPion(_,_,_,_,_)*/
+  /* Pour le temps de la recherche, on vient créer la copie conforme detous les prédicats pions sous le nom de miniMaxPion(_,_,_,_,_)*/
   findall((IdPion,Col,Lin,Etat,Marq),pion(IdPion,Col,Lin,Etat,Marq),ListePionsPourRecherche),
   recopiagePions(ListePionsPourRecherche),
-  /On lance ici la recherche minimax qui nous renvoie le meilleur move*/
+  /*On lance ici la recherche minimax qui nous renvoie le meilleur move*/
   miniMax(Player, 2, Board, BestMove, _),
- /* Une fois la recherche terminée, on supprime tous les prédicats fantômes*/
+  /* Une fois la recherche terminée, on supprime tous les prédicats fantômes*/
   retractall(miniMaxPion(_,_,_,_,_)).
 
 
-  recopiagePions([IdPion,Col,Lin,Etat,Marq)|Q]) :- asserta(miniMaxPion(IdPion,Col,Lin,Etat,Marq)),recopiagePions(Q).
-  recopiagePions([]).
+recopiagePions([IdPion,Col,Lin,Etat,Marq)|Q]) :- asserta(miniMaxPion(IdPion,Col,Lin,Etat,Marq)),recopiagePions(Q).
+recopiagePions([]).
 
 /**Algorithme Minimax**/
 
 miniMax(Player, 0, Board, BestMove, Value) :-
-												print('MINIMAX TERMINAL - Frontiere:0  Valeur:'),
-												transfertAI(Board, BestMove, OutBoard),
-												heuristic(OutBoard, Player, 0, Value),
-
-												print(Value), nl, !.
+  print('MINIMAX TERMINAL - Frontiere:0  Valeur:'),
+  transfertAI(Board, BestMove, OutBoard),
+  heuristic(OutBoard, Player, 0, Value),
+  print(Value), nl, !.
 
 miniMax(Player, Frontier, Board, BestMove, Value) :-
-												print('MINIMAX - Frontiere:'), print(Frontier), print('  Joueur:'), print(Player), nl,
-												possibleMovesMiniMax(Board, Player, MoveList),
-												best(Player, Frontier, Board, MoveList, BestMove, Value).
-% BoardList : liste de tuples (Move, Board) pour retrouver un mouvement correspondant à un état du plateau plus facilement
+  print('MINIMAX - Frontiere:'), print(Frontier), print('  Joueur:'), print(Player), nl,
+  possibleMovesMiniMax(Board, Player, MoveList),
+  best(Player, Frontier, Board, MoveList, BestMove, Value).
 
 
 %On trouve le meilleur mouvement
 best(Player, Frontier, Board, [Move], Move, Value) :-
-														print('Mouvement:'), print(Move), nl,
-														NFrontier is Frontier - 1,
-														oppPlayer(Player, Player2),
-														transfertAI(Board, Move, Board2),
-														miniMax(Player2, NFrontier, Board2,  _, Value), !.
+  print('Mouvement:'), print(Move), nl,
+  NFrontier is Frontier - 1,
+  oppPlayer(Player, Player2),
+  transfertAI(Board, Move, Board2),
+  miniMax(Player2, NFrontier, Board2,  _, Value), !.
 
 best(Player, Frontier, Board, [Move1|MoveList], BestMove, BestValue) :-
   print('Mouvement:'), print(Move1), nl,
@@ -59,12 +57,12 @@ best(Player, Frontier, Board, [Move1|MoveList], BestMove, BestValue) :-
 
 
 betterOf(Player, Move1, Value1, _, Value2, Move1, Value1) :-
-    playerState(Player, min),
-    Value1 > Value2, !.
+  playerState(Player, min),
+  Value1 > Value2, !.
 
 betterOf(Player, Move1, Value1, _, Value2, Move1, Value1) :-
-    playerState(Player, max),
-    Value1 < Value2, !.
+  playerState(Player, max),
+  Value1 < Value2, !.
 
 betterOf(_, _, _, Move2, Value2, Move2, Value2).
 
@@ -134,23 +132,24 @@ getIdInLine([_|Q], Col, IdPion) :- Col > 0, NCol is Col-1, getIdInLine(Q, NCol, 
 /**Calcul de la fonction heuristique**/
 /*On maximise pour l'IA; on minimise pour son adversaire*/
 
-heuristic(Board,Colour,V9) :- listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
-								oppPlayer(Colour,Ennemi),
-								listingPionsEquipe(Board,Ennemi,1,1,[],Lennemie),
-								listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)),
-								nbSbiresAlliesEnJeu(0.2,Lequipe,0,V2),print(V2),nl,
-								nbSbiresEnnemisEnJeu(0.2,Lennemie,V2,V3),print(V3), nl,
-								distanceSbiresKalista(0.2,KE,Lequipe,V3,V5),print(V5),nl,
-								defenseKalistaAlliee(0.2,Lequipe,KA,V5,V6),print(V6),nl,
-								defenseKalistaEnnemie(0.2,Lennemie,KE,V6,V7),print(V7),nl,
-								gagne(KE,V7,V8),
-								perdu(KA,V8,V9),write('Heuristique de '), print(V9),
+heuristic(Board,Colour,V9) :-
+  listingPionsEquipe(Board,Colour,1,1,[],Lequipe),
+  oppPlayer(Colour,Ennemi),
+  listingPionsEquipe(Board,Ennemi,1,1,[],Lennemie),
+  listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)),
+  nbSbiresAlliesEnJeu(0.2,Lequipe,0,V2),print(V2),nl,
+  nbSbiresEnnemisEnJeu(0.2,Lennemie,V2,V3),print(V3), nl,
+  distanceSbiresKalista(0.2,KE,Lequipe,V3,V5),print(V5),nl,
+  defenseKalistaAlliee(0.2,Lequipe,KA,V5,V6),print(V6),nl,
+  defenseKalistaEnnemie(0.2,Lennemie,KE,V6,V7),print(V7),nl,
+  gagne(KE,V7,V8),
+  perdu(KA,V8,V9),write('Heuristique de '), print(V9),
 
-								print(Ennemi),nl,
-								print(Lequipe),nl,
-								print(Lennemie),nl,
-								print(KA),nl,
-								print(KE),nl.
+  print(Ennemi),nl,
+  print(Lequipe),nl,
+  print(Lennemie),nl,
+  print(KA),nl,
+  print(KE),nl.
 
 /* Ce coup passe à 100 si le joueur a gagné*/
 gagne(KE,_,Vb):- KE==(0,0),Vb is 100,!.
@@ -161,34 +160,43 @@ perdu(_,V,V).
 
 
 /* Cette heuristique cherche à laisser le plus souvent possible 4 pièces à l'ennemi, kalista comprise*/
-nbSbiresEnnemisEnJeu(Coeff,L,Va,Vb):-longueur(V,L),
-									 calculNbSbiresEnnemis(Coeff,Va,Vb,V).
+nbSbiresEnnemisEnJeu(Coeff,L,Va,Vb):-
+  longueur(V,L),
+  calculNbSbiresEnnemis(Coeff,Va,Vb,V).
 
-nbSbiresAlliesEnJeu(Coeff,L,Va,Vb):- longueur(V,L),
-									 calculNbSbiresAllies(Coeff,Va,Vb,V).
+nbSbiresAlliesEnJeu(Coeff,L,Va,Vb):-
+  longueur(V,L),
+  calculNbSbiresAllies(Coeff,Va,Vb,V).
+
 /* Determine le nombre de pions dans l'équipe adverse*/
-listingPionsEquipe([T|Q],Colour,Col,Lin, V1,V3) :- Lin<7,NLin is Lin+1, listingPionsEquipeDansLigne(T,Colour,Col,Lin,V1,V2),
-												 listingPionsEquipe(Q,Colour,Col,NLin,V2,V3),!.
+listingPionsEquipe([T|Q],Colour,Col,Lin, V1,V3) :-
+  Lin<7,NLin is Lin+1,
+  listingPionsEquipeDansLigne(T,Colour,Col,Lin,V1,V2),
+  listingPionsEquipe(Q,Colour,Col,NLin,V2,V3),!.
+
 listingPionsEquipe(_,_,_,7,V,V).
+
 
 listingPionsEquipeDansLigne([(_, Pion)|Q], Colour,Col,Lin,V1,V3) :- Col<7, NCol is Col+1,findColour(Pion,Colour),append([(Col,Lin,Pion)],V1,V2),!, listingPionsEquipeDansLigne(Q, Colour,NCol,Lin,V2,V3).
 listingPionsEquipeDansLigne([_|Q], Colour,Col,Lin,V1,V2) :- Col <7,NCol is Col+1,!, listingPionsEquipeDansLigne(Q,Colour,NCol,Lin,V1,V2),!.
 listingPionsEquipeDansLigne([],_,7,_,V,V).
 listingPionsEquipeDansLigne(_,_,7,_,V,V).
 
-/*Determine le nombre de mouvements possibles susceptibles de supprimer des pièces adverses*/
 
-nbPositionAttaque(Coeff,Colour,Board,Lennemi,V1,V2) :- possibleMoves(Board,Colour,PossibleMoveList),
-															  findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lennemi),ListeMenaces),
-															  longueur(L,ListeMenaces),
-															  calculNbPositionAttaque(Coeff,V1,V2,L).
+/*Determine le nombre de mouvements possibles susceptibles de supprimer des pièces adverses*/
+nbPositionAttaque(Coeff,Colour,Board,Lennemi,V1,V2) :-
+  possibleMoves(Board,Colour,PossibleMoveList),
+  findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lennemi),ListeMenaces),
+  longueur(L,ListeMenaces),
+  calculNbPositionAttaque(Coeff,V1,V2,L).
 
 menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lennemi) :- element((Col1,Lin1,Col2,Lin2),PossibleMoveList),element((Col2,Lin2,_),Lennemi).
 /* Determine le nombre de mouvements adverses susceptibles de supprimer ses pièces*/
-nbPositionVictime(Coeff,Colour,Board,Lequipe,V1,V2) :- possibleMoves(Board,Colour,PossibleMoveList),
-															  findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lequipe),ListeMenaces),
-															  longueur(L,ListeMenaces),
-															  calculNbPositionVictime(Coeff,V1,V2,L).
+nbPositionVictime(Coeff,Colour,Board,Lequipe,V1,V2) :-
+  possibleMoves(Board,Colour,PossibleMoveList),
+  findall((Col1,Lin1,Col2,Lin2),menacePion((Col1,Lin1,Col2,Lin2),PossibleMoveList,Lequipe),ListeMenaces),
+  longueur(L,ListeMenaces),
+  calculNbPositionVictime(Coeff,V1,V2,L).
 
 /*Recherche de la position des kalistas
 listingKalistas(Board,Colour,1,1, ((0,0),(0,0)),(KA,KE)).*/
@@ -205,27 +213,31 @@ listingKalistasDansLigne(_,_,7,_,(K1,K2),(K1,K2)).
 
 /*Recherche du nombre de sbires autour de la Kalista*/
 
-defenseKalistaAlliee(Coeff,ListePion,(Col,Lin),Va,Vb) :- ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
-												 ColB is Col-1,defenseur((ColB,Lin),ListePion,V2,V3),
-												 LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
-												 LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
-												 calculDefenseKalistaAlliee(Coeff,Va,Vb,V5).
+defenseKalistaAlliee(Coeff,ListePion,(Col,Lin),Va,Vb) :-
+  ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
+  ColB is Col-1,defenseur((ColB,Lin),ListePion,V2,V3),
+  LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
+  LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
+  calculDefenseKalistaAlliee(Coeff,Va,Vb,V5).
 
-defenseKalistaEnnemie(Coeff,ListePion,(Col,Lin),Va,Vb) :- ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
-												 ColB is Col-1,defenseur((ColB,Lin),ListePion,V2,V3),
-												 LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
-												 LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
-												 calculDefenseKalistaEnnemie(Coeff,Va,Vb,V5).
+defenseKalistaEnnemie(Coeff,ListePion,(Col,Lin),Va,Vb) :-
+  ColA is Col+1,defenseur((ColA,Lin),ListePion,0,V2),
+  ColB is Col-1,defenseur((ColB,Lin),ListePion,V2,V3),
+  LinA is Lin+1,defenseur((Col,LinA),ListePion,V3,V4),
+  LinB is Lin-1,defenseur((Col,LinB),ListePion,V4,V5),
+  calculDefenseKalistaEnnemie(Coeff,Va,Vb,V5).
 
 defenseur((Col,Lin),ListePion,Va,Vb) :- element((Col,Lin),ListePion), Vb is Va+1,!.
 defenseur(_,_,V,V).
 
-distanceSbiresKalista(Coeff,(ColK,LinK),Lequipe,Va,Vb):- findall((Col,Lin),distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK),ListePionsACote),
-														 longueur(L,ListePionsACote),
-														 calculDistanceSbireKalista(Coeff,Va,Vb,L).
+distanceSbiresKalista(Coeff,(ColK,LinK),Lequipe,Va,Vb):-
+  findall((Col,Lin),distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK),ListePionsACote),
+  longueur(L,ListePionsACote),
+  calculDistanceSbireKalista(Coeff,Va,Vb,L).
 
-distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK):- element((Col,Lin,_),Lequipe),Col=<ColK+2,Col>=ColK-2,
-												Lin>=LinK-2,Lin=<LinK+2,!.
+distanceDeuxCases(Lequipe,Col,Lin,ColK,LinK):-
+  element((Col,Lin,_),Lequipe),Col=<ColK+2,Col>=ColK-2,
+  Lin>=LinK-2,Lin=<LinK+2,!.
 /*Listing des calculs d'heuristiques*/
 
 calculDefenseKalistaAlliee(Coeff,Va,Vb,NbDefenseurs):- Vb is Va+Coeff*NbDefenseurs*100*0.25.
